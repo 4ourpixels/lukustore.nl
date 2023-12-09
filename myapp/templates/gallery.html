@@ -1,0 +1,52 @@
+{% extends 'base.html' %}{% load static %}{% block body %}
+
+<div class="row my-3">
+  <ul class="nav nav-tabs justify-content-center">
+    <li class="nav-item">
+      <a
+        class="nav-link {% if active_category == category.name %}active{% endif %} text-black"
+        style="text-decoration: none"
+        href="{% url 'gallery' %}"
+      >
+        All
+      </a>
+    </li>
+    {% for category in categories %}
+    <li class="nav-item">
+      <a
+        class="nav-link {% if active_category == category.name %}active{% endif %} text-black"
+        style="text-decoration: none"
+        href="{% url 'gallery' %}?category={{ category.name }}"
+        >{{ category.name }}</a
+      >
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+
+<div class="container my-5">
+  <div
+    class="row row-cols-2 row-cols-md-4 row-cols-xl-4 justify-content-center"
+  >
+    {% for photo in products %}
+    <div class="col-sm-6 col-md-4 col-lg-3">
+      <a
+        href="{% url 'view_product' slug=photo.slug %}"
+        class="underline hover"
+      >
+        <img
+          src="{{ photo.image.url }}"
+          alt="{{ photo.name }}"
+          class="img-fluid mb-2 bg-light"
+        />
+        <h6 style="margin-bottom: -0.1rem" class="fw-bold mt-1">
+          {{ photo.name }}
+        </h6></a
+      >
+      <small>Brand: {{ photo.brand }}</small>
+      <p class="fw-bold">€ {{ photo.price }}</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

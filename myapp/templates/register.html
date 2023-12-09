@@ -1,0 +1,65 @@
+{% extends 'base.html' %} {% load static %} {% block body %}
+<div class="container-fluid">
+  <div class="row">
+    {% if form.errors %}
+    <div
+      class="alert alert-warning alert-dismissable fade show w-100 text-center"
+      role="alert"
+    >
+      <h6 class="text-center">
+        {{ form.errors }}
+        <span
+          ><button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+            aria-label="Close"
+          ></button
+        ></span>
+      </h6>
+    </div>
+    {% endif %}
+  </div>
+</div>
+<div id="top" class="container mt-3">
+  <div class="row justify-content-center text-center">
+    <div class="col-10">
+      <h1 class="m-3">Create an account.</h1>
+      <form class="w-100" method="POST" action="{% url 'register' %}">
+        {% csrf_token %}
+        <h6>{{ form.non_field_errors }}</h6>
+        {% for field in form %}
+        <div class="form-group mb-3">{{ field }}</div>
+        {% endfor %}
+        <button
+          type="submit"
+          class="btn w-100 btn-dark"
+          value="Register Account"
+        >
+          Register Account
+        </button>
+        <p class="small mt-3">
+          Already have an account?
+          <a href="{% url 'login' %}" class="underline text-dark fw-bold"
+            >Log In</a
+          >
+        </p>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+  var form_fields = document.getElementsByTagName("input");
+
+  form_fields[1].placeholder = "Username";
+  form_fields[2].placeholder = "First Name";
+  form_fields[3].placeholder = "Last Name";
+  form_fields[4].placeholder = "Email";
+  form_fields[5].placeholder = "Enter password";
+  form_fields[6].placeholder = "Re-enter password";
+
+  for (var field in form_fields) {
+    form_fields[field].className += "form-control";
+  }
+</script>
+{% endblock %}

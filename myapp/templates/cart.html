@@ -1,0 +1,105 @@
+{% extends 'base.html' %} {% load static %} {% block body %} {% if items %}
+<div class="container my-5">
+  <nav style="--bs-breadcrumb-divider: '>'" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a class="text-dark underline" href="{% url 'gallery' %}">Back</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">Cart</li>
+    </ol>
+  </nav>
+  <div class="row">
+    <div class="col-md-9 col-lg-9 col-sm-12">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Item</th>
+              <th scope="col">Name</th>
+              <th scope="col">Quantity</th>
+              <th scope="col">Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in items %}
+            <tr>
+              <td>
+                <img
+                  height="40"
+                  width="auto"
+                  style="object-fit: cover"
+                  class="thumbnail rounded bg-light"
+                  src="{{ item.product.image.url }}"
+                  alt="{{ item.name }}'s Image"
+                />
+              </td>
+              <td>
+                {{ item.product.name }} <br />
+                <span class="text-muted small"
+                  >{{ item.product.color }} {{ item.product.size }}</span
+                >
+              </td>
+              <td>
+                <div
+                  class="border rounded d-flex justify-content-evenly align-items-center py-1"
+                >
+                  <button
+                    style="background: none; border: none"
+                    data-product="{{ item.product.product_code }}"
+                    data-action="remove"
+                    class="update-cart"
+                  >
+                    -
+                  </button>
+                  <span>{{ item.quantity }}</span>
+                  <button
+                    style="background: none; border: none"
+                    data-product="{{ item.product.product_code }}"
+                    data-action="add"
+                    class="update-cart"
+                  >
+                    +
+                  </button>
+                </div>
+              </td>
+              <td>€{{ item.product.price }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-md-3 col-lg-3 col-sm-12 p-3 border rounded">
+      <div class="d-flex justify-content-between">
+        <span class="small text-muted">Subtotal</span>
+        <span class="fw-bold small">€ {{ order.get_cart_total }}</span>
+      </div>
+      <div class="d-flex justify-content-between mt-3">
+        <span class="small text-muted">Discount</span>
+        <span class="text-muted small">€ {{ discount }}</span>
+      </div>
+      <hr class="fw-bold" />
+      <div class="d-flex justify-content-between">
+        <span class="p">Grand total</span>
+        <span class="fw-bold">€ {{ order.get_cart_total }}</span>
+      </div>
+      <a class="btn btn-dark w-100 btn-lg mt-4" href="{% url 'checkout' %}"
+        >Checkout now</a
+      >
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <h1 class="display-5 text-center my-4 fw-bold">
+      Looks like your cart is empty...
+    </h1>
+    <img
+      style="height: 35vh"
+      src="{% static 'images/cart/undraw_empty_cart_co35.svg' %}"
+      class="img-fluid"
+    />
+  </div>
+</div>
+{% endif %} {% endblock %}

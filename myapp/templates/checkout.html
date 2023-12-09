@@ -1,0 +1,211 @@
+{% extends 'base.html' %} {% load static %} {% block body %}
+<div id="top" class="container my-5">
+  <nav style="--bs-breadcrumb-divider: '>'" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item active" aria-current="page">
+        <a class="text-dark underline" href="{% url 'cart' %}">Cart</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+    </ol>
+  </nav>
+  <div>
+    <div class="col">
+      <div class="box-element" id="form-wrapper">
+        <div class="row justify-content-center">
+          <form class="form" method="POST" id="form">
+            <h4 class="mb-3">Billing address</h4>
+            {% csrf_token %}
+            <div class="container">
+              <div class="row" id="user-info">
+                <div class="col">
+                  <label for="firstName">Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="firstName"
+                    name="name"
+                    required
+                  />
+                  <div class="invalid-feedback">Name is required.</div>
+                </div>
+
+                <div class="col">
+                  <label for="email">Email</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    name="email"
+                    required
+                  />
+                  <div class="invalid-feedback">Valid Email is required.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-8" id="shipping-info">
+              <div class="mb-3">
+                <label for="country">Country</label>
+                <input type="text" class="form-control" id="country" required />
+              </div>
+
+              <div class="mb-3">
+                <label for="city">City</label>
+                <input type="text" class="form-control" id="city" required />
+              </div>
+
+              <div class="mb-3">
+                <label for="address">Address</label>
+                <input type="text" class="form-control" id="address" required />
+              </div>
+
+              <div class="mb-3">
+                <label for="zipcode">Zipcode</label>
+                <input type="text" class="form-control" id="zipcode" required />
+              </div>
+
+              <div class="mb-3">
+                <label for="state">State</label>
+                <input type="text" class="form-control" id="state" required />
+              </div>
+
+              <button
+                id="form-button"
+                class="btn btn-dark btn-lg my-5 w-100"
+                type="submit"
+              >
+                Save Address
+              </button>
+            </div>
+          </form>
+          <section id="payment-info" class="hidden">
+            <div class="left-payment-child" id="paypal-button-container"></div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- javascript -->
+<!-- Paypal -->
+<!-- Paypal API -->
+<script src="https://www.paypal.com/sdk/js?client-id=AWQLLidcguyPsillx1mX6siiFmBlTpZOkE7qxy5vvzLb1jeoK4_DGKE9f27VEiwd5baRTgVkfXCMPK51&currency=USD"></script>
+<!-- end of Paypal API -->
+
+<!-- Paypal Button -->
+<script>
+  var total = "{{ order.get_cart_total }}";
+
+  // Render the PayPal button into #paypal-button-container
+  paypal
+    .Buttons({
+      style: {
+        color: "blue",
+        shape: "pill",
+        label: "pay",
+      },
+      // Set up the transaction
+      createOrder: function (data, actions) {
+        return actions.order.create({
+          purchase_units: [
+            {
+              amount: {
+                value: total,
+              },
+            },
+          ],
+        });
+      },
+
+      // Finalize the transaction
+      onApprove: function (data, actions) {
+        return actions.order.capture().then(function (details) {
+          submitFormData();
+        });
+      },
+    })
+    .render("#paypal-button-container");
+</script>
+<!-- End of Paypal Button -->
+<!-- End of Paypal -->
+<script type="text/javascript">
+  var shipping = "{{ order.shipping }}";
+
+  if (shipping == "False") {
+    document.getElementById("shipping-info").innerHTML = "";
+    document.getElementById("user-info").classList.add("hidden");
+    document.getElementById("payment-info").classList.remove("hidden");
+  }
+
+  if (user != "AnonymousUser") {
+    document.getElementById("user-info").innerHTML = "";
+  }
+
+  if (shipping == "False" && user != "AnonymousUser") {
+    // Hide entire form if user is logged in and shipping is false
+    document.getElementById("form-wrapper").classList.add("hidden");
+    document.getElementById("digital-false").classList.remove("current");
+    document.getElementById("digital-true").classList.add("current");
+    // Show payment if logged in user wants to buy an item that does not
+    // require shipping
+    document.getElementById("payment-info").classList.remove("hidden");
+  }
+
+  var form = document.getElementById("form");
+
+  csrftoken = form.getElementsByTagName("input")[0].value;
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    document.getElementById("form-button").classList.add("hidden");
+    document.getElementById("payment-info").classList.remove("hidden");
+    document.getElementById("form").classList.add("hidden");
+  });
+
+  function submitFormData() {
+    var userFormData = {
+      name: null,
+      email: null,
+      total: total,
+    };
+
+    var shippingInfo = {
+      address: null,
+      city: null,
+      state: null,
+      zipcode: null,
+      country: null,
+    };
+
+    if (shipping != "False") {
+      shippingInfo.address = form.address.value;
+      shippingInfo.city = form.city.value;
+      shippingInfo.state = form.state.value;
+      shippingInfo.zipcode = form.zipcode.value;
+      shippingInfo.country = form.zipcode.value;
+    }
+
+    if (user == "AnonymousUser") {
+      userFormData.name = form.name.value;
+      userFormData.email = form.email.value;
+    }
+
+    var url = "/processOrder/";
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrftoken,
+      },
+      body: JSON.stringify({ form: userFormData, shipping: shippingInfo }),
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        alert("Transaction completed");
+        cart = {};
+        document.cookie = "cart=" + JSON.stringify(cart) + ";domain=;path=/";
+        window.location.href = "{% url 'confirmed' %}";
+      });
+  }
+</script>
+<!-- javascript -->
+{% endblock %}
