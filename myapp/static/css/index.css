@@ -359,3 +359,12 @@ h3 {
   color: #000;
 }
 /* Dashboard End */
+.invert-hover {
+  background-color: #000;
+  color: #9e9e9e;
+  cursor: pointer;
+}
+.invert-hover:hover {
+  background-color: #121212;
+  color: #ffffff;
+}
