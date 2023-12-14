@@ -1,0 +1,45 @@
+{% extends 'base.html' %} {% load static %} {% block body %}
+<div class="container-fluid pb-5 bg-light">
+  <div class="row">
+    <h1 class="text-center my-4">Update blog</h1>
+    {% if success %}
+    <div class="alert alert-success pb-5 text-center" role="alert">
+      The blog updated successfully <i class="fa-solid fa-square-check"></i
+      ><br /><br />
+      <a href="{% url 'dashboard' %}" class="alert-link"
+        ><i class="fa-solid fa-reply"></i> Back To Dashboard.</a
+      >
+    </div>
+    {% endif %}
+    <div class="row justify-content-center align-items-start">
+      <div class="col-sm-12 col-lg-6">
+        <div class="row justify-content-center">
+          <div class="col-sm-6 col-md-4">
+            <img
+              src="{{ blog.image.url }}"
+              alt="{{ blog.item }}'s Image"
+              class="img-fluid rounded"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-sm-12">
+        <div class="card shadow border-0 p-3 mb-3">
+          <div class="card-body">
+            <form method="POST" enctype="multipart/form-data">
+              <h4 class="mb-3">Details</h4>
+              {% csrf_token %} {{ form.as_p }}
+              <button type="submit" class="btn me-2 btn-dark">
+                <i class="fa-solid fa-floppy-disk"></i> Save
+              </button>
+              <a href="{% url 'dashboard' %}" class="btn btn-outline-dark"
+                ><i class="fa-solid fa-reply"></i> Back</a
+              >
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

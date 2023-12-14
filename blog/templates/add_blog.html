@@ -1,0 +1,184 @@
+{% extends 'base.html' %} {% load static %} {% block body %}
+<div class="container-fluid bg-light">
+  <div class="row">
+    {% if success %}
+    <div class="alert alert-success" role="alert">
+      The new blog added successfully.
+    </div>
+    {% else %}
+    <div class="row justify-content-center">
+      <div class="col-8 my-5">
+        <div class="card bg-light mb-3">
+          <div class="card-header">
+            <h1 class="display-6 fw-bold">
+              New blog entry
+              <span class="float-end"
+                ><i class="fa-square-rss fa-solid fa-lg"></i
+              ></span>
+            </h1>
+          </div>
+          <div class="card-body">
+            <form
+              method="POST"
+              action="{% url 'add_blog' %}"
+              enctype="multipart/form-data"
+            >
+              {% csrf_token %}
+
+              <!-- blog title -->
+              <div class="form-group m-3">
+                <label class="form-label">Title</label>
+                <input
+                  required
+                  name="title"
+                  type="text"
+                  placeholder="Blog title"
+                  class="form-control"
+                />
+              </div>
+
+              <!-- summary -->
+              <div class="form-group m-3">
+                <label class="form-label">Summary</label>
+
+                <textarea
+                  class="form-control"
+                  name="summary"
+                  placeholder="Brief summary"
+                  style="height: 7rem"
+                ></textarea>
+              </div>
+
+              <!-- content -->
+              <div class="form-group m-3">
+                <label class="form-label">Content</label>
+                <textarea
+                  required
+                  class="form-control"
+                  name="content"
+                  placeholder="Content"
+                  rows="10"
+                ></textarea>
+              </div>
+
+              <!-- categories -->
+              <div class="form-group m-3">
+                <label class="form-label">Category</label>
+                <select name="category" class="form-control">
+                  <option value="none">Select existing category</option>
+                  {% for category in categories %}
+                  <option value="{{ category.slug }}">
+                    {{ category.name }}
+                  </option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <!-- create new category -->
+              <div class="form-group m-3">
+                <label class="form-label">New category</label>
+                <input
+                  name="category_new"
+                  type="text"
+                  placeholder="Create a new category"
+                  class="form-control"
+                />
+              </div>
+
+              <!-- tags -->
+              <div class="form-group m-3">
+                <label class="form-label">Tags</label>
+                <input
+                  type="text"
+                  name="tags"
+                  placeholder="Eg Luku Store.nl, Nakuru Bucks FC, SS23 Luku Book, Drop"
+                  class="form-control"
+                />
+              </div>
+
+              <!-- youtube link -->
+              <div class="form-group m-3">
+                <label class="form-label">YouTube Link</label>
+                <input
+                  type="text"
+                  name="youtube"
+                  placeholder="Only paste youtube embed link"
+                  class="form-control"
+                />
+              </div>
+
+              <!-- meta keywords -->
+              <div class="form-group m-3">
+                <label class="form-label">Meta Keywords</label>
+                <textarea
+                  class="form-control"
+                  name="meta_keywords"
+                  placeholder="SEO Meta Keywords"
+                  rows="10"
+                ></textarea>
+              </div>
+
+              <!-- meta description -->
+              <div class="form-group m-3">
+                <label class="form-label">Meta Description</label>
+                <textarea
+                  class="form-control"
+                  name="meta_description"
+                  placeholder="Google search results blog description"
+                  rows="10"
+                ></textarea>
+              </div>
+
+              <!-- cover image -->
+              <div class="form-group m-3">
+                <label class="form-label"
+                  >Select blog cover / thumbnail image</label
+                >
+                <input
+                  required
+                  type="file"
+                  name="cover_image"
+                  class="form-file-control"
+                />
+              </div>
+
+              <div class="text-center">
+                <div class="form-group m-3">
+                  <div class="form-check">
+                    <input
+                      checked
+                      name="publish"
+                      type="checkbox"
+                      class="form-check-input"
+                      id="publishCheckbox"
+                    />
+                    <label class="form-check-label" for="publishCheckbox"
+                      >Publish now!</label
+                    >
+                  </div>
+                  <!-- publish -->
+
+                  <button
+                    type="submit"
+                    class="btn btn-outline-dark btn-lg w-50 my-4"
+                  >
+                    Submit
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+<script>
+  var form_fields = document.getElementsByTagName("input");
+
+  for (var field in form_fields) {
+    form_fields[field].className = "form-control";
+  }
+</script>
+{% endblock %}
