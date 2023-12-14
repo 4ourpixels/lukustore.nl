@@ -55,7 +55,11 @@
       <hr />
       <!-- Cart and View Buttons Start -->
       <button class="btn btn-dark my-2">Add to Cart</button>
-      <button class="btn btn-outline-dark">View</button>
+      <a
+        href="{% url 'view_stock' slug=stock.slug %}"
+        class="btn btn-outline-dark"
+        >View</a
+      >
       <!-- Cart and View Buttons End -->
     </div>
     {% endif %} {% endfor %} {% for product in products %}

@@ -66,7 +66,6 @@
                 {% if stock.image_original_size %}
                 <img src="{{ stock.image_original_size.url }}" height="150px" />
                 {% else %}
-                <!-- Brand -->
                 <img
                   src="{{ stock.brand.image.url }}"
                   alt="{{ stock.item }}'s Image"
@@ -315,119 +314,176 @@
     </div>
   </div>
 </div>
-<div class="container-fluid px-4">
-  <h1 class="text-center display-6 my-5 border-bottom pb-5 fw-bold">
+<!-- Figures Section Start -->
+<div class="container-fluid">
+  <h1 class="text-center display-6 my-5 fw-bold">
     <i class="fa-solid fa-chart-simple me-1"></i>
     Figures
     <i class="fa-solid fa-chart-simple me-1"></i>
   </h1>
-  <div class="row d-flex justify-content-center align-items-center">
-    <div class="col-xl-3 col-md-6">
-      <div class="card bg-primary text-white mb-4">
-        <div class="card-body">
-          Total Pieces
-          <span><h1 class="fw-bold display-2">{{ total_pieces }}</h1></span>
+  <div class="container">
+    <div class="col-sm-12 col-md-6">
+      <div class="row d-flex justify-content-evenly align-items-center">
+        <div class="row">
+          <div class="col">
+            <div class="card invert-hover shadow mb-4">
+              <div class="card-body">
+                Total Pieces
+                <span
+                  ><h1 class="fw-bold display-2">{{ total_pieces }}</h1></span
+                >
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card invert-hover shadow mb-4">
+              <div class="card-body">
+                Total first consigment
+                <span
+                  ><h1 class="fw-bold display-2">
+                    € {{ total_consigment|intcomma }}
+                  </h1></span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="card invert-hover shadow mb-4">
+              <div class="card-body">
+                Total first consigment (Ksh)
+                <span
+                  ><h1 class="fw-bold display-2">
+                    {{ grand_total_cost|intcomma }}
+                  </h1></span
+                >
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card invert-hover shadow mb-4">
+              <div class="card-body">
+                Total first consigment (Ksh)
+                <span
+                  ><h1 class="display-2 fw-bold">
+                    € {{ euro_converted_total_consigment|intcomma }}
+                  </h1></span
+                >
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="col-xl-3 col-md-6">
-      <div class="card bg-warning text-white mb-4">
-        <div class="card-body">
-          Total first consigment
-          <span
-            ><h1 class="fw-bold display-2">
-              € {{ total_consigment|intcomma }}
-            </h1></span
-          >
+
+    <!-- Charts container start -->
+    <div class="container">
+      <div class="row row-cols-2 gy-5 justify-content-start my-5">
+        <div class="col">
+          <div class="card mb-4">
+            <div class="card-header text-primary">
+              <i class="fas fa-chart-area me-1"></i>
+              Possible Best Seller
+            </div>
+            <div class="card-body">
+              <canvas id="myAreaChart" width="100%" height="50"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card mb-4">
+            <div class="card-header text-primary">
+              <i class="fas fa-chart-bar me-1"></i>
+              Possible Best Seller
+            </div>
+            <div class="card-body">
+              <canvas
+                id="possibleBestSellerChart"
+                width="100%"
+                height="50"
+              ></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card mb-4">
+            <div class="card-header text-danger">
+              <i class="fas fa-chart-bar me-1"></i>
+              Possible Less Seller
+            </div>
+            <div class="card-body">
+              <canvas
+                id="possibleLessSellerChart"
+                width="100%"
+                height="50"
+              ></canvas>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="col-xl-3 col-md-6">
-      <div class="card bg-success text-white mb-4">
-        <div class="card-body">
-          Total first consigment (Ksh)
-          <span
-            ><h1 class="fw-bold display-2">
-              {{ grand_total_cost|intcomma }}
-            </h1></span
-          >
-          <h3>€ {{ euro_converted_total_consigment|intcomma }}</h3>
-        </div>
-      </div>
-    </div>
+    <!-- Charts container End -->
   </div>
-  <div class="row gy-5 justify-content-center my-5">
-    <div class="col-sm-12 col-md-12 col-lg-6">
-      <div class="card mb-4">
-        <div class="card-header text-success">
-          <i class="fas fa-chart-area me-1"></i>
-          Possible Best Seller
-        </div>
-        <div class="card-body">
-          <canvas id="myAreaChart" width="100%" height="50"></canvas>
-        </div>
-      </div>
-    </div>
-    <div class="col-sm-12 col-md-12 col-lg-6">
-      <div class="card mb-4">
-        <div class="card-header text-success">
-          <i class="fas fa-chart-bar me-1"></i>
-          Possible Best Seller
-        </div>
-        <div class="card-body">
-          <canvas
-            id="possibleBestSellerChart"
-            width="100%"
-            height="50"
-          ></canvas>
-        </div>
-      </div>
-    </div>
+  <!-- Charts -->
+</div>
+
+<!-- Amapiano Signups Start -->
+<div class="container">
+  <div class="row d-flex justify-content-center">
     <div class="col-8">
-      <div class="card mb-4">
-        <div class="card-header text-danger">
-          <i class="fas fa-chart-bar me-1"></i>
-          Possible Less Seller
-        </div>
-        <div class="card-body">
-          <canvas
-            id="possibleLessSellerChart"
-            width="100%"
-            height="50"
-          ></canvas>
-        </div>
+      <h1 class="text-center mb-3">Amapiano Signups</h1>
+      <div class="list-group">
+        {% for signup in amapiano_signups %}
+        <a class="list-group-item">
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{ signup.full_name }}</h5>
+            <small
+              >{{ signup.ticket_number }} <br /><span
+                class="badge bg-dark text-white rounded-pill"
+                >{{ signup.pk }}</span
+              ></small
+            >
+          </div>
+          <p class="mb-1">{{ signup.email }}</p>
+          {% if signup.consent %}
+          <small class="text-success">Subscribed to newsletter</small>
+          {% else %}
+          <small class="text-danger">Not subscribed</small>
+          {% endif %}
+        </a>
+        {% endfor %}
       </div>
     </div>
   </div>
 </div>
-
-<div class="container">
-  <div class="row justify-items-center">
-    <div class="col-md-8 col-sm-12">
-      <table
-        class="table table-responsive overflow-scroll border shadow table-striped-columns"
-      >
-        <thead class="bg-black">
-          <tr>
-            <th class="text-white">Action Id</th>
-            <th class="text-white">Notification</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for action in admin_actions %}
-          <tr>
-            <th class="col">{{ action.pk }}</th>
-            <th class="col">
-              Action: {{ action }} <br />
-              <span class="float-right small"
-                >Time: {{ action.action_time }}</span
-              >
-            </th>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
+<!-- Amapiano Signups End -->
+<!-- Actions -->
+<div class="container my-5">
+  <div class="text-center">
+    <table
+      class="table table-responsive overflow-scroll border shadow table-striped-columns"
+    >
+      <thead class="bg-black text-start">
+        <tr>
+          <th class="text-white">Action Id</th>
+          <th class="text-white">Notification</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for action in admin_actions %}
+        <tr>
+          <th class="col">{{ action.pk }}</th>
+          <th class="col text-start">
+            Action: {{ action }} <br />
+            <span class="float-right small"
+              >Time: {{ action.action_time }}</span
+            >
+          </th>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
 </div>
 <script

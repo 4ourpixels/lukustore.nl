@@ -278,7 +278,25 @@
                 >About</a
               >
             </li>
-            {% if user.is_authenticated %}
+            {% if request.user.is_authenticated %}
+            <li class="nav-item">
+              <a
+                id="nav-about"
+                class="nav-link fw-bold text-dark"
+                href="/admin/"
+                >Admin</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                id="nav-about"
+                class="nav-link fw-bold text-dark"
+                href="{% url 'add_blog' %}"
+                >Add Blog</a
+              >
+              {% endif %}
+            </li>
+            {% if request.user.is_authenticated and user.is_superuser %}
             <li class="nav-item">
               <div class="dropdown">
                 <a
@@ -317,6 +335,11 @@
                       class="dropdown-item"
                       href="https://analytics.google.com/analytics/web/?authuser=3#/p415088185/reports/intelligenthome"
                       >Google Analytics</a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="{% url 'add_blog' %}"
+                      >Add Blog</a
                     >
                   </li>
                 </ul>
