@@ -3,7 +3,10 @@ from django.contrib.auth.models import User
 from django.utils.dateformat import DateFormat
 from django.utils import timezone
 from django.utils.text import slugify
-
+from PIL import Image
+from django.urls import reverse
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 # Stock Calculation Utility Start
 from django.db.models import Sum
 # Stock Calculation Utility End
@@ -116,7 +119,6 @@ class Photo(models.Model):
     )
     description = models.TextField()
     price = models.DecimalField(max_digits=7, decimal_places=2, default=0)
-    stock = models.IntegerField(default=0)
     color = models.CharField(max_length=75, blank=True, null=True)
     size = models.CharField(max_length=50, blank=True, null=True)
     rating = models.IntegerField(blank=True, default=0)
@@ -166,16 +168,21 @@ class Customer(models.Model):
     )
 
     def __str__(self):
-        return self.username
+        return f"@{self.username} - {self.first_name}"
+
+# Use the receiver decorator to connect the create_customer function to the post_save signal
 
 
+@receiver(post_save, sender=User)
 def create_customer(sender, instance, created, **kwargs):
     if created:
         Customer.objects.create(
-            user=instance, name=instance.username, email=instance.email)
-
-
-models.signals.post_save.connect(create_customer, sender=User)
+            user=instance,
+            first_name=instance.first_name,
+            last_name=instance.last_name,
+            username=instance.username,
+            email=instance.email
+        )
 # END OF CUSTOMER MODEL
 
 
@@ -306,6 +313,13 @@ class Stock(models.Model):
         default='placeholder.png',
     )
 
+    thumbnail = models.ImageField(
+        null=True,
+        blank=True,
+        upload_to="stock/",
+        default='placeholder.png',
+    )
+
     slug = models.SlugField(unique=True, null=True, blank=True)
 
     def total_pieces(self):
@@ -324,8 +338,15 @@ class Stock(models.Model):
         self.slug = slugify(self.item)
         super().save(*args, **kwargs)
 
+    def get_url(self):
+        return reverse("view_stock", kwargs={
+            "slug": self.slug
+        })
+
     def __str__(self):
         return f"Product Code: #ls0{self.pk} | {self.item}"
+
+
 # ORDER
 
 
@@ -503,6 +524,9 @@ class AmapianoSignUp(models.Model):
     # New field for the ticket number
     ticket_number = models.CharField(
         max_length=36, unique=True, blank=True, null=True)
+
+    def full_name(self):
+        return f'{self.first_name} {self.last_name}'
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"

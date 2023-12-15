@@ -29,8 +29,8 @@ class RegisterUserForm(UserCreationForm):
             'password2',
         )
 
-        def __init__(self, *args, **kwagrs):
-            super(RegisterUserForm, self).__init__(*args, **kwagrs)
+        def __init__(self, *args, **kwargs):
+            super(RegisterUserForm, self).__init__(*args, **kwargs)
 
             self.fields['username'].widget.attrs['class'] = 'form-control'
             self.fields['password1'].widget.attrs['class'] = 'form-control'
@@ -157,9 +157,10 @@ class StockForm(forms.ModelForm):
             'online': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'priority': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'similar_products_codes': forms.TextInput(attrs={'class': 'form-control'}),
-            'image_original_size': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            'image_large_size': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            'image_medium_size': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            'image_thumbnail_size': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'image_1': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'image_2': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'image_3': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'image_4': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'image_5': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
 # Stocks Form End
