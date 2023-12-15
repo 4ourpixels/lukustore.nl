@@ -1,27 +1,28 @@
 {% extends 'base.html' %} {% load static %} {% block body %}
 <div class="container">
-  <div class="row d-flex justify-content-between align-items-center">
-    <div class="col-lg-6 col-sm-12 col-md-6">
-      <img class="mb-4 img-fluid rounded" src="{{ mix.image.url }}" />
-    </div>
-    <div class="col-lg-6 col-sm-12 col-md-6">
-      <h1 class="mb-4">{{ mix.title}}</h1>
-      <div class="mb-4">
-        <audio id="song">
-          <source src="{{ mix.stream_link }}" />
-          Your browser does not support the audio element.
-        </audio>
-        <div class="display-5 mb-3 hover" onclick="playPause()">
-          <i class="fa-solid fa-play text-black" id="controlIcon"></i>
-        </div>
-        <input class="mb-5" type="range" value="0" id="mix_progress_bar" />
-        <br />
-        <small
-          >Genre: {{ mix.genre }} <br />
-          Featured Artists: {{ mix.featured_artists|safe|truncatewords:65 }}
-          <br />
-        </small>
+  <div class="text-center">
+    <img
+      style="height: 50vh"
+      class="mb-4 img-fluid rounded"
+      src="{{ mix.image.url }}"
+    />
+  </div>
+  <div class="row text-center">
+    <h1 class="mb-2">{{ mix.title}}</h1>
+    <small
+      >Genre: {{ mix.genre }} <br />
+      Featured Artists: {{ mix.featured_artists|safe|truncatewords:65 }}
+      <br />
+    </small>
+    <div class="mb-4">
+      <audio id="song">
+        <source src="{{ mix.stream_link }}" />
+        Your browser does not support the audio element.
+      </audio>
+      <div class="display-5 mb-3 hover" onclick="playPause()">
+        <i class="fa-solid fa-play text-black" id="controlIcon"></i>
       </div>
+      <input class="mb-5" type="range" value="0" id="mix_progress_bar" />
     </div>
   </div>
 </div>

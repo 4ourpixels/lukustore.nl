@@ -458,6 +458,43 @@
   </div>
 </div>
 <!-- Amapiano Signups End -->
+
+<!-- Blog Posts Start -->
+<div class="container">
+  <div class="row d-flex justify-content-center">
+    <div class="col-8">
+      <h1 class="text-center mb-3">Blog Posts</h1>
+      <div class="list-group">
+        {% for blog in blog_posts %}
+        <div class="list-group-item">
+          <div class="d-flex w-100 justify-content-between">
+            <img
+              src="{{ blog.cover_image.url }}"
+              style="height: 60px"
+              class="img-fluid"
+            />
+            <a href="{{ blog.get_url }}" class="mb-1">{{ blog.title }}</a>
+            <small
+              >{{ blog.summary|safe|linebreaks }} <br /><span
+                class="badge bg-dark text-white rounded-pill"
+                >{{ blog.pk }}</span
+              ></small
+            >
+          </div>
+          <p class="mb-1">{{ blog.category }}</p>
+          {% if blog.is_published %}
+          <small class="text-success">Published</small>
+          {% else %}
+          <small class="text-danger">Not published</small>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Blog Posts End -->
+
 <!-- Actions -->
 <div class="container my-5">
   <div class="text-center">

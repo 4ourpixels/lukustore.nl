@@ -1,25 +1,28 @@
 {% extends 'base.html' %} {% load static %} {% block body %}
 <div class="container-fluid p-0">
-  <img class="img-fluid" src="{% static 'images/djg400-wallpaper-web.jpg' %}" />
+  <img
+    class="img-fluid"
+    src="{% static 'images/djg400-wallpaper-web.jpg' %}"
+    loading="lazy"
+  />
 </div>
-<div class="container pt-5">
-  <h1 class="display-2 fw-bold">Listen to DJ G400</h1>
-  <p class="text-muted fw-bold">Latest Mixes</p>
+<div class="container my-5">
+  <h1 class="display-2 mb-5 fw-bold">Latest DJ G400 Mix</h1>
   {% for mix in mixes %}
-  <hr />
-  <div class="my-4 d-flex flex-row p-3">
-    <div class="col-4 rounded">
-      <a class="underline text-dark" href="{% url 'music_player' mix.title %}">
-        <img
-          style="max-height: 250px"
-          class="img-fluid rounded shadow"
-          src="{{ mix.image.url }}"
+  <div class="row d-flex flex-row align-items-center">
+    <div class="col-sm-12 col-md-3 rounded">
+      <a
+        target="_blank"
+        class="underline text-dark"
+        href="{% url 'music_player' mix.slug %}"
+      >
+        <img class="img-fluid rounded mb-3 shadow" src="{{ mix.image.url }}"
       /></a>
     </div>
-    <div class="col-8">
+    <div class="col-md-9 col-sm-12">
       <a
         class="underline text-dark mb-3"
-        href="{% url 'music_player' mix.title %}"
+        href="{% url 'music_player' mix.slug %}"
       >
         <h3>{{ mix.title}}</h3></a
       >
