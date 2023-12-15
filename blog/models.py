@@ -3,6 +3,7 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.utils.text import slugify
 from tinymce.models import HTMLField
+from django.urls import reverse
 
 
 class Category(models.Model):
@@ -71,3 +72,8 @@ class BlogPost(models.Model):
     class Meta:
         verbose_name = 'Blog Post'
         verbose_name_plural = 'Blog Posts'
+
+    def get_url(self):
+        return reverse("blog_detail", kwargs={
+            "slug": self.slug
+        })

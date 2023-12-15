@@ -10,13 +10,13 @@ class BlogForm(forms.ModelForm):
     class Meta:
         model = BlogPost
         fields = ("__all__")
-        exclude = ['created_at', 'slug', 'author']
+        exclude = ['created_at', 'slug', 'author',
+                   'is_published', 'published_at', 'tags']
         widgets = {
-            'title': forms.Select(attrs={'class': 'form-control'}),
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
             'content': forms.Textarea(attrs={'class': 'form-control'}),
             'summary': forms.Textarea(attrs={'class': 'form-control'}),
-            'categories': forms.Select(attrs={'class': 'form-control'}),
-            'tags': forms.Select(attrs={'class': 'form-control'}),
+            'categories': forms.CheckboxSelectMultiple(attrs={'class': 'form-control', 'placeholder': 'Select category'}),
             'youtube': forms.Textarea(attrs={'class': 'form-control'}),
             'meta_keywords': forms.Textarea(attrs={'class': 'form-control'}),
             'meta_description': forms.Textarea(attrs={'class': 'form-control'}),
