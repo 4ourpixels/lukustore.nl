@@ -468,7 +468,7 @@
       <div class="blog-post rounded border">
         <div class="blog-img d-block overflow-hidden position-relative">
           <img
-            src="{{ blog.image.url }}"
+            src="{{ blog.cover_image.url }}"
             class="img-fluid rounded-top"
             alt="{{ blog.name }}'s Image"
           />
@@ -477,14 +477,14 @@
           <small class="text-muted p float-right"> {{ blog.pub_date }}</small>
           <h4 class="mt-2">
             <a
-              href="{% url 'blog_detail' slug=blog.slug %}"
+              href="{{ blog.get_url }}"
               class="text-dark underline"
               >{{ blog.title }}</a
             >
           </h4>
-          <p class="text-muted mt-2">{{ blog.summary }}</p>
+          <p class="text-muted mt-2">{{ blog.summary|safe }}</p>
           <a
-            href="{% url 'blog_detail' slug=blog.slug %}"
+            href="{{ blog.get_url }}"
             class="text-dark mt-2 underline"
             >Read More... <i class="mdi mdi-chevron-right"></i
           ></a>
