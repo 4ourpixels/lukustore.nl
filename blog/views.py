@@ -5,6 +5,7 @@ from .forms import BlogForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from myapp.models import Stock
 # Create your views here.
 
 
@@ -25,6 +26,9 @@ def blog_detail(request, slug):
     title_tag = f"- {blog.title}"
     meta_description = f"- {blog.title}"
     meta_keywords = f"- {blog.meta_keywords}"
+    products = Stock.objects.all()[:4]
+    tags = [tag.name for tag in blog.get_tags]
+
     keywords = [
         item.strip()
         for item in blog.meta_keywords.split(',')
@@ -38,9 +42,11 @@ def blog_detail(request, slug):
         'blog': blog,
         'title_tag': title_tag,
         'blogs': blogs,
-        'keywords': keywords,
+        'products': products,
+        'tags': tags,
         'meta_description': meta_description,
         'meta_keywords': meta_keywords,
+        'keywords': keywords,
         'category_ss23': category_ss23,
     }
     return render(request, 'blog_detail.html', context)

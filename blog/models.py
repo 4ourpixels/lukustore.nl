@@ -77,3 +77,7 @@ class BlogPost(models.Model):
         return reverse("blog_detail", kwargs={
             "slug": self.slug
         })
+
+    @property
+    def get_tags(self):
+        return self.tags.all()
