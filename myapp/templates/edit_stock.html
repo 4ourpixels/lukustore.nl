@@ -1,41 +1,142 @@
 {% extends 'base.html' %} {% load static %} {% block body %}
-<div class="container-fluid py-5 bg-light">
+<div class="container-fluid pb-5 bg-light">
   <div class="row">
-    <h3 class="text-center mb-4">Update Stock</h3>
+    <h1 class="text-center my-4">Update Stock</h1>
     {% if success %}
-    <div
-      class="alert alert-success pb-5 my-5 display-6 text-center"
-      role="alert"
-    >
+    <div class="alert alert-success pb-5 text-center" role="alert">
       The stock updated successfully <i class="fa-solid fa-square-check"></i
       ><br /><br />
       <a href="{% url 'dashboard' %}" class="alert-link"
         ><i class="fa-solid fa-reply"></i> Back To Dashboard.</a
       >
     </div>
-    {% else %}
+    {% endif %}
+
     <div class="row justify-content-center align-items-start">
       <div class="col-sm-12 col-lg-6">
-        {% if stock.image_original_size %}
-        <img
-          src="{{ stock.image_original_size.url }}"
-          alt="{{ stock.item }}'s Image"
-          class="img-fluid rounded"
-        />
-        {% else %}
-        <img
-          src="{% static 'images/lukustorenl-banner.jpg' %}"
-          alt="{{ stock.item }}'s Image"
-          class="img-fluid rounded"
-        />
-        {% endif %}
+        <div class="row justify-content-center">
+          {% for image in images %} {% if image %}
+          <div class="col-sm-6 col-md-4">
+            <img
+              src="{{ image.url }}"
+              alt="{{ stock.item }}'s Image"
+              class="img-fluid rounded"
+            />
+          </div>
+          {% else %}
+          <div class="col-sm-6 col-md-4">
+            <img
+              src="{% static 'images/lukustorenl-banner.jpg' %}"
+              alt="{{ stock.item }}'s Image"
+              class="img-fluid rounded"
+            />
+          </div>
+          {% endif %} {% endfor %}
+        </div>
       </div>
       <div class="col-lg-6 col-sm-12">
-        <div class="card shadow border-0 p-5 mb-3">
+        <div class="card shadow border-0 p-3 mb-3">
           <div class="card-body">
             <form method="POST" enctype="multipart/form-data">
               <h4 class="mb-3">Details</h4>
-              {% csrf_token %} {{ form.as_p }}
+              {% csrf_token %}
+              <div class="row mb-3">
+                <div class="col-6 form-group">
+                  <label class="mb-2">Select brand:</label>
+                  {{ form.brand }}
+                </div>
+                <div class="col-6 form-group">
+                  <label class="mb-2">Type:</label>
+                  {{ form.type }}
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <div class="col-6 form-group">
+                  <label class="mb-2">Name of item:</label>
+                  {{ form.item }}
+                </div>
+                <div class="col-6 form-group">
+                  <label class="mb-2">Target:</label>
+                  {{ form.target }}
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <div class="col-3 form-group">
+                  <label class="mb-2">Amount F:</label>
+                  {{ form.amount_f }}
+                </div>
+                <div class="col-3 form-group">
+                  <label class="mb-2">Amount T:</label>
+                  {{ form.amount_t }}
+                </div>
+                <div class="col-3 form-group">
+                  <label class="mb-2">Selling Price:</label>
+                  {{ form.buying_price }}
+                </div>
+                <div class="col-3 form-group">
+                  <label class="mb-2">Selling Price:</label>
+                  {{ form.selling_price }}
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <div class="col-3 form-group">
+                  {{ form.online }}
+                  <label class="mb-2">Online</label>
+                </div>
+                <div class="col-3 form-group">
+                  {{ form.priority }}
+                  <label class="mb-2">Priority</label>
+                </div>
+                <div class="col-3 form-group">
+                  {{ form.possible_best_seller }}
+                  <label class="mb-2">Possible Best Seller</label>
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <div class="col-4 form-group">
+                  <label class="mb-2">Total Cost:</label>
+                  {{ form.total_cost }}
+                </div>
+                <div class="col-4 form-group">
+                  <label class="mb-2">Size:</label>
+                  {{ form.size }}
+                </div>
+                <div class="col-4 form-group">
+                  <label class="mb-2">Color:</label>
+                  {{ form.color }}
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <label class="mb-2">Similar Product Codes:</label>
+                {{ form.similar_products_codes }}
+              </div>
+
+              <div class="row mb-3 border-bottom pb-2">
+                <label class="mb-2">Image 1:</label>
+                {{ form.image_original_size }}
+              </div>
+              <div class="row mb-3 border-bottom pb-2">
+                <label class="mb-2">Image 2:</label>
+                {{ form.image_large_size }}
+              </div>
+              <div class="row mb-3 border-bottom pb-2">
+                <label class="mb-2">Image 3:</label>
+                {{ form.image_medium_size }}
+              </div>
+              <div class="row mb-3 border-bottom pb-2">
+                <label class="mb-2">Image 4:</label>
+                {{ form.image_thumbnail_size }}
+              </div>
+              <div class="row mb-3">
+                <label class="mb-2">Image 5:</label>
+                {{ form.thumbnail }}
+              </div>
+
               <button type="submit" class="btn me-2 btn-dark">
                 <i class="fa-solid fa-floppy-disk"></i> Save
               </button>
@@ -47,7 +148,6 @@
         </div>
       </div>
     </div>
-    {% endif %}
   </div>
 </div>
 {% endblock %}
