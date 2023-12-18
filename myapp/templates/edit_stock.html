@@ -97,43 +97,44 @@
               </div>
 
               <div class="row mb-3">
-                <div class="col-4 form-group">
+                <div class="col form-group">
                   <label class="mb-2">Total Cost:</label>
                   {{ form.total_cost }}
                 </div>
-                <div class="col-4 form-group">
+                <div class="col form-group">
                   <label class="mb-2">Size:</label>
                   {{ form.size }}
                 </div>
-                <div class="col-4 form-group">
+                <div class="col form-group">
+                  <label class="mb-2">In Stock:</label>
+                  {{ form.stock }}
+                </div>
+                <div class="col form-group">
+                  <label class="mb-2">Rating:</label>
+                  {{ form.rating }}
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <div class="col-6">
+                  <label class="mb-2">Similar Product Codes:</label>
+                  {{ form.similar_products_codes }}
+                </div>
+                <div class="col-6">
                   <label class="mb-2">Color:</label>
                   {{ form.color }}
                 </div>
               </div>
 
               <div class="row mb-3">
-                <label class="mb-2">Similar Product Codes:</label>
-                {{ form.similar_products_codes }}
+                <div class="col">
+                  <label class="mb-2">Product description:</label>
+                  {{ form.description }}
+                </div>
               </div>
 
-              <div class="row mb-3 border-bottom pb-2">
-                <label class="mb-2">Image 1:</label>
-                {{ form.image_original_size }}
-              </div>
-              <div class="row mb-3 border-bottom pb-2">
-                <label class="mb-2">Image 2:</label>
-                {{ form.image_large_size }}
-              </div>
-              <div class="row mb-3 border-bottom pb-2">
-                <label class="mb-2">Image 3:</label>
-                {{ form.image_medium_size }}
-              </div>
-              <div class="row mb-3 border-bottom pb-2">
-                <label class="mb-2">Image 4:</label>
-                {{ form.image_thumbnail_size }}
-              </div>
               <div class="row mb-3">
-                <label class="mb-2">Image 5:</label>
+                <label class="mb-2">Product thumbnail:</label>
                 {{ form.thumbnail }}
               </div>
 
