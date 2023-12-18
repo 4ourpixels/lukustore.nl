@@ -57,44 +57,39 @@ def edit_blog(request, slug):
     title_tag = f"- Update: {blog.title}"
 
     if request.method == 'POST':
-        form = BlogForm(request.POST, request.FILES, instance=blog)
+        edit_blog_form = BlogForm(request.POST, request.FILES, instance=blog)
 
-        if form.is_valid():
-            form.save()
-            return render(request, 'edit_blog.html', {
-                'form': form,
-                'success': True
-            })
+        if edit_blog_form.is_valid():
+            edit_blog_form.save()
+            messages.info(request, f'"{blog.title}" update was successful!')
+            return redirect('blog_detail', blog.slug)
         else:
             print("Errors occurred while uploading: ",
-                  form.errors)
+                  edit_blog_form.errors)
     else:
-        form = BlogForm(instance=blog)
+        edit_blog_form = BlogForm(instance=blog)
 
     context = {
-        'form': form,
+        'edit_blog_form': edit_blog_form,
         'title_tag': title_tag,
         'blog': blog,
     }
 
-    return render(request, 'edit_stock.html', context)
+    return render(request, 'edit_blog.html', context)
 
 
 @login_required(login_url='login')
 def add_blog(request):
-    title_tag = "Add new blog"
+    title_tag = "- Add new blog"
 
     if request.method == 'POST':
-        new_blog_form = BlogForm(request.POST)
+        new_blog_form = BlogForm(request.POST, request.FILES)
         if new_blog_form.is_valid():
             new_blog = new_blog_form.save(commit=False)
-            # Assuming you have a ForeignKey to User in your Blog model
             new_blog.author = request.user
             new_blog.save()
-            return render(request, 'add_blog.html', {
-                'form': BlogForm(),
-                'success': True
-            })
+            messages.info(request, f'"{new_blog.title}" was added!')
+            return redirect('blog_detail', new_blog.slug)
     else:
         new_blog_form = BlogForm()
 
