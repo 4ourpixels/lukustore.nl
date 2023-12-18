@@ -2,43 +2,34 @@
 
 <main id="top" class="container">
   <h1 class="display-1 text-bold fw-bolder text-center mb-4">Blogs</h1>
-  <div class="row mb-5">
+  <div class="text-center mb-5">
+    <img
+      style="height: 4rem; width: auto; object-fit: cover"
+      src="{% static 'images/blog/wwwke-lukustore.png' %}"
+      class="img-fluid"
+    />
+  </div>
+  <div
+    class="row row-col-2 justify-content-start align-items-center fadeInUp animate my-5"
+  >
     {% for blog in blogs %}
-    <div class="col-md-6">
-      <div
-        class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative"
-      >
-        <div class="col p-4 d-flex flex-column position-static">
-          <a
-            href="{% url 'blog_detail' slug=blog.slug %}"
-            class="text-black h4 underline mb-3"
+    <div class="col-md-6 col-sm-12 mb-3">
+      <div class="card">
+        <img
+          src="{{ blog.cover_image.url }}"
+          style="height: 300px; width: 100%; object-fit: cover"
+        />
+        <div class="card-body">
+          <a href="{{ blog.get_url }}" class="h5 unlink card-title"
             >{{ blog.title }}</a
           >
-          <p class="card-text mb-3">{{ blog.summary|safe|linebreaks }}</p>
-          <a
-            href="{% url 'blog_detail' slug=blog.slug %}"
-            class="underline text-black"
-            >Continue reading</a
-          >
-          <small class="my-1 text-muted footer"
-            ><i class="fa-solid fa-clock"></i> {{ blog.pub_date|date:"jS F Y" }}</small
-          >
-        </div>
-        <div class="col-auto d-none d-lg-block">
-          <img
-            style="object-fit: cover"
-            class="bd-placeholder-img"
-            width="200"
-            height="250"
-            src="{{ blog.cover_image.url }}"
-            alt="{{ blog.name }}"
-            width="200"
-            height="250"
-          />
+          <p class="card-text">{{ blog.summary|safe }}</p>
+          <a href="{{ blog.get_url }}" class="unlink">Continue reading...</a>
+          <small class="text-muted float-end">{{ blog.created_at|date }}</small>
         </div>
       </div>
     </div>
     {% endfor %}
+  </div>
 </main>
-
 {% endblock %}

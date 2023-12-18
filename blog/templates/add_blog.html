@@ -3,7 +3,14 @@
   <div class="row">
     {% if success %}
     <div class="alert alert-success" role="alert">
-      The new blog added successfully.
+      <h4 class="text-center">
+        The new blog added successfully.
+        <span
+          ><a href="{% url 'blog_list' %}" class="fw-bold text-center underline"
+            >View Blogs</a
+          ></span
+        >
+      </h4>
     </div>
     {% else %}
     <div class="row justify-content-center">
@@ -24,24 +31,13 @@
               enctype="multipart/form-data"
             >
               {% csrf_token %}
-
-                {% for field in  new_blog_form %}
-                
-                <!-- blog title -->
-                <div class="form-group m-3">
-                  <label class="form-label">{{ field.name|title }}</label>
-                 <span> {{ field }}</span>
-                </div>
-                {% endfor %}
-
-                  <button
-                    type="submit"
-                    class="btn btn-outline-dark btn-lg w-100 my-4"
-                  >
-                    Submit
-                  </button>
-                </div>
-              </div>
+              <span>{{ new_blog_form.as_p }}</span>
+              <button
+                type="submit"
+                class="btn btn-outline-dark btn-lg w-100 my-4"
+              >
+                Submit
+              </button>
             </form>
           </div>
         </div>
@@ -50,11 +46,4 @@
     {% endif %}
   </div>
 </div>
-<script>
-  var form_fields = document.getElementsByTagName("input");
-
-  for (var field in form_fields) {
-    form_fields[field].className.add("form-control")
-  }
-</script>
 {% endblock %}

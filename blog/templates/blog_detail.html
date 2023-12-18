@@ -17,9 +17,26 @@
           <!-- Title -->
           <div class="row fadeInUp animate" data-delay="1000">
             <h1>{{ blog.title }}</h1>
-            <p>Posted by: {{ blog.author|title }} in {{ blog.tags.all.0 }}</p>
+            <p>
+              Posted by: <span>{{ blog.author.first_name|title }}</span>
+              <span>{{ blog.author.last_name }}</span> on
+              <span>{{ blog.updated_at|date }}</span>
+            </p>
+            {% if request.user.is_authenticated and user.is_staff %}
+            <span>
+              <a
+                href="{% url 'edit_blog' slug=blog.slug %}"
+                class="btn mb-3 btn-info"
+                >Edit blog</a
+              ></span
+            >
+            {% endif %}
           </div>
-          <article class="row fadeInUp animate">
+          <article
+            id="blog-article"
+            style="max-width: fit-content"
+            class="row fadeInUp animate"
+          >
             {% if blog.youtube %}
             <iframe
               style="width: 100%; height: 50vh"
@@ -29,22 +46,24 @@
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowfullscreen
             ></iframe>
-            {% else %}
-            <img src="{{ blog.cover_image.url }}" class="img-fluid h-50" />
             {% endif %}
-            <h3 class="my-3 fw-bold">{{ blog.summary|safe|linebreaks }}</h3>
+            <em class="my-3 border-bottom pb-3 h5"
+              >{{ blog.summary|safe|linebreaks }}</em
+            >
             <p>{{ blog.content|safe|linebreaks }}</p>
+            <img src="{{ blog.cover_image.url }}" class="img-fluid mb-5 h-50" />
           </article>
         </div>
       </div>
-      <div class="col-sm-12 col-lg-4 mb-5">
+      <div class="col-sm-12 col-lg-4 mb-5 position-sticky">
         <div class="container m-0 p-0">
           <h3 class="mb-3">Read previous blogs</h3>
           {% for blog in blogs %}
           <a
+            data-delay="1000"
             href="{{ blog.get_url }}"
             style="text-decoration: none; color: inherit"
-            class="row justify-conten-center align-items-center mb-3 border-top pt-3"
+            class="row fadeInUp animate justify-conten-center align-items-center mb-3 border-top pt-3"
           >
             <div class="col-4">
               <img
@@ -56,7 +75,7 @@
             <div class="col-8">
               <p class="fw-bold">{{ blog.title }}</p>
               <small class="text-muted">
-                {{ blog.published_at|date:"jS F Y" }}
+                {{ blog.created_at|date:"jS F Y" }}
               </small>
             </div>
           </a>
@@ -84,5 +103,18 @@
       cover.style.animationPlayState = "running"; // Start the animation
     });
   });
+</script>
+
+<script>
+  // Assuming the article has a specific ID, let's say "blog-article"
+  var article = document.getElementById("blog-article");
+
+  if (article) {
+    var img_elements = article.getElementsByTagName("img");
+
+    for (var i = 0; i < img_elements.length; i++) {
+      img_elements[i].classList.add("img-fluid");
+    }
+  }
 </script>
 {% endblock %}
