@@ -246,6 +246,8 @@ class Product(models.Model):
         return self.name
 
 
+
+
 class Stock(models.Model):
     brand = models.ForeignKey(
         Brand,
@@ -287,6 +289,11 @@ class Stock(models.Model):
 
     product_code = models.CharField(max_length=10, null=True, blank=True)
     similar_products_codes = models.CharField(max_length=300, blank=True)
+
+    description = models.TextField(null=True, blank=True)
+    stock = models.IntegerField(default=0, null=True, blank=True)
+    rating = models.IntegerField(blank=True, default=0)
+    digital = models.BooleanField(default=False, null=True, blank=True)
 
     image_original_size = models.ImageField(
         null=True,
@@ -347,6 +354,27 @@ class Stock(models.Model):
         return f"Product Code: #ls0{self.pk} | {self.item}"
 
 
+class StockPhoto(models.Model):
+    name = models.CharField(max_length=200, null=True, blank=True)
+    product_code = models.TextField(null=True, blank=True)
+    similar_products_codes = models.CharField(max_length=300, blank=True)
+    brand = models.ForeignKey(
+        Brand, on_delete=models.SET_NULL, null=True, blank=True)
+
+    image = models.ImageField(
+        null=False,
+        blank=False,
+        upload_to="products/",
+        default='image.jpg'
+    )
+    slug = models.SlugField(null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.name} - #ls0{self.pk}"
 # ORDER
 
 
