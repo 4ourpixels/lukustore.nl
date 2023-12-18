@@ -12,8 +12,6 @@ ALLOWED_HOSTS = []
 
 
 INSTALLED_APPS = [
-    "blog",
-    "tinymce",
     "myapp",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -22,6 +20,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.humanize",
+    "blog",
+    "django_summernote",
 ]
 
 MIDDLEWARE = [
