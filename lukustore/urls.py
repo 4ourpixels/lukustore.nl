@@ -3,8 +3,8 @@ from django.urls import path, include
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("myapp.urls")),
-    path('tinymce/', include('tinymce.urls')),
     path('blog/', include('blog.urls')),
+    path('summernote/', include('django_summernote.urls')),
 ]
 # Configure admin titles
 admin.site.site_header = "Luku Store.nl Admin"
