@@ -1081,56 +1081,32 @@ def add_stock(request):
 
 # Stock Logic End
 
+def add_stock_photo(request):
+    brands = Brand.objects.all()
 
-# Blog Logic Start
-# def edit_blog(request, slug):
-#     stock = get_object_or_404(Stock, slug=slug)
-#     title_tag = f"- Update: {stock.item}"
+    if request.method == 'POST':
+        data = request.POST
+        images = request.FILES.getlist('images')
 
-#     if request.method == 'POST':
-#         form = StockForm(request.POST, request.FILES, instance=stock)
+        if data['brand'] != 'none':
+            brand = Brand.objects.get(slug=data['brand'])
+        elif data['brand_new'] != '':
+            brand, created = Brand.objects.get_or_create(
+                name=data['brand_new'])
+        else:
+            brand = None
 
-#         if form.is_valid():
-#             form.save()
-#             return render(request, 'edit_blog.html', {
-#                 'form': form,
-#                 'success': True
-#             })
-#         else:
-#             print("Errors occurred while uploading: ",
-#                   form.errors)
-#     else:
-#         form = StockForm(instance=stock)
+        for image in images:
+            photo = StockPhoto.objects.create(
+                name=data['name'],
+                brand=brand,
+                product_code=data['product_code'],
+                similar_products_codes=data['similar_products_codes'],
+                image=image,
+            )
+        return redirect('dashboard')
 
-#     context = {
-#         'form': form,
-#         'images': images,
-#         'title_tag': title_tag,
-#         'stock': stock,
-#     }
-
-#     return render(request, 'edit_blog.html', context)
-
-
-# def add_blog(request):
-#     if request.method == 'POST':
-#         form = StockForm(request.POST)
-#         if form.is_valid():
-#             # new_title = form.cleaned_data['title']
-#             new_stock = Stock(
-#                 # title=new_title,
-
-#             )
-
-#             new_stock.save()
-#             return render(request, 'add_blog.html', {
-#                 'form': StockForm(),
-#                 'success': True
-#             })
-#     else:
-#         form = StockForm()
-#     return render(request, 'add_blog.html', {
-#         'form': StockForm()
-#     })
-
-# Blog Logic End
+    context = {
+        'brands': brands,
+    }
+    return render(request, 'add_stock_photo.html', context)
