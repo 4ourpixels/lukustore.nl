@@ -10,7 +10,7 @@ from myapp.models import Stock
 
 
 def blog_list(request):
-    title_tag = f"- Blogs"
+    title_tag = "Blogs"
     blogs = BlogPost.objects.filter(is_published=True)
 
     context = {
@@ -23,9 +23,9 @@ def blog_list(request):
 def blog_detail(request, slug):
     blogs = BlogPost.objects.order_by('-pk')
     blog = get_object_or_404(BlogPost, slug=slug)
-    title_tag = f"- {blog.title}"
-    meta_description = f"- {blog.title}"
-    meta_keywords = f"- {blog.meta_keywords}"
+    title_tag = blog.title
+    meta_description = blog.summary
+    meta_keywords = blog.meta_keywords
     products = Stock.objects.all()[:4]
     tags = [tag.name for tag in blog.get_tags]
 
@@ -54,7 +54,7 @@ def blog_detail(request, slug):
 
 def edit_blog(request, slug):
     blog = get_object_or_404(BlogPost, slug=slug)
-    title_tag = f"- Update: {blog.title}"
+    title_tag = f"Update: {blog.title}"
 
     if request.method == 'POST':
         edit_blog_form = BlogForm(request.POST, request.FILES, instance=blog)
@@ -80,7 +80,7 @@ def edit_blog(request, slug):
 
 @login_required(login_url='login')
 def add_blog(request):
-    title_tag = "- Add new blog"
+    title_tag = "Add new blog"
 
     if request.method == 'POST':
         new_blog_form = BlogForm(request.POST, request.FILES)

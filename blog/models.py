@@ -3,6 +3,7 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.utils.text import slugify
 from django.urls import reverse
+from django.templatetags.static import static
 
 
 class Category(models.Model):
@@ -77,6 +78,16 @@ class BlogPost(models.Model):
     @property
     def get_tags(self):
         return self.tags.all()
+
+    def get_og_image_url(self):
+        # Return the URL of the cover image
+        if self.cover_image:
+            return self.cover_image.url
+        else:
+            # If no cover image is set, use the default image from the static folder
+            # Replace with the path to your default image in the static folder
+            default_image_path = 'images/lukustore-thumbnail.jpg'
+            return static(default_image_path)
 
 
 class BlogPhoto(models.Model):
