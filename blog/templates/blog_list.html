@@ -15,14 +15,16 @@
     {% for blog in blogs %}
     <div class="col-md-6 col-sm-12 mb-3">
       <div class="card">
-        <img
-          src="{{ blog.cover_image.url }}"
-          style="height: 300px; width: 100%; object-fit: cover"
-        />
-        <div class="card-body">
-          <a href="{{ blog.get_url }}" class="h5 unlink card-title"
-            >{{ blog.title }}</a
-          >
+        <a href="{{ blog.get_url }}" class="unlink">
+          <figure class="figure-card">
+            <img
+              src="{{ blog.cover_image.url }}"
+              style="height: 300px; width: 100%; object-fit: cover"
+            />
+            <figcaption>{{ blog.title }}</figcaption>
+          </figure>
+        </a>
+        <div class="card-body mb-3">
           <p class="card-text">{{ blog.summary|safe }}</p>
           <a href="{{ blog.get_url }}" class="unlink">Continue reading...</a>
           <small class="text-muted float-end">{{ blog.created_at|date }}</small>
