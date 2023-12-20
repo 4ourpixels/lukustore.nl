@@ -1,1 +1,1 @@
-Pip install django and pillow
+Pip install django, summernote and pillow
