@@ -359,45 +359,12 @@ h3 {
   color: #000;
 }
 /* Dashboard End */
-.invert-hover {
-  background-color: #000;
-  color: #9e9e9e;
-  cursor: pointer;
+.unlink {
+  text-decoration: none;
+  color: #000;
 }
-.invert-hover:hover {
-  background-color: #121212;
-  color: #ffffff;
-}
-@keyframes zoomOut {
-  from {
-    transform: scale(1.2);
-  }
-  to {
-    transform: scale(1);
-  }
-}
-
-.overflow-hidden {
-  overflow: hidden; /* Ensure the overflow is hidden for smooth animation */
-}
-
-.zoomOut {
-  animation: zoomOut 1s ease-in-out; /* You can adjust the duration and timing function */
-  transform-origin: center center; /* Set the transform origin to the center for the zoom effect */
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px); /* Adjust the initial position */
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-.fadeInUp {
-  opacity: 1; /* Initially set opacity to 0 */
-  animation: fadeInUp 1s ease-out; /* You can adjust the duration and timing function */
-  transform-origin: center bottom; /* Set the transform origin for the fadeInUp effect */
+.unlink:hover {
+  text-decoration: none;
+  color: #000;
+  font-weight: 600;
 }
