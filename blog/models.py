@@ -17,6 +17,9 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    def __str__(self):
+        return self.name
+
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         super().save(*args, **kwargs)
@@ -24,7 +27,7 @@ class Category(models.Model):
 
 class Tag(models.Model):
     name = models.CharField(max_length=100)
-    slug = models.SlugField(max_length=100, unique=True)
+    slug = models.SlugField(max_length=100, unique=True, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -43,10 +46,11 @@ class BlogPost(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
     published_at = models.DateTimeField(blank=True, null=True)
-    is_published = models.BooleanField(default=True)
+    is_published = models.BooleanField(default=False)
     category = models.ForeignKey(
         Category, on_delete=models.SET_NULL, null=True, blank=True)
-    tags = models.ManyToManyField(Tag)
+    tag = models.ForeignKey(
+        Tag, on_delete=models.CASCADE, blank=True, null=True)
     slug = models.SlugField(unique=True, null=True, blank=True)
     youtube = models.TextField(blank=True, null=True)
     meta_keywords = models.TextField(null=True, blank=True)
@@ -70,22 +74,22 @@ class BlogPost(models.Model):
         verbose_name = 'Blog Post'
         verbose_name_plural = 'Blog Posts'
 
-    def get_url(self):
+    @property
+    def get_tag_slug(self):
+        return self.tag.slug
+
+    @property
+    def get_tag_url(self):
         return reverse("blog_detail", kwargs={
-            "slug": self.slug
+            "tag_slug": self.tag.slug,
+            "slug": self.slug,
         })
 
     @property
-    def get_tags(self):
-        return self.tags.all()
-
     def get_og_image_url(self):
-        # Return the URL of the cover image
         if self.cover_image:
             return self.cover_image.url
         else:
-            # If no cover image is set, use the default image from the static folder
-            # Replace with the path to your default image in the static folder
             default_image_path = 'images/lukustore-thumbnail.jpg'
             return static(default_image_path)
 

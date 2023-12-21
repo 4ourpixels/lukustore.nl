@@ -5,29 +5,29 @@ from .forms import BlogForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from myapp.models import Stock
+from myapp.models import Stock, Brand
 # Create your views here.
+brands = Brand.objects.all()
+blogs = BlogPost.objects.order_by('-pk')
 
 
 def blog_list(request):
     title_tag = "Blogs"
-    blogs = BlogPost.objects.filter(is_published=True)
 
     context = {
         'blogs': blogs,
+        'brands': brands,
         'title_tag': title_tag,
     }
     return render(request, 'blog_list.html', context)
 
 
-def blog_detail(request, slug):
-    blogs = BlogPost.objects.order_by('-pk')
-    blog = get_object_or_404(BlogPost, slug=slug)
+def blog_detail(request, tag_slug, slug):
+    blog = get_object_or_404(BlogPost, slug=slug, tag__slug=tag_slug)
     title_tag = blog.title
     meta_description = blog.summary
     meta_keywords = blog.meta_keywords
     products = Stock.objects.all()[:4]
-    tags = [tag.name for tag in blog.get_tags]
 
     keywords = [
         item.strip()
@@ -40,10 +40,10 @@ def blog_detail(request, slug):
 
     context = {
         'blog': blog,
+        'brands': brands,
         'title_tag': title_tag,
         'blogs': blogs,
         'products': products,
-        'tags': tags,
         'meta_description': meta_description,
         'meta_keywords': meta_keywords,
         'keywords': keywords,
@@ -52,8 +52,8 @@ def blog_detail(request, slug):
     return render(request, 'blog_detail.html', context)
 
 
-def edit_blog(request, slug):
-    blog = get_object_or_404(BlogPost, slug=slug)
+def edit_blog(request, tag_slug, slug):
+    blog = get_object_or_404(BlogPost, slug=slug, tag__slug=tag_slug)
     title_tag = f"Update: {blog.title}"
 
     if request.method == 'POST':
@@ -73,6 +73,8 @@ def edit_blog(request, slug):
         'edit_blog_form': edit_blog_form,
         'title_tag': title_tag,
         'blog': blog,
+        'blogs': blogs,
+        'brands': brands,
     }
 
     return render(request, 'edit_blog.html', context)
@@ -95,6 +97,7 @@ def add_blog(request):
 
     context = {
         'title_tag': title_tag,
+        'brands': brands,
         'new_blog_form': new_blog_form
     }
 
