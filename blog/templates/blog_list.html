@@ -1,5 +1,4 @@
 {% extends 'base.html' %} {% load static %} {% block body %}
-
 <main id="top" class="container">
   <h1 class="display-1 text-bold fw-bolder text-center mb-4">Blogs</h1>
   <div class="text-center mb-5">
@@ -15,7 +14,7 @@
     {% for blog in blogs %}
     <div class="col-md-6 col-sm-12 mb-3">
       <div class="card">
-        <a href="{{ blog.get_url }}" class="unlink">
+        <a href="{{ blog.get_tag_url }}" class="unlink">
           <figure class="figure-card">
             <img
               src="{{ blog.cover_image.url }}"
@@ -25,8 +24,10 @@
           </figure>
         </a>
         <div class="card-body mb-3">
-          <p class="card-text">{{ blog.summary|safe }}</p>
-          <a href="{{ blog.get_url }}" class="unlink">Continue reading...</a>
+          <p class="card-text">{{ blog.summary }}</p>
+          <a href="{{ blog.get_tag_url }}" class="btn btn-outline-dark"
+            >Continue reading...</a
+          >
           <small class="text-muted float-end">{{ blog.created_at|date }}</small>
         </div>
       </div>
@@ -34,4 +35,5 @@
     {% endfor %}
   </div>
 </main>
+
 {% endblock %}
