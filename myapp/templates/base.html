@@ -2,40 +2,22 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <!-- Google tag (gtag.js) -->
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-SS4YD6T3BW"
-    ></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-
-      gtag("config", "G-SS4YD6T3BW");
-    </script>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "url": "https://www.lukustore.nl",
-        "logo": "{% static 'images/lukustore-thumbnail.jpg' %}"
-      }
-    </script>
     <!-- Seo Tags Start -->
-    <title>Luku Store.nl {{ title_tag }}</title>
+    <title>{{ title_tag }} - Luku Store.nl</title>
     <meta property="og:title" content="{{ tag_title }}" />
     <meta name="keywords" content="{{ meta_keywords }}" />
     <meta property="og:description" content="{{ meta_description }}" />
+    {% if blog.get_og_image_url %}
+    <meta property="og:image" content="{{ blog.get_og_image_url }}" />
+    {% else %}
     <meta
       property="og:image"
       content="{% static 'images/lukustore-thumbnail.jpg' %}"
     />
+    {% endif %}
     <meta property="og:url" content="lukustore.nl" />
     <meta property="og:type" content="website" />
     <meta name="robots" content="index, follow" />
@@ -46,31 +28,37 @@
     <link
       rel="icon"
       type="image/x-icon"
-      href="{% static 'images/favicon.ico' %}"
-    />
-
-    <link
-      rel="icon"
-      type="image/x-icon"
-      href="{% static 'images/favicon.ico' %}"
+      href="{% static 'images/logo/favicon.ico' %}"
     />
 
     <link
       rel="apple-touch-icon"
       sizes="180x180"
-      href="{% static 'images/apple-touch-icon.png' %}"
+      href="{% static 'images/logo/apple-touch-icon.png' %}"
     />
     <link
       rel="icon"
       type="image/png"
       sizes="32x32"
-      href="{% static 'images/favicon-32x32.png' %}"
+      href="{% static 'images/logo/favicon-32x32.png' %}"
     />
     <link
       rel="icon"
       type="image/png"
       sizes="16x16"
-      href="{% static 'images/favicon-16x16.png' %}"
+      href="{% static 'images/logo/favicon-16x16.png' %}"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="{% static 'images/logo/android-chrome-512x512.png' %}"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="{% static 'images/logo/android-chrome-192x192.png' %}"
     />
 
     <link
@@ -108,14 +96,6 @@
       href="{% static 'css/index.css' %}"
     />
     <!-- END OF MAIN CSS -->
-
-    <!-- Animation css -->
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="{% static 'css/animation.css' %}"
-    />
-    <!-- Animation css -->
 
     <!-- Javascript Cart -->
     <script type="text/javascript">
@@ -170,13 +150,23 @@
   </head>
   <body id="top">
     <!-- NAVIGATION BAR STARTS HERE ----------------------------->
-    <nav class="navbar sticky-top navbar-expand-sm mb-3 bg-white w-auto">
+    <nav class="navbar sticky-top navbar-expand-sm mb-1 bg-white w-auto">
       <div class="container-fluid mx-3">
+        {% if blog.get_tag_slug == "who-what-where-kenya" %}
         <a class="navbar-brand" href="{% url 'index' %}"
           ><img
+            id="logo"
+            src="{% static 'images/logo/WWWKE-Logo-Black.svg' %}"
+            height="40"
+        /></a>
+        {% else %}
+        <a class="navbar-brand" href="{% url 'index' %}"
+          ><img
+            id="logo"
             src="{% static 'images/logo/lukustore.nl-logo.svg' %}"
             height="40"
         /></a>
+        {% endif %}
         <span>
           <button
             class="navbar-toggler border-muted"
@@ -235,9 +225,7 @@
                   </li>
                   {% for blog in blogs %}
                   <li class="border-bottom">
-                    <a
-                      class="fw-bold underline"
-                      href="{% url 'blog_detail' slug=blog.slug %}"
+                    <a class="fw-bold underline" href="{{ blog.get_tag_url }}"
                       >{{ blog.title }}</a
                     >
                   </li>
@@ -249,7 +237,7 @@
               <div class="dropdown">
                 <a
                   class="dropdown-toggle nav-link fw-bold text-dark"
-                  href="{% url 'blog_list' %}"
+                  href="{% url 'brand_list' %}"
                   role="button"
                   id="dropdownBrandsLink"
                   data-bs-toggle="dropdown"
@@ -301,7 +289,7 @@
               <div class="dropdown">
                 <a
                   class="dropdown-toggle nav-link fw-bold text-dark"
-                  href="{% url 'blog_list' %}"
+                  href="{% url 'dashboard' %}"
                   role="button"
                   id="dropdownBrandsLink"
                   data-bs-toggle="dropdown"
@@ -415,7 +403,7 @@
     </nav>
     <!-- End of navigation bar -->
     {% if messages %} {% for message in messages %}
-    <div class="container p-0">
+    <div class="container my-5 p-0">
       <div
         id="alert-dark"
         class="alert alert-dark alert-dismissable fade show"
@@ -462,7 +450,7 @@
           <ul class="nav flex-column">
             <li class="nav-item mb-2">
               <a
-                href="{% url 'blog_detail' slug='ss23-luku-book' %}"
+                href="{% url 'blog_detail' tag_slug='luku-store-nl' slug='ss23-luku-book' %}"
                 class="nav-link p-0 text-muted"
                 >Luku Book</a
               >
@@ -540,12 +528,13 @@
       </div>
 
       <div class="small text-center py-4 border-top">
+        <a class="text-white underline me-5">KvK: 83071423</a>
         <a
           class="text-white underline me-5"
           id="footer-year"
           href="{% url 'lukufam' %}"
         ></a>
-        <a class="text-white underline" href="https://www.4ourpixels.com"
+        <a class="text-white underline" href="http://www.4ourpixels.com"
           >Powered by Four Pixels</a
         >
       </div>
