@@ -1,0 +1,36 @@
+<section class="container my-5">
+  <article class="d-flex justify-content-center">
+    <div class="img-fluid mb-5">
+      <video height="700" width="100%" autoplay loop muted>
+        <source src="{{ home_video_2.video_file.url }}" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  </article>
+</section>
+
+<section class="container">
+  <div class="row d-flex justify-content-center align-items-center">
+    <video
+      height="700"
+      width="100%"
+      class="col-lg-6 col-sm-12 mb-5"
+      autoplay
+      loop
+      muted
+    >
+      <source src="{{ video.video_file.url }}" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+    <article class="col-lg-6 col-sm-12 text-center">
+      <span>BEAUTIFUL and BRUTAL</span>
+      <h1 class="fw-bold display-1">Nairobi Nnoize</h1>
+      <h5><small>Exclusive Drop</small></h5>
+      <a
+        class="btn btn-dark mt-4"
+        href="{% url 'brand_detail' slug='nairobi-nnoize' %}"
+        >Shop Now</a
+      >
+    </article>
+  </div>
+</section>

@@ -1,0 +1,248 @@
+{% load static %}
+<nav class="navbar sticky-top navbar-expand-sm bg-white w-auto">
+  <div class="container-fluid mx-3">
+    {% if blog.get_tag_slug == "who-what-where-kenya" %}
+    <a class="navbar-brand" href="{% url 'index' %}"
+      ><img
+        id="logo"
+        src="{% static 'images/logo/WWWKE-Logo-Black.svg' %}"
+        height="40"
+    /></a>
+    {% else %}
+    <a class="navbar-brand" href="{% url 'index' %}"
+      ><img
+        id="logo"
+        src="{% static 'images/logo/lukustore.nl-logo.svg' %}"
+        height="40"
+    /></a>
+    {% endif %}
+    <span>
+      <button
+        class="navbar-toggler border-muted"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+        id="navButton"
+      >
+        <a style="text-decoration: none" class="text-muted" href="#!">
+          <i class="fa-solid fa-cart-shopping mx-2"></i>{{ cartItems }}
+        </a>
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </span>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-lg-0">
+        <li class="nav-item">
+          <a
+            id="nav-home"
+            class="nav-link fw-bold text-dark"
+            href="{% url 'index' %}"
+            >Home</a
+          >
+        </li>
+        <li class="nav-item fw-bold">
+          <a
+            id="nav-shop"
+            class="nav-link fw-bold text-dark"
+            href="{% url 'shop' %}"
+            >Shop</a
+          >
+        </li>
+        <li class="nav-item">
+          <div class="dropdown">
+            <a
+              class="dropdown-toggle nav-link fw-bold text-dark"
+              href="{% url 'blog_list' %}"
+              role="button"
+              id="dropdownBlogsLink"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Blogs
+            </a>
+            <ul
+              class="dropdown-menu dropdown px-3"
+              aria-labelledby="dropdownBlogsLink"
+            >
+              <li class="border-bottom">
+                <a class="fw-bold underline" href="{% url 'blog_list' %}"
+                  >All Blogs</a
+                >
+              </li>
+              {% for blog in blogs %}
+              <li class="border-bottom">
+                <a class="fw-bold underline" href="{{ blog.get_tag_url }}"
+                  >{{ blog.title }}</a
+                >
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </li>
+        <li class="nav-item">
+          <div class="dropdown">
+            <a
+              class="dropdown-toggle nav-link fw-bold text-dark"
+              href="{% url 'brand_list' %}"
+              role="button"
+              id="dropdownBrandsLink"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Brands
+            </a>
+            <ul
+              class="dropdown-menu dropdown px-3"
+              aria-labelledby="dropdownBrandsLink"
+            >
+              <li class="border-bottom">
+                <a class="fw-bold underline" href="{% url 'brand_list'  %}"
+                  >All Brands</a
+                >
+              </li>
+              {% for brand in brands %}
+              <li class="border-bottom">
+                <a
+                  class="fw-bold underline"
+                  href="{% url 'brand_detail' slug=brand.slug %}"
+                  >{{ brand.name }}</a
+                >
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a
+            id="nav-about"
+            class="nav-link fw-bold text-dark"
+            href="{% url 'lukufam' %}"
+            >About</a
+          >
+        </li>
+        {% if request.user.is_authenticated and user.is_staff %}
+        <li class="nav-item">
+          <a
+            id="nav-about"
+            class="nav-link fw-bold text-dark"
+            href="{% url 'add_blog' %}"
+            >Add Blog</a
+          >
+          {% endif %}
+        </li>
+        {% if request.user.is_authenticated and user.is_superuser %}
+        <li class="nav-item">
+          <div class="dropdown">
+            <a
+              class="dropdown-toggle nav-link fw-bold text-dark"
+              href="{% url 'dashboard' %}"
+              role="button"
+              id="dropdownBrandsLink"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Controls
+            </a>
+            <ul
+              class="dropdown-menu dropdown px-3"
+              aria-labelledby="dropdownBrandsLink"
+            >
+              <li>
+                <a
+                  class="fw-bold dropdown-item border-bottom underline"
+                  href="/admin/"
+                  >Admin</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item" href="{% url 'dashboard' %}"
+                  >Dashboard</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item" href="{% url 'logout' %}">Log Out</a>
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="https://analytics.google.com/analytics/web/?authuser=3#/p415088185/reports/intelligenthome"
+                  >Google Analytics</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item" href="{% url 'add_blog' %}"
+                  >Add Blog</a
+                >
+              </li>
+            </ul>
+          </div>
+        </li>
+        {% endif %}
+      </ul>
+      <div class="d-flex soci">
+        <span>
+          <a href="{% url 'cart' %}">
+            <i class="fa-solid fa-cart-shopping">
+              <span class="cartItems">{{ cartItems }}</span></i
+            >
+          </a>
+        </span>
+        {% if user.is_authenticated %} {% if user.customer %}
+        <div class="dropdown">
+          <button
+            style="background: none; border: none"
+            class="dropdown-toggle"
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            {% if user.customer.profile_pic %}
+            <img
+              style="
+                object-fit: cover;
+                height: 20px;
+                width: 20px;
+                border-radius: 25px;
+              "
+              src="{{ request.user.customer.profile_pic.url }}"
+            />
+            {% else %}
+            <img
+              style="
+                object-fit: cover;
+                height: 20px;
+                width: 20px;
+                border-radius: 25px;
+              "
+              src="{{ user.customer.image.url }}"
+            />
+            {% endif %}
+          </button>
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" href="{% url 'account' %}">Account</a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'logout' %}">Log Out</a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'cart' %}">Cart</a>
+            </li>
+          </ul>
+        </div>
+        {% endif %} {% endif %} {% if user.is_authenticated %}
+        <span class="hidden"></span>
+        {% else %}
+        <span>
+          <a href="{% url 'register' %}">
+            <i class="fa-solid fa-user"></i>
+          </a>
+        </span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</nav>

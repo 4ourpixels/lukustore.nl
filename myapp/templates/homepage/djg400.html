@@ -1,0 +1,28 @@
+<section class="container">
+  <h1 class="text-center title">Music Mix</h1>
+  <p class="mb-5 text-center">Latest mixes from DJ G400, Nairobi 🇰🇪</p>
+  <div
+    class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-4 row-cols-xl-4 justify-content-center"
+  >
+    {% for mix in mixes|slice:'1:5' %}
+    <article class="col mb-5 wrapper-zoom">
+      <img
+        height="150"
+        class="img-fluid rounded mb-3"
+        style="object-fit: cover"
+        src="{{ mix.image.url }}"
+        alt="{{ mix.title }}"
+      />
+      <div class="text-start">
+        <a
+          href="{% url 'music_player' slug=mix.slug %}"
+          class="text-black fw-bold underline my-2"
+          >{{ mix.title }}</a
+        >
+        <h6 class="small">{{ mix.description|truncatechars:25 }}</h6>
+        <h6 class="text-black my-2">Genre: {{ mix.genre }}</h6>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>

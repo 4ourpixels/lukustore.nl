@@ -1,15 +1,19 @@
 {% extends 'base.html' %} {% load static %} {% block body %} {% if items %}
-<div class="container my-5">
-  <nav style="--bs-breadcrumb-divider: '>'" aria-label="breadcrumb">
+<main class="container">
+  <nav
+    class="mt-2"
+    style="--bs-breadcrumb-divider: '>'"
+    aria-label="breadcrumb"
+  >
     <ol class="breadcrumb">
       <li class="breadcrumb-item">
-        <a class="text-dark underline" href="{% url 'gallery' %}">Back</a>
+        <a class="text-dark underline h2" href="{% url 'gallery' %}">Back</a>
       </li>
-      <li class="breadcrumb-item active" aria-current="page">Cart</li>
+      <li class="breadcrumb-item active h2" aria-current="page">Cart</li>
     </ol>
   </nav>
-  <div class="row">
-    <div class="col-md-9 col-lg-9 col-sm-12">
+  <section class="row">
+    <article class="col-md-9 col-lg-9 col-sm-12">
       <div class="table-responsive">
         <table class="table">
           <thead>
@@ -68,8 +72,8 @@
           </tbody>
         </table>
       </div>
-    </div>
-    <div class="col-md-3 col-lg-3 col-sm-12 p-3 border rounded">
+    </article>
+    <article class="col-md-3 col-lg-3 col-sm-12 p-3 border rounded">
       <div class="d-flex justify-content-between">
         <span class="small text-muted">Subtotal</span>
         <span class="fw-bold small">€ {{ order.get_cart_total }}</span>
@@ -86,20 +90,21 @@
       <a class="btn btn-dark w-100 btn-lg mt-4" href="{% url 'checkout' %}"
         >Checkout now</a
       >
-    </div>
-  </div>
-</div>
-{% else %}
-<div class="container py-5">
-  <div class="row justify-content-center">
-    <h1 class="display-5 text-center my-4 fw-bold">
-      Looks like your cart is empty...
-    </h1>
-    <img
-      style="height: 35vh"
-      src="{% static 'images/cart/undraw_empty_cart_co35.svg' %}"
-      class="img-fluid"
-    />
-  </div>
-</div>
-{% endif %} {% endblock %}
+    </article>
+  </section>
+  {% else %}
+  <section class="container my-5">
+    <article class="row justify-content-center">
+      <h1 class="display-5 text-center fw-bold">
+        Looks like your cart is empty...
+      </h1>
+      <img
+        style="height: 35vh"
+        src="{% static 'images/cart/undraw_empty_cart_co35.svg' %}"
+        class="img-fluid"
+      />
+    </article>
+  </section>
+  {% endif %}
+</main>
+{% endblock %}

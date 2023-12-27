@@ -1,0 +1,42 @@
+<section style="padding-top: 4rem" class="container my-5">
+  <div class="row justify-content-center align-items-center">
+    <article class="col-sm-12 col-lg-4 col-md-12">
+      <img src="{{ new_release.image.url }}" class="img-fluid rounded" />
+      <div class="text-center" style="margin-top: -10rem">
+        <h3 class="text-white">{{ new_release.name|safe }}</h3>
+        <p class="text-white">{{ new_release.quote_author }}</p>
+        <a
+          class="btn btn-outline-light"
+          href="{% url 'blog_detail' tag_slug='luku-store-nl' slug='ss23-luku-book' %}"
+          >{{ new_release.button }} &raquo;</a
+        >
+      </div>
+    </article>
+
+    <article class="col-sm-12 col-lg-4 col-md-12" style="margin: 5rem 0">
+      <img src="{{ sweater.image.url }}" class="img-fluid rounded" />
+      <div class="text-center" style="margin-top: -10rem">
+        <h3 class="text-white">{{ sweater.name|safe }}</h3>
+        <p class="text-white">{{ sweater.quote_author }}</p>
+        <a
+          class="btn btn-outline-light"
+          href="{% url 'view_stock' slug='knit-sweater' %}"
+          >{{ sweater.button }} &raquo;</a
+        >
+      </div>
+    </article>
+
+    <article class="col-sm-12 col-lg-4 col-md-12">
+      <img src="{{ trucker_hats.image.url }}" class="img-fluid rounded" />
+      <div class="text-center" style="margin-top: -10rem">
+        <h3 class="text-white">{{ trucker_hats.name|safe }}</h3>
+        <p class="text-white">{{ trucker_hats.quote_author }}</p>
+        <a
+          class="btn btn-outline-light"
+          href="{% url 'view_stock' slug='bucket-hat' %}"
+          >{{ trucker_hats.button }} &raquo;</a
+        >
+      </div>
+    </article>
+  </div>
+</section>

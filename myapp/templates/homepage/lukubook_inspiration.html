@@ -1,0 +1,117 @@
+<section style="margin: 7rem auto" class="container">
+  <h1 class="text-center title fw-bold my-5">SS23 Lukubook Inspiration</h1>
+  <div class="row d-flex justify-content-between">
+    <article class="col-md-6 col-sm-12 mb-3">
+      <img
+        class="img-fluid rounded"
+        src="{{ lukubookImage.image.url }}"
+        alt="{{ lukubookImage.name }}"
+      />
+    </article>
+
+    <section class="col-md-6 col-sm-12">
+      <div class="container inspoContainer">
+        <div class="row tableScroll">
+          <!-- Bucket Hat Start -->
+          <article class="row justify-content-center mb-3">
+            <div class="col me-2">
+              <img
+                style="height: 40"
+                class="img-fluid"
+                src="{{ red_bucket_hat.image.url }}"
+              />
+            </div>
+            <div class="col">
+              <p class="fw-bold">Bucket Hat</p>
+              <h6>Brand: Akiba Studios</h6>
+              <h6 class="small">Crafted for both fashion...</h6>
+              <h6>€20.00</h6>
+              <a
+                class="btn btn-dark"
+                href="{% url 'view_stock' slug='bucket-hat' %}"
+                >View</a
+              >
+            </div>
+          </article>
+          <!-- Bucket Hat End -->
+
+          <!-- Kintsungi Top Start -->
+          <article class="row mb-3">
+            <div class="col me-2">
+              <img
+                style="height: 40"
+                class="img-fluid"
+                src="{{ kintsugi_top_blue.image.url }}"
+                alt="{{ kintsugi_top_blue.name }}"
+              />
+            </div>
+            <div class="col">
+              <p class="fw-bold">Kintsungi Top</p>
+              <h6>Brand: Akiba Studios</h6>
+              <h6 class="small">With a harmonious blend of traditional...</h6>
+              <h6>€20.00</h6>
+              <a
+                class="btn btn-dark"
+                href="{% url 'view_stock' slug='kintsungi-top' %}"
+                >View</a
+              >
+            </div>
+          </article>
+          <!-- Kintsungi Top End -->
+
+          <!-- Utility Vest Start -->
+          <article class="row mb-3">
+            <div class="col me-2">
+              <img
+                style="height: 40"
+                class="img-fluid"
+                src="{{ utility_jacket.image.url }}"
+                alt="{{ utility_jacket.name }}"
+              />
+            </div>
+            <div class="col">
+              <p class="fw-bold">Utility Vest</p>
+              <h6>Brand: Akiba Studios</h6>
+              <h6 class="small">
+                Crafted from durable and weather-resistant...
+              </h6>
+              <h6>€60.00</h6>
+              <a
+                class="btn btn-dark"
+                href="{% url 'view_stock' slug='utility-vest' %}"
+                >View</a
+              >
+            </div>
+          </article>
+          <!-- Utility Vest End -->
+
+          <!-- Kintsungi Flare Start -->
+          <article class="row mb-3">
+            <div class="col me-2">
+              <img
+                style="height: 40"
+                class="img-fluid"
+                src="{{ kintsugi_flare.image.url }}"
+                alt="{{ kintsugi_flare.name }}"
+              />
+            </div>
+            <div class="col">
+              <p class="fw-bold">Kintsungi Flare</p>
+              <h6>Brand: Akiba Studios</h6>
+              <h6 class="small">
+                Modern style with artistic heritage, featuring...
+              </h6>
+              <h6>€70.00</h6>
+              <a
+                class="btn btn-dark"
+                href="{% url 'view_stock' slug='kintsungi-flare' %}"
+                >View</a
+              >
+            </div>
+          </article>
+          <!-- Kintsungi Flare End -->
+        </div>
+      </div>
+    </section>
+  </div>
+</section>

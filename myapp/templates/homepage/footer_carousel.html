@@ -1,0 +1,53 @@
+{% load static %}
+<section class="container mt-5">
+  <div class="row">
+    <div
+      id="carouselExampleFade"
+      class="carousel slide carousel-fade"
+      data-bs-ride="carousel"
+    >
+      <div class="carousel-inner">
+        <article class="carousel-item active">
+          <img
+            style="height: 300px"
+            src="{{ trucker_hat.image.url }}"
+            class="d-block w-100 grayscale img-fluid rounded"
+            alt="Akiba Trucker Hats"
+          />
+          <div class="carousel-caption d-md-block">
+            <h4 style="margin-bottom: 6rem" class="text-start">
+              <a
+                class="underline text-white"
+                href="{% url 'gallery' %}?category=Headwear"
+                >Explore our <br />Trucker Hats &#8594;</a
+              >
+            </h4>
+          </div>
+        </article>
+        <article class="carousel-item">
+          <img
+            style="height: 300px"
+            src="{% static 'index/pink_trucker_hat.png' %}"
+            class="d-block w-100 img-fluid rounded"
+            alt="Trucker Hat"
+          />
+        </article>
+        <article class="carousel-item">
+          <img
+            style="height: 300px"
+            src="{% static 'index/bucket_hats.png' %}"
+            class="d-block w-100 img-fluid rounded"
+            alt="Bucket Hats"
+          />
+          <div class="carousel-caption d-md-block">
+            <a
+              class="btn btn-outline-light"
+              href="{% url 'gallery' %}?category=Headwear"
+              >Akiba Bucket Hats</a
+            >
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>

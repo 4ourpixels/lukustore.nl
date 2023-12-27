@@ -1,17 +1,19 @@
 {% extends 'base.html' %}{% load static %}{% block body %}{% load humanize %}
-<div class="container-fluid mb-5">
-  <h1 class="text-center display-6 my-5 border-bottom pb-5 fw-bold">
-    <i class="fas fa-table me-1"></i>
-    LukuStore Estimate Stock September 2023
-    <i class="fas fa-table me-1"></i>
-  </h1>
-  <div class="text-center my-3">
-    <a href="{% url 'add_stock_photo' %}" class="btn btn-outline-success"
-      >Add Stock Photos</a
-    >
+<main class="container-fluid mb-5">
+  <div class="row">
+    <h1 class="text-center display-6 my-5 border-bottom pb-5 fw-bold">
+      <i class="fas fa-table me-1"></i>
+      LukuStore Estimate Stock September 2023
+      <i class="fas fa-table me-1"></i>
+    </h1>
+    <div class="text-center my-3">
+      <a href="{% url 'add_stock_photo' %}" class="btn btn-outline-success"
+        >Add Stock Photos</a
+      >
+    </div>
   </div>
 
-  <div class="container">
+  <section class="container">
     <div class="row">
       <div class="col-8">
         {% for photo in stock_photos.all %}
@@ -25,8 +27,8 @@
         {% endfor %}
       </div>
     </div>
-  </div>
-  <div
+  </section>
+  <section
     class="table-responsive table"
     style="max-height: 550px; overflow-y: auto; overflow-x: auto"
   >
@@ -84,8 +86,8 @@
             <tr>
               <th class="col">#ls0{{ stock.pk }}</th>
               <th>
-                {% if stock.image_original_size %}
-                <img src="{{ stock.image_original_size.url }}" height="150px" />
+                {% if stock.thumbnail %}
+                <img src="{{ stock.thumbnail.url }}" height="150px" />
                 {% else %}
                 <img
                   src="{{ stock.brand.image.url }}"
@@ -98,7 +100,7 @@
                 <button
                   type="button"
                   class="view_stock_btn"
-                  href="{% url 'view_stock' slug=stock.slug %}"
+                  href="{% url 'view_stock_details' slug=stock.slug %}"
                   data-bs-toggle="modal"
                   data-bs-target="#myModal{{ stock.id }}"
                 >
@@ -157,9 +159,9 @@
                             class="row justify-content-center align-items-start"
                           >
                             <div class="col-sm-16 col-md-6">
-                              {% if stock.image_original_size %}
+                              {% if stock.thumbnail %}
                               <img
-                                src="{{ stock.image_original_size.url }}"
+                                src="{{ stock.thumbnail.url }}"
                                 class="img-fluid"
                                 style="
                                   height: 75vh;
@@ -333,346 +335,347 @@
         </table>
       </div>
     </div>
-  </div>
-</div>
-<!-- Figures Section Start -->
-<div class="container">
-  <h1 class="text-center display-6 my-5 fw-bold">
-    <i class="fa-solid fa-chart-simple me-1"></i>
-    Figures
-    <i class="fa-solid fa-chart-simple me-1"></i>
-  </h1>
+  </section>
 
-  <div class="row d-flex justify-content-evenly align-items-center">
+  <!-- Figures Section Start -->
+  <section class="container">
+    <h1 class="text-center display-6 my-5 fw-bold">
+      <i class="fa-solid fa-chart-simple me-1"></i>
+      Figures
+      <i class="fa-solid fa-chart-simple me-1"></i>
+    </h1>
+
+    <div class="row d-flex justify-content-evenly align-items-center">
+      <div class="row">
+        <div class="col">
+          <div class="card invert-hover shadow mb-4">
+            <div class="card-body">
+              Total Pieces
+              <span><h1 class="fw-bold display-4">{{ total_pieces }}</h1></span>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card invert-hover shadow mb-4">
+            <div class="card-body">
+              Total first consigment
+              <span
+                ><h1 class="fw-bold display-4">
+                  € {{ total_consigment|intcomma }}
+                </h1></span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="card invert-hover shadow mb-4">
+            <div class="card-body">
+              Total first consigment (Ksh)
+              <span
+                ><h1 class="fw-bold display-4">
+                  {{ grand_total_cost|intcomma }}
+                </h1></span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card invert-hover shadow mb-4">
+            <div class="card-body">
+              Total first consigment (Ksh)
+              <span
+                ><h1 class="display-4 fw-bold">
+                  € {{ euro_converted_total_consigment|intcomma }}
+                </h1></span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Charts container start -->
+  <section class="container">
+    <div class="row gy-5">
+      <div class="col">
+        <div class="card mb-4">
+          <div class="card-header text-primary text-center">
+            <i class="fas fa-chart-area me-1"></i>
+            Possible Best Seller
+          </div>
+          <div class="card-body">
+            <canvas id="myAreaChart" width="100%" height="50"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="card mb-4">
+          <div class="card-header text-primary text-center">
+            <i class="fas fa-chart-bar me-1"></i>
+            Possible Best Seller
+          </div>
+          <div class="card-body">
+            <canvas
+              id="possibleBestSellerChart"
+              width="100%"
+              height="50"
+            ></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="row">
       <div class="col">
-        <div class="card invert-hover shadow mb-4">
+        <div class="card mb-4">
+          <div class="card-header text-danger text-center">
+            <i class="fas fa-chart-bar me-1"></i>
+            Possible Less Seller
+          </div>
           <div class="card-body">
-            Total Pieces
-            <span><h1 class="fw-bold display-4">{{ total_pieces }}</h1></span>
+            <canvas
+              id="possibleLessSellerChart"
+              width="100%"
+              height="50"
+            ></canvas>
           </div>
         </div>
       </div>
       <div class="col">
-        <div class="card invert-hover shadow mb-4">
+        <div class="card mb-4">
+          <div class="card-header text-danger text-center">
+            <i class="fas fa-chart-bar me-1"></i>
+            Possible Less Seller
+          </div>
           <div class="card-body">
-            Total first consigment
-            <span
-              ><h1 class="fw-bold display-4">
-                € {{ total_consigment|intcomma }}
-              </h1></span
-            >
+            <canvas id="chartz" width="100%" height="50"></canvas>
           </div>
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col">
-        <div class="card invert-hover shadow mb-4">
-          <div class="card-body">
-            Total first consigment (Ksh)
-            <span
-              ><h1 class="fw-bold display-4">
-                {{ grand_total_cost|intcomma }}
-              </h1></span
-            >
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card invert-hover shadow mb-4">
-          <div class="card-body">
-            Total first consigment (Ksh)
-            <span
-              ><h1 class="display-4 fw-bold">
-                € {{ euro_converted_total_consigment|intcomma }}
-              </h1></span
-            >
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+  </section>
+  <!-- Charts container End -->
 
-<!-- Charts container start -->
-<div class="container">
-  <div class="row gy-5">
-    <div class="col">
-      <div class="card mb-4">
-        <div class="card-header text-primary text-center">
-          <i class="fas fa-chart-area me-1"></i>
-          Possible Best Seller
-        </div>
-        <div class="card-body">
-          <canvas id="myAreaChart" width="100%" height="50"></canvas>
-        </div>
-      </div>
-    </div>
-
-    <div class="col">
-      <div class="card mb-4">
-        <div class="card-header text-primary text-center">
-          <i class="fas fa-chart-bar me-1"></i>
-          Possible Best Seller
-        </div>
-        <div class="card-body">
-          <canvas
-            id="possibleBestSellerChart"
-            width="100%"
-            height="50"
-          ></canvas>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col">
-      <div class="card mb-4">
-        <div class="card-header text-danger text-center">
-          <i class="fas fa-chart-bar me-1"></i>
-          Possible Less Seller
-        </div>
-        <div class="card-body">
-          <canvas
-            id="possibleLessSellerChart"
-            width="100%"
-            height="50"
-          ></canvas>
-        </div>
-      </div>
-    </div>
-    <div class="col">
-      <div class="card mb-4">
-        <div class="card-header text-danger text-center">
-          <i class="fas fa-chart-bar me-1"></i>
-          Possible Less Seller
-        </div>
-        <div class="card-body">
-          <canvas id="chartz" width="100%" height="50"></canvas>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- Charts container End -->
-
-<!-- Amapiano Signups Start -->
-<div class="container my-5">
-  <h1 class="text-center mb-3">Amapiano Signups</h1>
-  <div class="accordion" id="accordionExample">
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="headingThree">
-        <button
-          class="accordion-button collapsed"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#collapseThree"
-          aria-expanded="false"
-          aria-controls="collapseThree"
+  <!-- Amapiano Signups Start -->
+  <section class="container my-5">
+    <h1 class="text-center mb-3">Amapiano Signups</h1>
+    <div class="accordion" id="accordionExample">
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="headingThree">
+          <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapseThree"
+            aria-expanded="false"
+            aria-controls="collapseThree"
+          >
+            Unsubscribed
+          </button>
+        </h2>
+        <div
+          id="collapseThree"
+          class="accordion-collapse collapse"
+          aria-labelledby="headingThree"
+          data-bs-parent="#accordionExample"
         >
-          Unsubscribed
-        </button>
-      </h2>
-      <div
-        id="collapseThree"
-        class="accordion-collapse collapse"
-        aria-labelledby="headingThree"
-        data-bs-parent="#accordionExample"
-      >
-        <div class="accordion-body">
-          <table class="table">
-            <thead class="bg-light">
-              <tr>
-                <th scope="col">Ticket#</th>
-                <th scope="col">First Name</th>
-                <th scope="col">Last Name</th>
-                <th scope="col">Email</th>
-                <th scope="col">Subscribed</th>
-              </tr>
-            </thead>
-            {% for signup in amapiano_signups %}
-            <tbody>
-              {% if signup.consent %}
-              <div class="hidden"></div>
-              {% else %}
-              <tr>
-                <th scope="row">{{ signup.ticket_number }}</th>
-                <td>{{ signup.first_name }}</td>
-                <td>{{ signup.last_name }}</td>
-                <td>{{ signup.email }}</td>
-                {% if signup.consent %}
-                <td>
-                  <span class="badge bg-success">Subscribed</span>
-                </td>
-                {% else %}
-                <td>
-                  <span class="badge bg-danger">Not subscribed</span>
-                </td>
-                {% endif %}
-              </tr>
-              {% endif %}
-            </tbody>
-            {% endfor %}
-          </table>
-        </div>
-      </div>
-    </div>
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="headingTwo">
-        <button
-          class="accordion-button collapsed"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#collapseTwo"
-          aria-expanded="false"
-          aria-controls="collapseTwo"
-        >
-          Subscribed
-        </button>
-      </h2>
-      <div
-        id="collapseTwo"
-        class="accordion-collapse collapse"
-        aria-labelledby="headingTwo"
-        data-bs-parent="#accordionExample"
-      >
-        <div class="accordion-body">
-          <table class="table">
-            <thead class="bg-light">
-              <tr>
-                <th scope="col">Ticket#</th>
-                <th scope="col">First Name</th>
-                <th scope="col">Last Name</th>
-                <th scope="col">Email</th>
-                <th scope="col">Subscribed</th>
-              </tr>
-            </thead>
-            {% for signup in amapiano_signups %}
-            <tbody>
-              {% if signup.consent %}
-              <tr>
-                <th scope="row">{{ signup.ticket_number }}</th>
-                <td>{{ signup.first_name }}</td>
-                <td>{{ signup.last_name }}</td>
-                <td>{{ signup.email }}</td>
-                {% if signup.consent %}
-                <td>
-                  <span class="badge bg-success">Subscribed</span>
-                </td>
-                {% else %}
-                <td>
-                  <span class="badge bg-danger">Not subscribed</span>
-                </td>
-                {% endif %}
-              </tr>
-              {% endif %}
-            </tbody>
-            {% endfor %}
-          </table>
-        </div>
-      </div>
-    </div>
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="headingOne">
-        <button
-          class="accordion-button"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#collapseOne"
-          aria-expanded="true"
-          aria-controls="collapseOne"
-        >
-          All
-        </button>
-      </h2>
-      <div
-        id="collapseOne"
-        class="accordion-collapse collapse"
-        aria-labelledby="headingOne"
-        data-bs-parent="#accordionExample"
-      >
-        <div class="accordion-body">
-          <table class="table">
-            <thead class="bg-light">
-              <tr>
-                <th scope="col">Ticket#</th>
-                <th scope="col">First Name</th>
-                <th scope="col">Last Name</th>
-                <th scope="col">Email</th>
-                <th scope="col">Subscribed</th>
-              </tr>
-            </thead>
-            <tbody>
+          <div class="accordion-body">
+            <table class="table">
+              <thead class="bg-light">
+                <tr>
+                  <th scope="col">Ticket#</th>
+                  <th scope="col">First Name</th>
+                  <th scope="col">Last Name</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Subscribed</th>
+                </tr>
+              </thead>
               {% for signup in amapiano_signups %}
-              <tr>
-                <th scope="row">{{ signup.ticket_number }}</th>
-                <td>{{ signup.first_name }}</td>
-                <td>{{ signup.last_name }}</td>
-                <td>{{ signup.email }}</td>
+              <tbody>
                 {% if signup.consent %}
-                <td>
-                  <span class="badge bg-success">Subscribed</span>
-                </td>
+                <div class="hidden"></div>
                 {% else %}
-                <td>
-                  <span class="badge bg-danger">Not subscribed</span>
-                </td>
+                <tr>
+                  <th scope="row">{{ signup.ticket_number }}</th>
+                  <td>{{ signup.first_name }}</td>
+                  <td>{{ signup.last_name }}</td>
+                  <td>{{ signup.email }}</td>
+                  {% if signup.consent %}
+                  <td>
+                    <span class="badge bg-success">Subscribed</span>
+                  </td>
+                  {% else %}
+                  <td>
+                    <span class="badge bg-danger">Not subscribed</span>
+                  </td>
+                  {% endif %}
+                </tr>
                 {% endif %}
-              </tr>
+              </tbody>
               {% endfor %}
-            </tbody>
-          </table>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="headingTwo">
+          <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapseTwo"
+            aria-expanded="false"
+            aria-controls="collapseTwo"
+          >
+            Subscribed
+          </button>
+        </h2>
+        <div
+          id="collapseTwo"
+          class="accordion-collapse collapse"
+          aria-labelledby="headingTwo"
+          data-bs-parent="#accordionExample"
+        >
+          <div class="accordion-body">
+            <table class="table">
+              <thead class="bg-light">
+                <tr>
+                  <th scope="col">Ticket#</th>
+                  <th scope="col">First Name</th>
+                  <th scope="col">Last Name</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Subscribed</th>
+                </tr>
+              </thead>
+              {% for signup in amapiano_signups %}
+              <tbody>
+                {% if signup.consent %}
+                <tr>
+                  <th scope="row">{{ signup.ticket_number }}</th>
+                  <td>{{ signup.first_name }}</td>
+                  <td>{{ signup.last_name }}</td>
+                  <td>{{ signup.email }}</td>
+                  {% if signup.consent %}
+                  <td>
+                    <span class="badge bg-success">Subscribed</span>
+                  </td>
+                  {% else %}
+                  <td>
+                    <span class="badge bg-danger">Not subscribed</span>
+                  </td>
+                  {% endif %}
+                </tr>
+                {% endif %}
+              </tbody>
+              {% endfor %}
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="headingOne">
+          <button
+            class="accordion-button"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapseOne"
+            aria-expanded="true"
+            aria-controls="collapseOne"
+          >
+            All
+          </button>
+        </h2>
+        <div
+          id="collapseOne"
+          class="accordion-collapse collapse"
+          aria-labelledby="headingOne"
+          data-bs-parent="#accordionExample"
+        >
+          <div class="accordion-body">
+            <table class="table">
+              <thead class="bg-light">
+                <tr>
+                  <th scope="col">Ticket#</th>
+                  <th scope="col">First Name</th>
+                  <th scope="col">Last Name</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Subscribed</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for signup in amapiano_signups %}
+                <tr>
+                  <th scope="row">{{ signup.ticket_number }}</th>
+                  <td>{{ signup.first_name }}</td>
+                  <td>{{ signup.last_name }}</td>
+                  <td>{{ signup.email }}</td>
+                  {% if signup.consent %}
+                  <td>
+                    <span class="badge bg-success">Subscribed</span>
+                  </td>
+                  {% else %}
+                  <td>
+                    <span class="badge bg-danger">Not subscribed</span>
+                  </td>
+                  {% endif %}
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
-<!-- Amapiano Signups End -->
+  </section>
+  <!-- Amapiano Signups End -->
 
-<!-- Blog Posts Start -->
-<div class="container my-5">
-  <div class="row d-flex justify-content-center">
-    <div class="col-10">
-      <h1 class="text-center mb-3">Blog Posts</h1>
-      <table class="table">
-        <thead class="bg-light">
-          <tr>
-            <th scope="col">Cover</th>
-            <th scope="col">Title</th>
-            <th scope="col">Category</th>
-            <th scope="col">Author</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for blog in blog_posts %}
-          <tr>
-            <td>
-              <img
-                style="height: 50px; width: 50px; object-fit: cover"
-                src="{{ blog.cover_image.url }}"
-                class="img-fluid"
-              />
-            </td>
-            <td>
-              <a class="unlink" href="{{ blog.get_url }}">{{ blog.title }}</a>
-              <br />
-              {% if blog.is_published %}
-              <span class="badge bg-success">Published</span>
-              {% else %}
-              <span class="badge bg-danger">Not published</span>
-              {% endif %}
-            </td>
-            <td>{{ blog.category }}</td>
-            <td>{{ blog.author }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+  <!-- Blog Posts Start -->
+  <section class="container my-5">
+    <div class="row d-flex justify-content-center">
+      <div class="col-10">
+        <h1 class="text-center mb-3">Blog Posts</h1>
+        <table class="table">
+          <thead class="bg-light">
+            <tr>
+              <th scope="col">Cover</th>
+              <th scope="col">Title</th>
+              <th scope="col">Category</th>
+              <th scope="col">Author</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for blog in blog_posts %}
+            <tr>
+              <td>
+                <img
+                  style="height: 50px; width: 50px; object-fit: cover"
+                  src="{{ blog.cover_image.url }}"
+                  class="img-fluid"
+                />
+              </td>
+              <td>
+                <a class="unlink" href="{{ blog.get_url }}">{{ blog.title }}</a>
+                <br />
+                {% if blog.is_published %}
+                <span class="badge bg-success">Published</span>
+                {% else %}
+                <span class="badge bg-danger">Not published</span>
+                {% endif %}
+              </td>
+              <td>{{ blog.category }}</td>
+              <td>{{ blog.author }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
-</div>
+  </section>
+</main>
 <!-- Blog Posts End -->
 <script
   src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"

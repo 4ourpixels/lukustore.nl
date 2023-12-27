@@ -1,7 +1,7 @@
 {% extends 'base.html' %} {% load static %} {% block body %}
-<div class="container-fluid">
+<main class="container-fluid">
   {% if form.errors %}
-  <div class="row">
+  <section class="row">
     <div
       class="alert alert-warning alert-dismissable fade show w-100 text-center"
       role="alert"
@@ -18,11 +18,11 @@
         ></span>
       </h6>
     </div>
-  </div>
+  </section>
   {% endif %}
-  <div class="container my-5">
+  <section class="container my-5">
     <div class="row justify-content-center align-items-center text-center">
-      <div class="col-sm-12 col-md-4">
+      <article class="col-sm-12 col-md-4">
         <h3 class="mb-3">Register Account</h3>
         <form method="POST" action="{% url 'register' %}">
           {% csrf_token %}
@@ -44,17 +44,17 @@
             >
           </p>
         </form>
-      </div>
-      <div class="col-sm-12 col-md-6">
+      </article>
+      <article class="col-sm-12 col-md-6">
         <img
           src="{% static 'images/svg/undraw_two_factor_authentication_namy.svg' %}"
           alt=""
           class="img-fluid"
         />
-      </div>
+      </article>
     </div>
-  </div>
-</div>
+  </section>
+</main>
 <script>
   var form_fields = document.getElementsByTagName("input");
 

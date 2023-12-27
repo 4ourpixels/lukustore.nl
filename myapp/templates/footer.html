@@ -1,0 +1,105 @@
+{% load static %}
+<footer class="container-fluid pt-5 pb-2 px-5 mt-5 text-white bg-black">
+  <div class="row">
+    <div class="col-lg-4 col-md-12 col-sm-12 mb-3">
+      <a href="{% url 'lukufam' %}" class="text-white navbar-brand">
+        <img
+          style="filter: invert(100%); margin-bottom: 1.5rem"
+          height="50"
+          src="{% static 'images/logo/lukustore.nl-logo.svg' %}" />
+        <br
+      /></a>
+      <p class="text-muted">
+        Experience the vibrant culture of Kenya through our
+        <strong>accessible</strong> and stylish clothing.
+      </p>
+    </div>
+
+    <div class="col-lg-2 col-md-6 col-sm-2 mb-3 align-content-center">
+      <h5>Quick Links</h5>
+      <ul class="nav flex-column">
+        <li class="nav-item mb-2">
+          <a
+            href="{% url 'blog_detail' tag_slug='luku-store-nl' slug='ss23-luku-book' %}"
+            class="nav-link p-0 text-muted"
+            >Luku Book</a
+          >
+        </li>
+        <li class="nav-item mb-2">
+          <a href="{% url 'lukufam' %}" class="nav-link p-0 text-muted"
+            >About Us</a
+          >
+        </li>
+        <li class="nav-item mb-2">
+          <a href="{% url 'music' %}" class="nav-link p-0 text-muted"
+            >Music Mix</a
+          >
+        </li>
+        <li class="nav-item mb-2">
+          <a href="{% url 'help' %}" class="nav-link p-0 text-muted"
+            >Terms of Service</a
+          >
+        </li>
+      </ul>
+    </div>
+
+    <div class="col-lg-2 col-md-6 col-sm-2 mb-3">
+      <h5>Pages</h5>
+      <ul class="nav flex-column">
+        <li class="nav-item mb-2">
+          <a href="{% url 'index' %}" class="nav-link p-0 text-muted">Home</a>
+        </li>
+        <li class="nav-item mb-2">
+          <a href="{% url 'shop' %}" class="nav-link p-0 text-muted">Shop</a>
+        </li>
+        <li class="nav-item mb-2">
+          <a href="{% url 'blog_list' %}" class="nav-link p-0 text-muted"
+            >Blogs</a
+          >
+        </li>
+        <li class="nav-item mb-2">
+          <a href="{% url 'account' %}" class="nav-link p-0 text-muted"
+            >Account</a
+          >
+        </li>
+      </ul>
+    </div>
+
+    <div class="col-lg-4 col-md-12 col-sm-12 mb-3">
+      <form method="POST" action="{% url 'newsletter' %}">
+        {% csrf_token %}
+        <h5>Subscribe to our newsletter</h5>
+        <p class="text-muted">
+          Subscribe to recieve updates, access to exclusive deals, our
+          newsletter and more.
+        </p>
+        <div class="d-flex flex-column flex-sm-row w-100 gap-2">
+          <input
+            type="email"
+            name="email"
+            id="newsletter1"
+            placeholder="Email"
+            aria-label="Email"
+            type="email"
+            class="form-control"
+            placeholder="Email address"
+            required
+          />
+          <button class="btn btn-outline-light" type="submit">Subscribe</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="small text-center py-4 border-top">
+    <a class="text-white underline me-5">KvK: 83071423</a>
+    <a
+      class="text-white underline me-5"
+      id="footer-year"
+      href="{% url 'lukufam' %}"
+    ></a>
+    <a class="text-white underline" href="http://www.4ourpixels.com"
+      >Powered by Four Pixels</a
+    >
+  </div>
+</footer>

@@ -1,5 +1,5 @@
 {% extends 'base.html' %} {% load static %} {% block body %}
-<div class="container">
+<main class="container">
   <nav style="--bs-breadcrumb-divider: '>'" aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item">
@@ -10,11 +10,11 @@
       </li>
     </ol>
   </nav>
-  <div class="row my-5">
+  <section class="row my-5">
     <div class="col-md-12 col-lg-12 col-sm-12">
       <h1 class="mb-5 ms-5">My Luku</h1>
       {% if items %}
-      <div class="p-5 border rounded">
+      <article class="p-5 border rounded">
         <h6 class="mb-3">
           Luku ordered: {{ cartItems }}
           <span class="float-end">Total: €{{ order.get_cart_total }}</span>
@@ -45,12 +45,12 @@
             {% endfor %}
           </tbody>
         </table>
-      </div>
+      </article>
       {% else %}
       <h4>Cart is empty</h4>
       {% endif %}
     </div>
-  </div>
-</div>
+  </section>
+</main>
 
 {% endblock %}

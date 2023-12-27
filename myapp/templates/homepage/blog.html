@@ -1,0 +1,30 @@
+<section class="container my-5">
+  <h1 class="title text-center mb-4">Latest Blog &amp; News</h1>
+  <div class="row justify-content-center">
+    {% for blog in blogs|slice:":2" %}
+    <article class="col-lg-6 col-md-12 mt-4 col-sm-12 pt-2">
+      <div class="blog-post rounded border">
+        <div class="blog-img d-block overflow-hidden position-relative">
+          <img
+            src="{{ blog.cover_image.url }}"
+            class="img-fluid rounded-top"
+            alt="{{ blog.name }}'s Image"
+          />
+        </div>
+        <div class="content p-3">
+          <small class="text-muted p float-right"> {{ blog.pub_date }}</small>
+          <h4 class="mt-2">
+            <a href="{{ blog.get_tag_url }}" class="text-dark underline"
+              >{{ blog.title }}</a
+            >
+          </h4>
+          <p class="text-muted mt-2">{{ blog.summary|safe }}</p>
+          <a href="{{ blog.get_tag_url }}" class="text-dark mt-2 underline"
+            >Read More... <i class="mdi mdi-chevron-right"></i
+          ></a>
+        </div>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>

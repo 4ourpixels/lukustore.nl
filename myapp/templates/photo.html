@@ -1,5 +1,5 @@
 {% extends 'base.html' %} {% load static %} {% block body %}
-<div id="top" class="container">
+<main class="container">
   <div class="row">
     <section class="py-4">
       <a class="text-dark underline" href="{% url 'shop' %}">Shop</a> /
@@ -9,7 +9,7 @@
         >{{ photo.category }}</a
       >
 
-      <div class="container mt-1">
+      <article class="container mt-1">
         <div class="row gx-5">
           <aside class="col-lg-6">
             <div class="mb-3 d-flex justify-content-center">
@@ -119,9 +119,9 @@
             </div>
           </main>
         </div>
-      </div>
+      </article>
 
-      <div class="border-top py-4">
+      <article class="border-top py-4">
         <div class="accordion" id="accordionExample">
           <div class="accordion-item w-auto">
             <h2 class="accordion-header" id="headingOne">
@@ -175,10 +175,10 @@
           </div>
           {% endif %}
         </div>
-      </div>
+      </article>
     </section>
   </div>
-</div>
+</main>
 
 <script>
   var productImg = document.getElementById("productImg");

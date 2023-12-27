@@ -1,5 +1,5 @@
 {% extends 'base.html' %} {% load static %} {% block body %}
-<div class="container">
+<main class="container">
   <nav style="--bs-breadcrumb-divider: '>'" aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item">
@@ -16,7 +16,7 @@
       <h1 class="text-center">Update Your Profile</h1>
     </div>
   </div>
-  <div class="row justify-content-center my-5">
+  <section class="row justify-content-center my-5">
     <div class="col-lg-4 col-sm-12 mb-4">
       {% if user.customer.profile_pic %}
       <img
@@ -48,13 +48,12 @@
       </form>
       <!-- Form End -->
     </div>
-  </div>
-</div>
+  </section>
+</main>
 <script>
   var form_fields = document.getElementsByTagName("input");
   form_fields[5].placeholder = "Re-enter password";
   form_fields[5].classList = "form-check-input";
-  console.log("FOrm: ", form_fields[5]);
   for (var field in form_fields) {
     form_fields[field].className += "form-control";
   }

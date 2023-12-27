@@ -1,12 +1,12 @@
 {% extends 'base.html' %}{% load static %}{% block body %}
-<div style="margin-top: 3rem" id="top" class="container">
-  <div id="main" class="row">
+<main class="container">
+  <section class="row">
     <h1 class="text-black display-1 text-center fw-bold">Luku Fam</h1>
     <h3 class="text-center fw-light mt-2">
       Platforming Afro Streetwear Culture
     </h3>
     <!-- ======= About Us Section ======= -->
-    <div class="container px-4 py-5">
+    <article class="container px-4 py-5">
       <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
         <div class="col-sm-12 col-lg-6">
           <img
@@ -34,9 +34,9 @@
           </div>
         </div>
       </div>
-    </div>
+    </article>
 
-    <div class="row px-4 py-5 flex-lg-row-reverse align-items-center">
+    <section class="row px-4 py-5 flex-lg-row-reverse align-items-center">
       <div class="col-sm-12 col-lg-6">
         <img
           src="{{ kendy.image.url }}"
@@ -62,9 +62,9 @@
           ></a>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div class="row px-4 py-5 flex-lg-row-reverse align-items-center">
+    <section class="row px-4 py-5 flex-lg-row-reverse align-items-center">
       <div class="col-sm-12 col-lg-6">
         <img
           src="{{ tarela.image.url }}"
@@ -87,9 +87,9 @@
           ></a>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div class="row px-4 py-5 flex-lg-row-reverse align-items-center">
+    <section class="row px-4 py-5 flex-lg-row-reverse align-items-center">
       <div class="col-sm-12 col-lg-6">
         <img
           src="{{ djg400.image.url }}"
@@ -115,7 +115,7 @@
           ></a>
         </div>
       </div>
-    </div>
+    </section>
 
     <!-- End About Us Section -->
     <hr />
@@ -125,8 +125,8 @@
         <p>Chat to us. Our friendly team is here to help.</p>
       </div>
 
-      <div class="row mt-5">
-        <div class="col-lg-8 col-md-12 col-sm-12 mb-5">
+      <article class="row justify-content-center mt-5">
+        <div class="col-lg-6 col-md-8 col-sm-12 mb-5">
           <form name="submit-to-google-sheet">
             <div class="row">
               <div class="form-group">
@@ -174,7 +174,7 @@
           </div>
         </div>
 
-        <div class="col-lg-4 col-md-12 col-sm-12">
+        <div class="col-lg-6 col-md-8 col-sm-12">
           <div class="info">
             <div class="email">
               <i class="ri-mail-line"></i>
@@ -197,7 +197,7 @@
         </div>
         <div class="col">
           <iframe
-            class="mt-5"
+            class="mt-5 rounded"
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d155959.60697224745!2d4.753582280043844!3d52.354663727548534!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c63fb5949a7755%3A0x6600fd4cb7c0af8d!2sAmsterdam%2C%20Netherlands!5e0!3m2!1sen!2ske!4v1684177757213!5m2!1sen!2ske"
             height="450"
             style="border: 0; width: 100%"
@@ -207,9 +207,9 @@
             referrerpolicy="no-referrer-when-downgrade"
           ></iframe>
         </div>
-      </div>
+      </article>
     </section>
     <!-- End Contact Section -->
-  </div>
-</div>
+  </section>
+</main>
 {% endblock %}

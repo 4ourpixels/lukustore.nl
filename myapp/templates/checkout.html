@@ -1,21 +1,25 @@
 {% extends 'base.html' %} {% load static %} {% block body %}
-<div id="top" class="container my-5">
-  <nav style="--bs-breadcrumb-divider: '>'" aria-label="breadcrumb">
+<main class="container">
+  <nav
+    class="mt-2"
+    style="--bs-breadcrumb-divider: '>'"
+    aria-label="breadcrumb"
+  >
     <ol class="breadcrumb">
       <li class="breadcrumb-item active" aria-current="page">
-        <a class="text-dark underline" href="{% url 'cart' %}">Cart</a>
+        <a class="text-dark underline h2" href="{% url 'cart' %}">Cart</a>
       </li>
-      <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+      <li class="breadcrumb-item active h2" aria-current="page">Checkout</li>
     </ol>
   </nav>
-  <div>
+  <section class="row">
     <div class="col">
       <div class="box-element" id="form-wrapper">
         <div class="row justify-content-center">
           <form class="form" method="POST" id="form">
             <h4 class="mb-3">Billing address</h4>
             {% csrf_token %}
-            <div class="container">
+            <article class="container">
               <div class="row" id="user-info">
                 <div class="col">
                   <label for="firstName">Name</label>
@@ -41,9 +45,9 @@
                   <div class="invalid-feedback">Valid Email is required.</div>
                 </div>
               </div>
-            </div>
+            </article>
 
-            <div class="col-8" id="shipping-info">
+            <article class="col-8" id="shipping-info">
               <div class="mb-3">
                 <label for="country">Country</label>
                 <input type="text" class="form-control" id="country" required />
@@ -76,7 +80,7 @@
               >
                 Save Address
               </button>
-            </div>
+            </article>
           </form>
           <section id="payment-info" class="hidden">
             <div class="left-payment-child" id="paypal-button-container"></div>
@@ -84,8 +88,8 @@
         </div>
       </div>
     </div>
-  </div>
-</div>
+  </section>
+</main>
 <!-- javascript -->
 <!-- Paypal -->
 <!-- Paypal API -->

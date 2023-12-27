@@ -1,0 +1,129 @@
+{% load static %}
+<section class="container-fluid overflow-hidden px-0 text-center">
+  <div class="row">
+    <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-indicators">
+        <button
+          type="button"
+          data-bs-target="#myCarousel"
+          data-bs-slide-to="0"
+          class="active"
+          aria-current="true"
+          aria-label="Slide 1"
+        ></button>
+        <button
+          type="button"
+          data-bs-target="#myCarousel"
+          data-bs-slide-to="1"
+          aria-label="Slide 2"
+        ></button>
+        <button
+          type="button"
+          data-bs-target="#myCarousel"
+          data-bs-slide-to="2"
+          aria-label="Slide 3"
+        ></button>
+      </div>
+      <div class="carousel-inner">
+        <article class="carousel-item active">
+          <a
+            class="btn btn-outline-light p-0 m-0"
+            href="{% url 'blog_detail' tag_slug='luku-store-nl' slug='ss23-luku-book' %}"
+          >
+            <img src="{{ slider_01.image.url }}" class="img-fluid zoomOut"
+          /></a>
+          <div class="container">
+            <div class="carousel-caption text-start">
+              <img
+                class="img-fluid"
+                style="
+                  filter: invert(100%);
+                  margin-bottom: 1.5rem;
+                  height: 5rem;
+                "
+                src="{% static 'images/logo/lukustore.nl-logo.svg' %}"
+              />
+              <p>
+                <a
+                  class="btn btn-outline-light"
+                  href="{% url 'blog_detail' tag_slug='luku-store-nl' slug='ss23-luku-book' %}"
+                  >SS23' Lukubook</a
+                >
+              </p>
+            </div>
+          </div>
+        </article>
+        <article class="carousel-item">
+          <a class="btn btn-outline-light p-0 m-0" href="{% url 'shop' %}">
+            <img class="img-fluid" src="{{ slider_03.image.url }}"
+          /></a>
+          <div class="container">
+            <div class="carousel-caption">
+              <figure class="text-center">
+                <blockquote class="blockquote">
+                  <h1 class="fw-bold">
+                    Streetwear is an artistic movement. It’s a creative process.
+                  </h1>
+                </blockquote>
+                <figcaption class="blockquote-footer text-white">
+                  Virgil Abloh
+                </figcaption>
+              </figure>
+              <p>
+                <a class="btn btn-outline-light" href="{% url 'shop' %}"
+                  >Shop &#8599;</a
+                >
+              </p>
+            </div>
+          </div>
+        </article>
+        <article class="carousel-item">
+          <a
+            class="btn btn-outline-light p-0 m-0"
+            href="{% url 'gallery' %}?category=SS23"
+          >
+            <img class="img-fluid" src="{{ slider_02.image.url }}" />
+          </a>
+          <div class="container">
+            <div class="carousel-caption text-start">
+              <img
+                class="img-fluid"
+                style="
+                  filter: invert(100%);
+                  margin-bottom: 1.5rem;
+                  height: 5rem;
+                "
+                src="{% static 'images/logo/lukustore.nl-logo.svg' %}"
+              />
+              <p>
+                <a
+                  class="btn btn-outline-light"
+                  href="{% url 'gallery' %}?category=SS23"
+                  >Akiba Studios</a
+                >
+              </p>
+            </div>
+          </div>
+        </article>
+      </div>
+      <button
+        class="carousel-control-prev"
+        type="button"
+        data-bs-target="#myCarousel"
+        data-bs-slide="prev"
+      >
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button
+        class="carousel-control-next"
+        type="button"
+        data-bs-target="#myCarousel"
+        data-bs-slide="next"
+      >
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </div>
+</section>
