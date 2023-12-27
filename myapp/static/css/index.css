@@ -57,8 +57,8 @@ h3 {
 .navbar {
   margin: 0 3rem;
   border-radius: 8px;
-  backdrop-filter: blur(35px);
-  --webkit-backdrop-filter: blur(35px);
+  backdrop-filter: blur(8px);
+  --webkit-backdrop-filter: blur(8px);
   opacity: 0.9;
   background-color: #fff;
 }
@@ -188,26 +188,6 @@ h3 {
 
 /* Product Page CSS */
 
-.product-rating {
-  line-height: 22px;
-}
-.product-rating i {
-  color: #fc0;
-  display: inline-block;
-  margin-right: 2px;
-  font-size: 14px;
-}
-@media screen and (max-width: 1199px) {
-  .product-rating {
-    margin-bottom: 5px;
-    font-size: 15px;
-  }
-}
-@media screen and (max-width: 767px) {
-  .product-rating i {
-    font-size: 13px;
-  }
-}
 .card-wrapper {
   position: relative;
   overflow: hidden;
@@ -359,12 +339,186 @@ h3 {
   color: #000;
 }
 /* Dashboard End */
+.invert-hover {
+  background-color: #000;
+  color: #9e9e9e;
+  cursor: pointer;
+}
+.invert-hover:hover {
+  background-color: #121212;
+  color: #ffffff;
+}
+@keyframes zoomOut {
+  from {
+    transform: scale(1.2);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.overflow-hidden {
+  overflow: hidden; /* Ensure the overflow is hidden for smooth animation */
+}
+
+.zoomOut {
+  animation: zoomOut 1s ease-in-out; /* You can adjust the duration and timing function */
+  transform-origin: center center; /* Set the transform origin to the center for the zoom effect */
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px); /* Adjust the initial position */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.fadeInUp {
+  opacity: 1; /* Initially set opacity to 0 */
+  animation: fadeInUp 1.3s ease-out; /* You can adjust the duration and timing function */
+  transform-origin: center bottom; /* Set the transform origin for the fadeInUp effect */
+}
 .unlink {
   text-decoration: none;
   color: #000;
+  cursor: pointer;
 }
 .unlink:hover {
   text-decoration: none;
   color: #000;
   font-weight: 600;
+}
+.unlink-div {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* Add a class to style the overlay */
+.figure-card {
+  position: relative;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* Style for the overlay on hover */
+.figure-card:hover figcaption {
+  opacity: 1;
+}
+
+/* Style for the gradient overlay */
+.figure-card figcaption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  color: white;
+  font-size: 1.3rem;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.6) 50%,
+    rgba(0, 0, 0, 0.9) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.wrapper-zoom {
+  overflow: hidden;
+  padding-bottom: 3rem;
+  cursor: pointer;
+}
+.wrapper-zoom img {
+  transition: scale 400ms;
+}
+.wrapper-zoom:hover img {
+  scale: 110%;
+}
+
+.container-fluid-scroll {
+  overflow-x: auto;
+  white-space: nowrap;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.scrolling-wrapper {
+  display: inline-flex;
+}
+/* Media Queries */
+/* Extra small devices(phones, 600px and down) */
+@media (max-width: 600px) {
+  #productImg {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+  }
+  .scrolling-wrapper {
+    margin-left: 1rem;
+  }
+}
+/* Small devices(Portrait tablets and large phones, 600px and up) */
+@media (min-width: 600px) {
+  #productImg {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+  }
+  .scrolling-wrapper {
+    margin-left: 1rem;
+  }
+}
+/* Medium devices (Landscape tablets, 768px and up) */
+@media (min-width: 768px) {
+  #productImg {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+  }
+  .scrolling-wrapper {
+    margin-left: 3rem;
+  }
+}
+/* Large devices (Laptops/desktops, 992px and up) */
+@media (min-width: 992px) {
+  #productImg {
+    height: 80vh;
+    width: 100%;
+    object-fit: contain;
+  }
+  .scrolling-wrapper {
+    margin-left: 5rem;
+  }
+}
+/* Extra large devices (Large laptops and desktops, 1200px and up) */
+@media (min-width: 1200px) {
+  #productImg {
+    height: 80vh;
+    width: 100%;
+    object-fit: contain;
+  }
+  .scrolling-wrapper {
+    margin-left: 5rem;
+  }
+}
+@media (min-width: 1400px) {
+  #productImg {
+    height: 80vh;
+    width: 100%;
+    object-fit: contain;
+  }
+  .scrolling-wrapper {
+    margin-left: 5rem;
+  }
+}
+/* Media Queries */
+.brand-btn {
+  border-radius: 30px;
 }
