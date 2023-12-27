@@ -26,11 +26,11 @@ from django.contrib.admin.models import LogEntry
 # History Logic End
 # ABOUT US
 
-blogs = BlogPost.objects.all()
+blogs = BlogPost.objects.order_by('-pk')
 
 
 def lukufam(request):
-    title_tag = f"About Us"
+    title_tag = "About Us"
 
     data = cartData(request)
     cartItems = data['cartItems']
@@ -73,11 +73,10 @@ def lukufam(request):
 
 
 def help(request):
-    title_tag = f"Help"
+    title_tag = "Help"
 
     data = cartData(request)
     cartItems = data['cartItems']
-    blogs = BlogPost.objects.order_by('-pk')
     brands = Brand.objects.order_by('-pk')
 
     help = Help.objects.first()
@@ -97,7 +96,6 @@ def index(request):
     meta_description = "Immerse yourself in the rich tapestry of Kenyan culture with Luku Store.nl. Explore our latest blogs, diverse brands, new collections, and visually stunning images. Shop unique, handmade fashion that tells a story. Join our community of socially-conscious shoppers and experience the vibrancy of Kenyan style here in Amsterdam."
     meta_keywords = "Kenyan Culture, Fashion Blog, Unique Brands, New Collections, Vibrant Images, Streetwear, Handmade Clothing, Socially-conscious Shopping, Afro, Luku Store.nl, Cultural Fashion, Fashion Community, Online Clothing Store, Netherlands, Amsterdam, Young Men, Young Women, Local Designers, Unique Outfits, Colorful, Independent Clothing Designers, Reasonable Price, Stories Behind Designers."
     photos = Photo.objects.all()
-    blogs = BlogPost.objects.order_by('-pk')
     brands = Brand.objects.order_by('-pk')
     homepages = HomePage.objects.all()
     categories = Category.objects.all()
@@ -193,14 +191,14 @@ def index(request):
 
 
 def shop(request):
-    title_tag = f"Shop Unique Kenyan Fashion at Luku Store.nl | Accessible and Stylish Clothing"
+    brand = request.GET.get('brand')
+    title_tag = "Shop Unique Kenyan Fashion at Luku Store.nl | Accessible and Stylish Clothing"
     meta_description = "Explore our collection of vibrant and accessible Kenyan fashion at Luku Store.nl. From handcrafted pieces to curated designs, discover the latest trends for unisex, men and women. Make a statement with our socially-conscious clothing. Shipping within Netherlands."
     meta_keywords = "Kenyan Fashion, Accessible Clothing, Stylish Outfits, Online Fashion Store, Handmade Clothes, Curated Designs, Socially-conscious Shopping, Men's Fashion, Women's Fashion, Unisex, Luku Store.nl, Netherlands Fashion, Shipping."
     blogs = BlogPost.objects.order_by('-pk')
-    brands = Brand.objects.order_by('-pk')
-    products = Product.objects.order_by('-pk')
-    # stocks = Stock.objects.order_by('-pk')
-    stocks = Stock.objects.filter(online=True).order_by('-priority')
+    brands = Brand.objects.order_by('pk')
+    stocks = Stock.objects.all()
+    # stocks = Stock.objects.filter(online=True).order_by('-priority')
 
     unique_product_codes = Photo.objects.filter(
         product_code__isnull=False).values_list('product_code', flat=True).distinct()
@@ -216,6 +214,17 @@ def shop(request):
     data = cartData(request)
     cartItems = data['cartItems']
 
+    sorted_brands = Brand.get_brands_sorted_by_online_stock()
+
+    if brand is not None:
+        stocks = Stock.objects.filter(brand__name=brand, online=True)
+    else:
+        stocks = Stock.objects.filter(online=True)
+
+    sorted_brands = Brand.get_brands_sorted_by_online_stock()
+
+    active_brand = request.GET.get('brand', None)
+
     context = {
         'title_tag': title_tag,
         'cartItems': cartItems,
@@ -224,59 +233,60 @@ def shop(request):
         'categories': categories,
         'blogs': blogs,
         'brands': brands,
-        'products': products,
         "meta_description": meta_description,
         'meta_keywords': meta_keywords,
         'stocks': stocks,
+        'sorted_brands': sorted_brands,
+        'active_brand': active_brand,
     }
 
     return render(request, 'shop.html', context)
 
 
-def view_product(request, slug):
-    product = get_object_or_404(Product, slug=slug)
-    photos = Photo.objects.filter(product_code=product.product_code)
-    similar_products_codes = product.similar_products_codes.split(',')
-    similar_products = Product.objects.filter(
-        Q(product_code__in=similar_products_codes) | Q(
-            name__in=similar_products_codes)
-    )
+# def view_product(request, slug):
+#     product = get_object_or_404(Product, slug=slug)
+#     photos = Photo.objects.filter(product_code=product.product_code)
+#     similar_products_codes = product.similar_products_codes.split(',')
+#     similar_products = Product.objects.filter(
+#         Q(product_code__in=similar_products_codes) | Q(
+#             name__in=similar_products_codes)
+#     )
 
-    data = cartData(request)
-    cartItems = data['cartItems']
-    blogs = BlogPost.objects.order_by('-pk')
-    brands = Brand.objects.order_by('-pk')
+#     data = cartData(request)
+#     cartItems = data['cartItems']
+#     blogs = BlogPost.objects.order_by('-pk')
+#     brands = Brand.objects.order_by('-pk')
 
-    title_tag = f"{product.name}"
+#     title_tag = product.name
 
-    context = {
-        'product': product,
-        'cartItems': cartItems,
-        'photos': photos,
-        'title_tag': title_tag,
-        'blogs': blogs,
-        'brands': brands,
-        'similar_products': similar_products,
-    }
+#     context = {
+#         'product': product,
+#         'cartItems': cartItems,
+#         'photos': photos,
+#         'title_tag': title_tag,
+#         'blogs': blogs,
+#         'brands': brands,
+#         'similar_products': similar_products,
+#     }
 
-    return render(request, 'product.html', context)
+#     return render(request, 'product.html', context)
 
 
 def view_stock(request, slug):
     product = get_object_or_404(Stock, slug=slug)
-    photos = Photo.objects.filter(product_code=product.product_code)
-    similar_products_codes = product.similar_products_codes.split(',')
-    similar_products = Stock.objects.filter(
-        Q(product_code__in=similar_products_codes) | Q(
-            name__in=similar_products_codes)
-    )
+    photos = Stock.objects.all()
+    other_images = [
+        product.image_original_size,
+        product.image_large_size,
+        product.image_medium_size,
+    ]
 
     data = cartData(request)
     cartItems = data['cartItems']
     blogs = BlogPost.objects.order_by('-pk')
     brands = Brand.objects.order_by('-pk')
 
-    title_tag = f"{product.name}"
+    title_tag = product.item
 
     context = {
         'product': product,
@@ -284,8 +294,8 @@ def view_stock(request, slug):
         'photos': photos,
         'title_tag': title_tag,
         'blogs': blogs,
+        'other_images': other_images,
         'brands': brands,
-        'similar_products': similar_products,
     }
 
     return render(request, 'view_stock.html', context)
@@ -339,7 +349,7 @@ def cart(request):
 
 
 def checkout(request):
-    title_tag = f"Checkout"
+    title_tag = "Checkout"
     blogs = BlogPost.objects.order_by('-pk')
     brands = Brand.objects.order_by('-pk')
     # data = cartData(request)
@@ -394,7 +404,7 @@ def brand_detail(request, slug):
     products = Product.objects.order_by('-pk')
     blogs = BlogPost.objects.order_by('-pk')
     brands = Brand.objects.order_by('-pk')
-    title_tag = f"{brand.name}"
+    title_tag = brand.name
     # Filter stocks based on the specified brand
     stocks = Stock.objects.filter(brand=brand).order_by('-priority')
 
@@ -593,7 +603,7 @@ def processOrder(request):
 
 
 def loginPage(request):
-    title_tag = f"Log In"
+    title_tag = "Log In"
     blogs = BlogPost.objects.order_by('-pk')
     brands = Brand.objects.order_by('-pk')
     data = cartData(request)
@@ -637,7 +647,7 @@ def logoutUser(request):
 
 def registerPage(request):
     meta_keywords = "Luku Store.nl Signup, Account Registration, Exclusive Offers, Fashion Updates, Socially-conscious Shopping, Personalized Account, Kenyan Fashion, Streetwear, Community Membership, Stay Connected, Diverse Style."
-    title_tag = f"Create Your Luku Account - Sign Up for Exclusive Offers and Fashion Updates"
+    title_tag = "Create Your Luku Account - Sign Up for Exclusive Offers and Fashion Updates"
     meta_description = "Join the Lukustore.nl community! Sign up for an account to access exclusive offers, stay updated on the latest Kenyan fashion trends, and be part of our socially-conscious shopping experience. Register now for a personalized shopping journey that celebrates diversity and style."
     form = RegisterUserForm()
     blogs = BlogPost.objects.order_by('-pk')
@@ -676,7 +686,7 @@ def registerPage(request):
 
 
 def confirmed(request):
-    title_tag = f"Order Complete!"
+    title_tag = "Order Complete!"
     data = cartData(request)
     cartItems = data['cartItems']
     blogs = BlogPost.objects.order_by('-pk')
@@ -750,7 +760,7 @@ def viewPhoto(request, pk):
                 name__in=similar_products_codes)
         )
 
-        title_tag = f"{photo.name}"
+        title_tag = photo.name
 
         context = {
             'photo': photo,
@@ -984,7 +994,7 @@ def account_settings(request):
     customer = request.user.customer
     form = CustomerForm(instance=customer)
 
-    title_tag = f"Account Settings"
+    title_tag = "Account Settings"
     if request.method == 'POST':
         form = CustomerForm(request.POST, request.FILES, instance=customer)
         if form.is_valid():
@@ -1009,8 +1019,7 @@ def account_settings(request):
     return render(request, 'account_settings.html', context)
 
 
-# Stock Logic Start
-def view_stock(request, slug):
+def view_stock_details(request, slug):
     stock = Stock.objects.get(slug=slug)
     return HttpResponseRedirect(reverse('dashboard'))
 
@@ -1018,6 +1027,7 @@ def view_stock(request, slug):
 def edit_stock(request, slug):
     stock = get_object_or_404(Stock, slug=slug)
     title_tag = f"Update: {stock.item}"
+
     images = [
         stock.image_original_size,
         stock.image_large_size,
@@ -1058,32 +1068,7 @@ def delete_stock(request, slug):
     return HttpResponseRedirect(reverse('dashboard'))
 
 
-# def add_stock(request):
-#     if request.method == 'POST':
-#         form = StockForm(request.POST)
-#         if form.is_valid():
-#             # new_title = form.cleaned_data['title']
-#             new_stock = Stock(
-#                 # title=new_title,
-
-#             )
-
-#             new_stock.save()
-#             return render(request, 'add_stock.html', {
-#                 'form': StockForm(),
-#                 'success': True
-#             })
-#     else:
-#         form = StockForm()
-#     return render(request, 'add_stock.html', {
-#         'form': StockForm()
-#     })
-
-# Stock Logic End
-
-
 def add_stock_photo(request):
-
     brands = Brand.objects.all()
 
     if request.method == 'POST':
@@ -1112,3 +1097,5 @@ def add_stock_photo(request):
         'brands': brands,
     }
     return render(request, 'add_stock_photo.html', context)
+
+# Stock Logic End

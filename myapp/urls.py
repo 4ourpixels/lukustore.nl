@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path
 from .import views
 from blog.views import add_blog
 from django.conf import settings
@@ -28,16 +28,13 @@ urlpatterns = [
     path('photo/<str:pk>/', views.viewPhoto, name='photo'),
     path('brands/', views.brand_list, name='brand_list'),
     path('brand/<slug:slug>/', views.brand_detail, name='brand_detail'),
-    path('shop/<slug:slug>/', views.view_product, name='view_product'),
     path('404/', views.error404, name='error404'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('amapiano/', views.amapiano_workshop_signup,
          name='amapiano_workshop_signup'),
-    path('<slug:slug>', views.view_stock, name='view_stock'),
+    path('shop/<slug:slug>/', views.view_stock, name='view_stock'),
     path('edit_stock/<slug:slug>/', views.edit_stock, name='edit_stock'),
     path('delete_stock/<slug:slug>/', views.delete_stock, name='delete_stock'),
-    path('add_stock/', views.add_stock, name='add_stock'),
-    path('shop/<slug:slug>/', views.view_stock, name='view_stock'),
-    path('tinymce/', include('tinymce.urls')),
+    path('add_stock_photo/', views.add_stock_photo, name='add_stock_photo'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

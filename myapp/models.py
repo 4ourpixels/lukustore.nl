@@ -9,6 +9,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 # Stock Calculation Utility Start
 from django.db.models import Sum
+from django.db.models import Count
 # Stock Calculation Utility End
 # BLOG ENTRY
 
@@ -197,6 +198,16 @@ class Brand(models.Model):
     )
     slug = models.SlugField(unique=True, null=True, blank=True)
 
+    def total_stock_products(self):
+        return Stock.objects.filter(brand=self).count()
+
+    @classmethod
+    def get_brands_sorted_by_online_stock(cls):
+        return cls.objects.filter(stock__online=True).annotate(
+            online_stock_count=Count(
+                'stock', filter=models.Q(stock__online=True))
+        ).order_by('online_stock_count')
+
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         super().save(*args, **kwargs)
@@ -244,8 +255,6 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
-
-
 
 
 class Stock(models.Model):
@@ -345,13 +354,14 @@ class Stock(models.Model):
         self.slug = slugify(self.item)
         super().save(*args, **kwargs)
 
+    @property
     def get_url(self):
         return reverse("view_stock", kwargs={
             "slug": self.slug
         })
 
     def __str__(self):
-        return f"Product Code: #ls0{self.pk} | {self.item}"
+        return self.item
 
 
 class StockPhoto(models.Model):
