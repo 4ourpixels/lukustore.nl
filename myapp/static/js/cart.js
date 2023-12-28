@@ -1,14 +1,9 @@
-// Selecting all Update Buttons
 var updateBtns = document.getElementsByClassName("update-cart");
-
-// For loop for itering through each button and grabbing the data-set
 
 for (var i = 0; i < updateBtns.length; i++) {
   updateBtns[i].addEventListener("click", function () {
     var productId = this.dataset.product;
     var action = this.dataset.action;
-    console.log("productId: ", productId, "Action: ", action);
-    console.log("Current user: ", user);
 
     if (user == "AnonymousUser") {
       addCookieItem(productId, action);
@@ -18,10 +13,7 @@ for (var i = 0; i < updateBtns.length; i++) {
   });
 }
 
-// Function to update user order
 function updateUserOrder(productId, action) {
-  console.log("User is logged in, sending data...");
-
   var url = "/updateItem/";
 
   fetch(url, {
@@ -36,14 +28,11 @@ function updateUserOrder(productId, action) {
       return response.json();
     })
     .then((data) => {
-      console.log("Data: ", data);
       location.reload();
     });
 }
 
 function addCookieItem(productId, action) {
-  console.log("User is not authenticated");
-
   if (action == "add") {
     if (cart[productId] == undefined) {
       cart[productId] = { quantity: 1 };
@@ -56,7 +45,6 @@ function addCookieItem(productId, action) {
     cart[productId]["quantity"] -= 1;
 
     if (cart[productId]["quantity"] <= 0) {
-      console.log("Item should be deleted");
       delete cart[productId];
     }
   }
