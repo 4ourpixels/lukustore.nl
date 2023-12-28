@@ -190,6 +190,8 @@ def index(request):
     return render(request, 'index.html', context)
 
 
+
+
 def shop(request):
     brand = request.GET.get('brand')
     title_tag = "Shop Unique Kenyan Fashion at Luku Store.nl | Accessible and Stylish Clothing"
@@ -243,48 +245,38 @@ def shop(request):
     return render(request, 'shop.html', context)
 
 
-# def view_product(request, slug):
-#     product = get_object_or_404(Product, slug=slug)
-#     photos = Photo.objects.filter(product_code=product.product_code)
-#     similar_products_codes = product.similar_products_codes.split(',')
-#     similar_products = Product.objects.filter(
-#         Q(product_code__in=similar_products_codes) | Q(
-#             name__in=similar_products_codes)
-#     )
-
-#     data = cartData(request)
-#     cartItems = data['cartItems']
-#     blogs = BlogPost.objects.order_by('-pk')
-#     brands = Brand.objects.order_by('-pk')
-
-#     title_tag = product.name
-
-#     context = {
-#         'product': product,
-#         'cartItems': cartItems,
-#         'photos': photos,
-#         'title_tag': title_tag,
-#         'blogs': blogs,
-#         'brands': brands,
-#         'similar_products': similar_products,
-#     }
-
-#     return render(request, 'product.html', context)
-
-
 def view_stock(request, slug):
     product = get_object_or_404(Stock, slug=slug)
     photos = Stock.objects.all()
+
     other_images = [
         product.image_original_size,
         product.image_large_size,
         product.image_medium_size,
+        product.image_thumbnail_size,
     ]
+
+    try:
+        similar_products_codes = product.similar_products_codes.split(',')
+        similar_products = Stock.objects.filter(
+            Q(product_code__in=similar_products_codes) | Q(
+                item__in=similar_products_codes)
+        )
+    except:
+        pass
 
     data = cartData(request)
     cartItems = data['cartItems']
     blogs = BlogPost.objects.order_by('-pk')
     brands = Brand.objects.order_by('-pk')
+
+    product_images = []
+
+    for image in other_images:
+        if image.name == "placeholder.png":
+            pass
+        else:
+            product_images.append(image)
 
     title_tag = product.item
 
@@ -296,6 +288,8 @@ def view_stock(request, slug):
         'blogs': blogs,
         'other_images': other_images,
         'brands': brands,
+        'product_images': product_images,
+        'similar_products': similar_products,
     }
 
     return render(request, 'view_stock.html', context)
