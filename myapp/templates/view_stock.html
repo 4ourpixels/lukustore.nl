@@ -10,16 +10,16 @@
           class="rounded"
           loading="eager"
         />
-        {% if other_images %}
+        {% if product_images %}
         <div class="d-flex justify-content-center my-3">
-          {% for photo in other_images %}
+          {% for image in product_images %}
           <img
             style="object-fit: cover"
             width="60"
             height="60"
             class="small-img mx-1"
             loading="lazy"
-            src="{{ photo.url }}"
+            src="{{ image.url }}"
           />
           {% endfor %}
         </div>
@@ -156,12 +156,13 @@
       </div>
     </article>
   </section>
+  {% if similar_products %}
   <section class="container">
     <h3 class="text-center my-5">Shop similar items</h3>
     <div
       class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-4 row-cols-xl-4 justify-content-start"
     >
-      {% for stock in photos|slice:":3" %}
+      {% for stock in similar_products %}
       <article class="col-sm-6 mb-5 col-md-4 col-lg-3">
         <figure class="figure-card">
           <img src="{{ stock.thumbnail.url }}" class="img-fluid rounded" />
@@ -194,41 +195,18 @@
       {% endfor %}
     </div>
   </section>
+  {% endif %}
 </main>
 
 <script>
   var productImg = document.getElementById("productImg");
   var smallImg = document.getElementsByClassName("small-img");
 
-  smallImg[0].onclick = function () {
-    productImg.src = smallImg[0].src;
-  };
-  smallImg[1].onclick = function () {
-    productImg.src = smallImg[1].src;
-  };
-  smallImg[2].onclick = function () {
-    productImg.src = smallImg[2].src;
-  };
-  smallImg[3].onclick = function () {
-    productImg.src = smallImg[3].src;
-  };
-  smallImg[4].onclick = function () {
-    productImg.src = smallImg[4].src;
-  };
-  smallImg[5].onclick = function () {
-    productImg.src = smallImg[5].src;
-  };
-  smallImg[6].onclick = function () {
-    productImg.src = smallImg[6].src;
-  };
-  smallImg[7].onclick = function () {
-    productImg.src = smallImg[7].src;
-  };
-  smallImg[8].onclick = function () {
-    productImg.src = smallImg[8].src;
-  };
-  smallImg[9].onclick = function () {
-    productImg.src = smallImg[9].src;
-  };
+  for (var i = 0; i < smallImg.length; i++) {
+    smallImg[i].onclick = function (event) {
+      productImg.src = event.target.src;
+    };
+  }
 </script>
+
 {% endblock %}
