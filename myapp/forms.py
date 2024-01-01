@@ -40,48 +40,6 @@ class RegisterUserForm(UserCreationForm):
             self.fields['email'].widget.attrs['class'] = 'form-control'
 
 
-class PhotoForm(forms.ModelForm):
-    class Meta:
-        model = Photo
-        fields = ("__all__")
-
-        def __init__(self, *args, **kwagrs):
-            super(PhotoForm, self).__init__(*args, **kwagrs)
-
-            self.fields['name'].widget.attrs['class'] = 'form-control'
-            self.fields['name_link'].widget.attrs['class'] = 'form-control'
-            self.fields['type'].widget.attrs['class'] = 'form-control'
-            self.fields['category'].widget.attrs['class'] = 'form-control'
-            self.fields['image'].widget.attrs['class'] = 'form-control'
-            self.fields['description'].widget.attrs['class'] = 'form-control'
-            self.fields['similar_products'].widget.attrs['class'] = 'form-control'
-            self.fields['price'].widget.attrs['class'] = 'form-control'
-            self.fields['stock'].widget.attrs['class'] = 'form-control'
-            self.fields['color'].widget.attrs['class'] = 'form-control'
-            self.fields['size'].widget.attrs['class'] = 'form-control'
-            self.fields['rating'].widget.attrs['class'] = 'form-control'
-            self.fields['popular'].widget.attrs['class'] = 'form-check-input'
-            self.fields['shop'].widget.attrs['class'] = 'form-check-input'
-            self.fields['digital'].widget.attrs['class'] = 'form-check-input'
-
-
-class BlogForm(forms.ModelForm):
-    class Meta:
-        model = Blog
-        fields = ("__all__")
-
-        def __init__(self, *args, **kwagrs):
-            super(BlogForm, self).__init__(*args, **kwagrs)
-
-            self.fields['title'].widget.attrs['class'] = 'form-control'
-            self.fields['summary'].widget.attrs['class'] = 'form-control'
-            self.fields['content'].widget.attrs['class'] = 'form-control'
-            self.fields['author'].widget.attrs['class'] = 'form-control'
-            self.fields['keywords'].widget.attrs['class'] = 'form-control'
-            self.fields['image'].widget.attrs['class'] = 'form-control'
-            self.fields['youtube'].widget.attrs['class'] = 'form-control'
-
-
 class AmapianoSignUpForm(forms.ModelForm):
     class Meta:
         model = AmapianoSignUp
@@ -124,15 +82,6 @@ class CustomerForm(ModelForm):
             self.fields['password1'].widget.attrs['class'] = 'form-control'
             self.fields['password2'].widget.attrs['class'] = 'form-control'
 
-
-class WatermarkColorForm(forms.Form):
-    watermark_color = forms.ChoiceField(
-        choices=[('white', 'White'), ('black', 'Black')],
-        widget=forms.RadioSelect(attrs={'class': 'form-check-input'}),
-        initial='white',
-    )
-
-
 # Stocks Form Start
 
 
@@ -146,6 +95,9 @@ class StockForm(forms.ModelForm):
             'type': forms.Select(attrs={'class': 'form-control'}),
             'target': forms.Select(attrs={'class': 'form-control'}),
             'item': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control'}),
+            'stock': forms.NumberInput(attrs={'class': 'form-control'}),
+            'rating': forms.NumberInput(attrs={'class': 'form-control'}),
             'amount_f': forms.NumberInput(attrs={'class': 'form-control'}),
             'amount_t': forms.NumberInput(attrs={'class': 'form-control'}),
             'buying_price': forms.NumberInput(attrs={'class': 'form-control'}),
@@ -157,10 +109,27 @@ class StockForm(forms.ModelForm):
             'online': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'priority': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'similar_products_codes': forms.TextInput(attrs={'class': 'form-control'}),
-            'image_1': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            'image_2': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            'image_3': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            'image_4': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            'image_5': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'thumbnail': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
+
 # Stocks Form End
+
+
+class StockPhotoForm(forms.ModelForm):
+    class Meta:
+        model = StockPhoto
+        fields = '__all__'
+
+
+class SpectraTalksSignUpForm(forms.ModelForm):
+    class Meta:
+        model = SpectraTalksSignUp
+        fields = ("__all__")
+
+        def __init__(self, *args, **kwagrs):
+            super(SpectraTalksSignUpForm, self).__init__(*args, **kwagrs)
+
+            self.fields['first_name'].widget.attrs['class'] = 'form-control'
+            self.fields['last_name'].widget.attrs['class'] = 'form-control'
+            self.fields['email'].widget.attrs['class'] = 'form-control'
+            self.fields['consent'].widget.attrs['class'] = 'form-check-input'

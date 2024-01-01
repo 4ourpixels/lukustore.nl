@@ -3,51 +3,10 @@ from django.contrib.auth.models import User
 from django.utils.dateformat import DateFormat
 from django.utils import timezone
 from django.utils.text import slugify
-from PIL import Image
 from django.urls import reverse
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-# Stock Calculation Utility Start
-from django.db.models import Sum
 from django.db.models import Count
-# Stock Calculation Utility End
-# BLOG ENTRY
-
-
-class Blog(models.Model):
-    title = models.CharField(max_length=200)
-    summary = models.CharField(max_length=500)
-    content = models.TextField()
-    author = models.CharField(max_length=200)
-    keywords = models.TextField(null=True, blank=True)
-    meta_keywords = models.TextField(null=True, blank=True)
-    meta_description = models.TextField(null=True, blank=True)
-    image = models.ImageField(
-        null=True,
-        blank=True,
-        upload_to="blog/",
-        default='blog.jpg'
-    )
-    youtube = models.TextField(blank=True, null=True)
-
-    # Add the slug field
-    # You can make it unique if needed
-    slug = models.SlugField(unique=True, null=True, blank=True)
-
-    pub_date = models.DateTimeField(auto_now_add=True)
-    updated_date = models.DateTimeField(auto_now=True)
-
-    contentOne = models.TextField(null=True, blank=True)
-    contentTwo = models.TextField(null=True, blank=True)
-
-    def __str__(self):
-        return f"{self.title} - Published On: {self.pub_date.strftime('%A, %B %d, %Y')}"
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.title)
-        super().save(*args, **kwargs)
-# END OF BLOG ENTRY
-
 # ABOUT US
 
 
@@ -568,3 +527,23 @@ class AmapianoSignUp(models.Model):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
+
+
+class SpectraTalksSignUp(models.Model):
+    first_name = models.CharField(max_length=100, blank=True, null=True)
+    last_name = models.CharField(max_length=100, blank=True, null=True)
+    email = models.EmailField()
+    consent = models.BooleanField(default=True, null=True, blank=False)
+    # New field for the ticket number
+    ticket_number = models.CharField(
+        max_length=36, unique=True, blank=True, null=True)
+
+    def full_name(self):
+        return f'{self.first_name} {self.last_name}'
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
+
+    class Meta:
+        verbose_name = 'Spectra Talks With Luku Store.nl Signup'
+        verbose_name_plural = 'Spectra Talks With Luku Store.nl Signups'

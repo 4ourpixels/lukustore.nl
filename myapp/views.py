@@ -5,21 +5,16 @@ import json
 import datetime
 from .models import *
 from .forms import *
+from .email import send_email_with_inline_logo
 from .utils import cartData, guestOrder
-from django.db.models import Q
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
+from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from blog.models import BlogPost
 
-# Email Logic
-from django.core.mail import send_mail, EmailMessage
-from django.conf import settings
-
 # Amapiano Slots Logic
-from django.db.models import Count
 import uuid
-import os
+
 
 # History Logic Start
 from django.contrib.admin.models import LogEntry
@@ -31,7 +26,6 @@ blogs = BlogPost.objects.order_by('-pk')
 
 def lukufam(request):
     title_tag = "About Us"
-
     data = cartData(request)
     cartItems = data['cartItems']
 
@@ -188,8 +182,6 @@ def index(request):
 
     }
     return render(request, 'index.html', context)
-
-
 
 
 def shop(request):
@@ -595,87 +587,6 @@ def processOrder(request):
     messages.success(request, ("Payment Complete!"))
     return JsonResponse('Payment Complete!', safe=False)
 
-
-def loginPage(request):
-    title_tag = "Log In"
-    blogs = BlogPost.objects.order_by('-pk')
-    brands = Brand.objects.order_by('-pk')
-    data = cartData(request)
-    cartItems = data['cartItems']
-
-    if request.user.is_authenticated:
-        return redirect('index')
-    else:
-        if request.method == 'POST':
-            username = request.POST.get('username')
-            password = request.POST.get('password')
-
-            user = authenticate(request, username=username, password=password)
-
-            if user is not None:
-                login(request, user)
-                if user.is_staff:
-                    messages.info(request, f'Welcome back {user.first_name}')
-                    return redirect('index')
-                else:
-                    messages.info(
-                        request, 'Register an account with us today.')
-                    return redirect('register')
-            else:
-                messages.info(request, 'Username Or Password is incorrect')
-
-    context = {
-        'title_tag': title_tag,
-        'cartItems': cartItems,
-        'blogs': blogs,
-        'brands': brands,
-    }
-
-    return render(request, 'login.html', context)
-
-
-def logoutUser(request):
-    logout(request)
-    return redirect('login')
-
-
-def registerPage(request):
-    meta_keywords = "Luku Store.nl Signup, Account Registration, Exclusive Offers, Fashion Updates, Socially-conscious Shopping, Personalized Account, Kenyan Fashion, Streetwear, Community Membership, Stay Connected, Diverse Style."
-    title_tag = "Create Your Luku Account - Sign Up for Exclusive Offers and Fashion Updates"
-    meta_description = "Join the Lukustore.nl community! Sign up for an account to access exclusive offers, stay updated on the latest Kenyan fashion trends, and be part of our socially-conscious shopping experience. Register now for a personalized shopping journey that celebrates diversity and style."
-    form = RegisterUserForm()
-    blogs = BlogPost.objects.order_by('-pk')
-    brands = Brand.objects.order_by('-pk')
-    data = cartData(request)
-    cartItems = data['cartItems']
-
-    if request.user.is_authenticated:
-        return redirect('index')
-    else:
-        if request.method == "POST":
-            form = RegisterUserForm(request.POST)
-            if form.is_valid():
-                form.save()
-                username = form.cleaned_data.get('username')
-                password = form.cleaned_data.get('password1')
-                user = authenticate(username=username, password=password)
-                login(request, user)
-                messages.success(
-                    request, ("Account registration successful, you've officially joined the cool club! Welcome aboard!"))
-                return redirect('index')
-        else:
-            form = RegisterUserForm()
-    context = {
-        'title_tag': title_tag,
-        'meta_description': meta_description,
-        'meta_keywords': meta_keywords,
-        'cartItems': cartItems,
-        'form': form,
-        'blogs': blogs,
-        'brands': brands,
-    }
-
-    return render(request, 'register.html', context)
 # customer
 
 
@@ -695,129 +606,6 @@ def confirmed(request):
     }
 
     return render(request, 'confirmed.html', context)
-
-
-def gallery(request):
-    category = request.GET.get('category')
-    blogs = BlogPost.objects.order_by('-pk')
-    brands = Brand.objects.order_by('-pk')
-
-    data = cartData(request)
-    cartItems = data['cartItems']
-
-    if category == None:
-        products = Product.objects.all()
-    else:
-        products = Product.objects.filter(category__name=category)
-
-    categories = Category.objects.all()
-
-    unique_product_codes = Product.objects.filter(
-        product_code__isnull=False).values_list('product_code', flat=True).distinct()
-    unique_photos = []
-
-    for product_code in unique_product_codes:
-        latest_photo = Product.objects.filter(
-            product_code=product_code).order_by('-id').first()
-        unique_photos.append(latest_photo)
-
-    active_category = request.GET.get('category', None)
-
-    context = {
-        'categories': categories,
-        'products': products,
-        'cartItems': cartItems,
-        'active_category': active_category,
-        'unique_photos': unique_photos,
-        'blogs': blogs,
-        'brands': brands,
-    }
-    return render(request, 'gallery.html', context)
-
-
-def viewPhoto(request, pk):
-    try:
-        photo = get_object_or_404(Photo, pk=pk)
-        product = get_object_or_404(Product, product_code=photo.product_code)
-        data = cartData(request)
-        cartItems = data['cartItems']
-        blogs = BlogPost.objects.order_by('-pk')
-        brands = Brand.objects.order_by('-pk')
-        photos = Photo.objects.filter(product_code=product.product_code)
-
-        similar_products = Product.objects.filter(
-            product_code=photo.product_code)
-
-        similar_products_codes = photo.similar_products_codes.split(',')
-        similar_products = Product.objects.filter(
-            Q(product_code__in=similar_products_codes) | Q(
-                name__in=similar_products_codes)
-        )
-
-        title_tag = photo.name
-
-        context = {
-            'photo': photo,
-            'cartItems': cartItems,
-            'similar_products': similar_products,
-            'title_tag': title_tag,
-            'blogs': blogs,
-            'brands': brands,
-            'product': product,
-            'photos': photos,
-        }
-
-        return render(request, 'photo.html', context)
-
-    except Exception as e:
-        # Handle other exceptions
-        title_tag = f'Error {photo.name} was not found'
-        print("Error :", str(e))
-        context = {
-            'error': str(e),
-            'title_tag': title_tag
-        }
-        return render(request, '404.html', context)
-
-
-# ACCOUNT
-@login_required(login_url='login')
-def account(request):
-    photos = Photo.objects.all()
-    products = Product.objects.all()
-    blogs = BlogPost.objects.order_by('-pk')
-    brands = Brand.objects.order_by('-pk')
-    shippings = ShippingAddress.objects.all()
-    orders = Order.objects.order_by('-pk')
-    order_item_list = OrderItem.objects.all()
-    # title Tag
-    title_tag = "Account Settings | Manage Your Luku Profile and Preferences"
-    meta_description = "Customize your Lukustore.nl experience with our account settings. Update your profile, manage preferences, and stay connected with the latest Kenyan fashion. Shop consciously with Lukustore.nl."
-    meta_keywords = "Lukustore, Account Settings, Profile Management, Preferences, Kenyan Fashion, Online Clothing Store, Socially-conscious Shopping, Vibrant Outfits, Handmade Clothes, Free Shipping Netherlands."
-    data = cartData(request)
-    cartItems = data['cartItems']
-    order = data['order']
-    items = data['items']
-
-    context = {
-        'order_item_list': order_item_list,
-        'shippings': shippings,
-        'cartItems': cartItems,
-        'title_tag': title_tag,
-        'photos': photos,
-        'products': products,
-        'orders': orders,
-        'order': order,
-        'items': items,
-        'blogs': blogs,
-        'brands': brands,
-        'meta_description': meta_description,
-        'meta_keywords': meta_keywords,
-
-    }
-
-    return render(request, 'account.html', context)
-# END OF ACCOUNT
 
 
 def music(request):
@@ -864,6 +652,7 @@ def dashboard(request):
     euro_converted_total_consigment = round(
         int(grand_total_cost) / euro_exchange_rate)
     amapiano_signups = AmapianoSignUp.objects.all()
+    spectra_talks_signups = SpectraTalksSignUp.objects.all()
     blog_posts = BlogPost.objects.all()
 
     title_tag = "Dashboard"
@@ -879,6 +668,7 @@ def dashboard(request):
         'admin_actions': admin_actions,
         'brands': brands,
         'amapiano_signups': amapiano_signups,
+        'spectra_talks_signups': spectra_talks_signups,
         'blog_posts': blog_posts,
     }
 
@@ -886,33 +676,6 @@ def dashboard(request):
 
 
 # Amapiano Workshop Signup Logic Start
-
-
-def send_email_with_inline_logo(email, first_name, ticket_number):
-    subject = 'Your Amapiano Workshop Confirmation 🎉'
-    message = f"Hi {first_name},\n\nGreat news! You're officially registered for the Amapiano Workshop 🎶\n\n📅 Date: 18th Nov 2023\n🕒 Time: 3:00 PM - 5:00 PM\n📍 Venue: Amsterdam Dance Center\n\n\nYour Ticket: {ticket_number}\n\nGet ready for a fantastic time of music and dance!\nSee you there,\n\nLuku Store.nl\ninfo@lukustore.nl"
-
-    from_email = 'lukustore.nl@gmail.com'
-    lukustore_info_email = 'info@lukustore.nl'
-    recipient_list = [email, lukustore_info_email]
-
-    # Create an EmailMessage instance
-    email_message = EmailMessage(
-        subject,
-        message,
-        from_email,
-        recipient_list,
-    )
-
-    # Attach the logo inline
-    logo_path = os.path.join(os.path.dirname(
-        __file__), 'static/Amapiano-Workshop.jpg')
-    with open(logo_path, 'rb') as logo_file:
-        # Adjust content type if needed
-        email_message.attach(logo_file.name, logo_file.read(), 'image/png')
-
-    # Send the email
-    email_message.send()
 
 
 def amapiano_workshop_signup(request):
@@ -968,49 +731,10 @@ def amapiano_workshop_signup(request):
         'remaining_slots': remaining_slots,
     }
 
-    return render(request, 'amapiano.html', context)
+    return render(request, 'events/amapiano.html', context)
 # Amapiano Workshop Signup Logic End
 
 # ACCOUNT
-
-
-@login_required(login_url='login')
-def account_settings(request):
-    blogs = BlogPost.objects.order_by('-pk')
-    brands = Brand.objects.order_by('-pk')
-    shippings = ShippingAddress.objects.all()
-    data = cartData(request)
-    cartItems = data['cartItems']
-    order = data['order']
-    items = data['items']
-
-    # Edit account
-    customer = request.user.customer
-    form = CustomerForm(instance=customer)
-
-    title_tag = "Account Settings"
-    if request.method == 'POST':
-        form = CustomerForm(request.POST, request.FILES, instance=customer)
-        if form.is_valid():
-            form.save()
-            first_name = form.cleaned_data.get('first_name')
-            print(f"Succesfully updated {first_name}'s account.")
-            messages.success(
-                request, ('Succesfully updated account settings.'))
-            return redirect('account_settings')
-        else:
-            form = CustomerForm(instance=customer)
-
-    context = {
-        'shippings': shippings,
-        'cartItems': cartItems,
-        'title_tag': title_tag,
-        'blogs': blogs,
-        'brands': brands,
-        'form': form,
-    }
-
-    return render(request, 'account_settings.html', context)
 
 
 def view_stock_details(request, slug):
@@ -1093,3 +817,64 @@ def add_stock_photo(request):
     return render(request, 'add_stock_photo.html', context)
 
 # Stock Logic End
+
+
+# Spectra Talks Signup Logic Start
+
+
+def spectra_talks_signup(request):
+    title_tag = "Spectra Talks with Luku Store.nl & WhoWhatWhereKE Signup"
+    spectra_talks_signup_form = SpectraTalksSignUpForm()
+
+    if request.method == 'POST':
+        spectra_talks_signup_form = SpectraTalksSignUpForm(request.POST)
+        if spectra_talks_signup_form.is_valid():
+            email = spectra_talks_signup_form.cleaned_data.get('email')
+
+            # Check if the email already exists in the database
+            if SpectraTalksSignUp.objects.filter(email=email).exists():
+                messages.error(
+                    request, ('The email you entered is already registered. Please use a different one.'))
+                return redirect('spectra_talks')
+
+            try:
+                user_signup = spectra_talks_signup_form.save(commit=False)
+                user_signup.consent = spectra_talks_signup_form.cleaned_data.get(
+                    'consent')
+                user_signup.ticket_number = str(uuid.uuid4())[:8]
+                user_signup.save()
+
+                first_name = spectra_talks_signup_form.cleaned_data.get(
+                    'first_name')
+                last_name = spectra_talks_signup_form.cleaned_data.get(
+                    'last_name')
+                email = spectra_talks_signup_form.cleaned_data.get('email')
+                consent = user_signup.consent
+                ticket_number = user_signup.ticket_number
+                short_ticket_number = ticket_number[:8]
+
+                print(
+                    f"\n\n++++++SIGNUP DETAILS START+++++\n\nTicket Number: {ticket_number}\n{first_name} {last_name} registered with {email}\nConsent: {consent}\nShort Ticket No: #{short_ticket_number}\n\n++++++SIGNUP DETAILS END+++++\n\n")
+
+                # Send email with inline logo
+                send_email_with_inline_logo(
+                    email, first_name, short_ticket_number)
+
+                messages.success(
+                    request, (f"Hey {first_name}! Your Registration to 'Spectra Talks with Luku Store.nl & WhoWhatWhereKE' Was Successful! Check your email for the ticket and event details."))
+                return redirect('index')
+            except:
+                spectra_talks_signup_form.save()
+                messages.error(
+                    request, ('Unable to register. Your details were correct, but we could not save them due to a technical issue on our end. Please registering again. If the issue keeps happening, contact us at info@lukustore.nl'))
+                return redirect('spectra_talks')
+        else:
+            spectra_talks_signup_form = SpectraTalksSignUpForm()
+
+    context = {
+        'title_tag': title_tag,
+        'spectra_talks_signup_form': spectra_talks_signup_form,
+    }
+
+    return render(request, 'events/spectra_talks.html', context)
+# Spectra Talks Signup Logic End
