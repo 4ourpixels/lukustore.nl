@@ -115,6 +115,26 @@ STATIC_ROOT = BASE_DIR / 'static'
 # AWS_STORAGE_BUCKET_NAME = 'BUCKET-NAME-IN-STRING'
 # AWS_QUERYSTRING_AUTH = False
 
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = '587'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_CC = ''
+EMAIL_HOST_PASSWORD = ''
+EMAIL_USE_SSL = False
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = ''
+
+# Debug
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = '1025'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+EMAIL_USE_SSL = False
+EMAIL_USE_TLS = False
+
 # Update with your project name
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lukustore.settings")
 django.setup()
