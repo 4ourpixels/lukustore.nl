@@ -1,13 +1,13 @@
 {% extends 'base.html' %} {% load static %} {% block body %}
-<!-- Spectra Talks Start -->
+<!-- spectra Talks Start -->
 <section class="container mt-3">
   <div class="row gy-5 justify-content-center align-items-center">
-    <!-- Spectra Talks Poster Start -->
+    <!-- spectra Talks Poster Start -->
     <article class="col-sm-12 col-md-6">
       <figure class="figure-card">
         <img
           src="{% static 'images/events/spectra_talks_flyer.jpg' %}"
-          alt="Poster for Spectra Talks with Luku Store.nl & WhoWhatWhereKE"
+          alt="Poster for spectra Talks with Luku Store.nl & WhoWhatWhereKE"
           class="img-fluid rounded shadow"
         />
         <figcaption style="font-size: 2rem">
@@ -16,7 +16,7 @@
         </figcaption>
       </figure>
     </article>
-    <!-- Spectra Talks Poster End -->
+    <!-- spectra Talks Poster End -->
 
     <!-- Form Start -->
     <article class="col-sm-12 col-md-6">
@@ -29,7 +29,7 @@
         {% csrf_token %}
         <div class="my-4 row">
           <h2 class="text-dark fw-bold">
-            Spectra Talks with Luku Store.nl & WhoWhatWhereKE
+            spectra Talks with Luku Store.nl & WhoWhatWhereKE
           </h2>
         </div>
 
@@ -104,7 +104,29 @@
       <!-- Form End -->
     </article>
   </div>
+  <article class="row mt-5">
+    <div class="text-center">
+      <iframe
+        style="border-radius: 8px"
+        class="shadow border"
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1175.3763990871607!2d36.786183706642646!3d-1.2923235050424111!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f112bdeb370d7%3A0x616dbdcaf5618b9f!2sUnseen%20Nairobi!5e0!3m2!1sen!2ske!4v1704120994028!5m2!1sen!2ske"
+        style="border: 0"
+        allowfullscreen=""
+        height="300"
+        width="800"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
+    </div>
+    <a
+      target="_blank"
+      class="unlink h5 text-center mt-5 text-muted hover"
+      href="https://maps.app.goo.gl/q1Z3Vy5dHQj9LtGy6"
+      ><i class="fa-solid fa-location-crosshairs"></i> Click here for
+      location</a
+    >
+  </article>
 </section>
-<!-- Spectra Talks End -->
+<!-- spectra Talks End -->
 
 {% endblock %}
