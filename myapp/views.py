@@ -819,11 +819,11 @@ def add_stock_photo(request):
 # Stock Logic End
 
 
-# Spectra Talks Signup Logic Start
+# spectra Talks Signup Logic Start
 
 
 def spectra_talks_signup(request):
-    title_tag = "Spectra Talks with Luku Store.nl & WhoWhatWhereKE Signup"
+    title_tag = "spectra Talks with Luku Store.nl & WhoWhatWhereKE Signup"
     spectra_talks_signup_form = SpectraTalksSignUpForm()
 
     if request.method == 'POST':
@@ -861,7 +861,7 @@ def spectra_talks_signup(request):
                     email, first_name, short_ticket_number)
 
                 messages.success(
-                    request, (f"Hey {first_name}! Your Registration to 'Spectra Talks with Luku Store.nl & WhoWhatWhereKE' Was Successful! Check your email for the ticket and event details."))
+                    request, (f"Hey {first_name}! Your Registration to 'spectra Talks with Luku Store.nl & WhoWhatWhereKE' Was Successful! Check your email for the ticket and event details."))
                 return redirect('index')
             except:
                 spectra_talks_signup_form.save()
@@ -877,4 +877,4 @@ def spectra_talks_signup(request):
     }
 
     return render(request, 'events/spectra_talks.html', context)
-# Spectra Talks Signup Logic End
+# spectra Talks Signup Logic End

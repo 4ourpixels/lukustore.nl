@@ -4,8 +4,8 @@ from django.conf import settings
 
 
 def send_email_with_inline_logo(email, first_name, ticket_number):
-    subject = 'Your Spectra Talks with Luku Store.nl & WhoWhatWhereKE Confirmation 🎉'
-    message = f"Hi {first_name},\n\nGreat news! You're officially registered for the Spectra Talks with Luku Store.nl & WhoWhatWhereKE 🎶\n\n📅 Date: 05th Jan 2024\n🕒 Time: 3:00 PM - 12:00 AM\n📍 Venue: To be confirmed\n\n\nYour Ticket: {ticket_number}\n\nGet ready for an industry panel talk engaging the various stakeholders in the fashion and music industry!\n\nThis panel follows our most recent partnership Spectra, a community building gathering that seamlessly intertwined locally produced music and art.\nSee you there,\n\nLuku Store.nl & WhoWhatWhereKE\ninfo@lukustore.nl"
+    subject = 'Confirmation: spectra Talks with Luku Store.nl & WhoWhatWhereKE 🎉'
+    message = f"Hi {first_name},\n\nExciting news! You've successfully secured your spot for spectra Talks with Luku Store.nl & WhoWhatWhereKE\n\n📅 Date: 05th Jan 2024\n🕒 Time: 3:00 PM - 12:00 AM\n📍 Venue: Unseen Nairobi, Wood Ave\n\n\nYour Ticket: {ticket_number}\n\nGet ready for an industry panel talk engaging the various stakeholders in the fashion and music industry!\n\nThis panel follows our most recent partnership Spectra, a community building gathering that seamlessly intertwined locally produced music and art.\nSee you there,\n\nLuku Store.nl & WhoWhatWhereKE\ninfo@lukustore.nl"
     from_email = settings.EMAIL_HOST_USER
     cc_email = settings.EMAIL_HOST_CC
     recipient_list = [email, cc_email]
