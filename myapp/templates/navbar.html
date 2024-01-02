@@ -247,27 +247,25 @@
   </div>
 </nav>
 {% if messages %} {% for message in messages %}
-<div class="container p-0">
-  <div
-    id="alert-dark"
-    class="alert alert-dark alert-dismissable fade show"
-    role="alert"
-  >
-    <h6 class="text-center">
-      {{ message }}
-      <span
-        ><button
-          style="color: white"
-          id="alert-close"
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="alert"
-          aria-label="Close"
-        >
-          X
-        </button></span
+<section
+  id="alert-dark"
+  class="alert alert-dark alert-dismissable fade show"
+  role="alert"
+>
+  <h6 class="text-center">
+    {{ message }}
+    <span
+      ><button
+        style="color: white"
+        id="alert-close"
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
       >
-    </h6>
-  </div>
-</div>
+        X
+      </button></span
+    >
+  </h6>
+</section>
 {% endfor %} {% endif %}
