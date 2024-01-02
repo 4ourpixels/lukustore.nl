@@ -136,7 +136,7 @@ def index(request):
     cartItems = data['cartItems']
 
     # Calculate remaining slots
-    remaining_slots = 20 - AmapianoSignUp.objects.count()
+    remaining_slots = 43 - SpectraTalksSignUp.objects.count()
 
     context = {
         'photos': photos,
@@ -651,8 +651,9 @@ def dashboard(request):
     euro_exchange_rate = int(155)
     euro_converted_total_consigment = round(
         int(grand_total_cost) / euro_exchange_rate)
-    amapiano_signups = AmapianoSignUp.objects.all()
+    amapiano_signups = AmapianoSignUp.objects.order_by('-pk')
     spectra_talks_signups = SpectraTalksSignUp.objects.all()
+    num_spectra_talks_signups = SpectraTalksSignUp.objects.all().count()
     blog_posts = BlogPost.objects.all()
 
     title_tag = "Dashboard"
@@ -669,6 +670,7 @@ def dashboard(request):
         'brands': brands,
         'amapiano_signups': amapiano_signups,
         'spectra_talks_signups': spectra_talks_signups,
+        'num_spectra_talks_signups': num_spectra_talks_signups,
         'blog_posts': blog_posts,
     }
 
@@ -825,19 +827,19 @@ def add_stock_photo(request):
 def spectra_talks_signup(request):
     title_tag = "spectra Talks with Luku Store.nl & WhoWhatWhereKE Signup"
     spectra_talks_signup_form = SpectraTalksSignUpForm()
+    remaining_slots = 43 - SpectraTalksSignUp.objects.count()
 
     if request.method == 'POST':
         spectra_talks_signup_form = SpectraTalksSignUpForm(request.POST)
         if spectra_talks_signup_form.is_valid():
             email = spectra_talks_signup_form.cleaned_data.get('email')
 
-            # Check if the email already exists in the database
             if SpectraTalksSignUp.objects.filter(email=email).exists():
                 messages.error(
-                    request, ('The email you entered is already registered. Please use a different one.'))
-                return redirect('spectra_talks')
+                    request, ('Successfylly registered'))
+                return redirect('index')
 
-            try:
+            if remaining_slots > 0:
                 user_signup = spectra_talks_signup_form.save(commit=False)
                 user_signup.consent = spectra_talks_signup_form.cleaned_data.get(
                     'consent')
@@ -852,27 +854,38 @@ def spectra_talks_signup(request):
                 consent = user_signup.consent
                 ticket_number = user_signup.ticket_number
                 short_ticket_number = ticket_number[:8]
+                consent = user_signup.consent
+
+                if consent:
+                    print("New subscriber!")
+                    consent_status = "Subscribed"
+                elif consent == "Unknown":
+                    print("Consent Unknown")
+                    consent_status = "Unknown"
+                else:
+                    consent_status = "Unsbscribed"
+                    print(f"{first_name} Unsibscribed :(")
 
                 print(
-                    f"\n\n++++++SIGNUP DETAILS START+++++\n\nTicket Number: {ticket_number}\n{first_name} {last_name} registered with {email}\nConsent: {consent}\nShort Ticket No: #{short_ticket_number}\n\n++++++SIGNUP DETAILS END+++++\n\n")
+                    f"\n\n++++++SIGNUP DETAILS START+++++\n\nTicket Number: {ticket_number}\n{first_name} {last_name} registered with {email}\nSubscription status: {consent_status}\nShort Ticket No: #{short_ticket_number}\n\n++++++SIGNUP DETAILS END+++++\n\n")
 
-                # Send email with inline logo
                 send_email_with_inline_logo(
                     email, first_name, short_ticket_number)
 
                 messages.success(
                     request, (f"Hey {first_name}! Your Registration to 'spectra Talks with Luku Store.nl & WhoWhatWhereKE' Was Successful! Check your email for the ticket and event details."))
                 return redirect('index')
-            except:
+            else:
                 spectra_talks_signup_form.save()
                 messages.error(
-                    request, ('Unable to register. Your details were correct, but we could not save them due to a technical issue on our end. Please registering again. If the issue keeps happening, contact us at info@lukustore.nl'))
-                return redirect('spectra_talks')
+                    request, ("We appreciate your interest! As we've reached full capacity, keep an eye on our announcements for details on the next event. Stay connected through our newsletter or social channels to be the first to know."))
+                return redirect('index')
         else:
             spectra_talks_signup_form = SpectraTalksSignUpForm()
 
     context = {
         'title_tag': title_tag,
+        'remaining_slots': remaining_slots,
         'spectra_talks_signup_form': spectra_talks_signup_form,
     }
 

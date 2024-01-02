@@ -538,6 +538,7 @@ class SpectraTalksSignUp(models.Model):
     ticket_number = models.CharField(
         max_length=36, unique=True, blank=True, null=True)
 
+    @property
     def full_name(self):
         return f'{self.first_name} {self.last_name}'
 
