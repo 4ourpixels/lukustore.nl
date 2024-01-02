@@ -1,14 +1,14 @@
 {% load static %}
 <section class="container py-5 my-5">
-  <div class="row justify-content-center align-items-center">
-    <article class="col-lg-10 col-sm-12 mb-5">
+  <div class="row gy-5 justify-content-center align-items-center">
+    <article class="col-lg-10 col-sm-12">
       <!-- Spotify Playlist Start -->
       <iframe
         class="shadow"
         style="border-radius: 8px"
         src="https://open.spotify.com/embed/playlist/1FGZyjmcqr8hqipSkUdnPX?utm_source=generator&theme=0"
-        width="100%"
         height="423"
+        width="100%"
         frameborder="0"
         allowfullscreen
         loading="lazy"
@@ -16,9 +16,9 @@
       <!-- Spotify Playlist End -->
     </article>
     <!-- Form -->
-    <article style="margin: 0 3rem" class="col-lg-10 col-sm-12">
+    <article class="col-lg-10 col-sm-12">
       <div class="container p-0 m-0">
-        <div class="row gy-5 justify-content-center align-items-center">
+        <div class="row gy-2 justify-content-center align-items-start">
           <div class="col-sm-12 col-lg-6">
             <figure class="figure-card">
               <img
@@ -44,7 +44,7 @@
           <div class="col-sm-12 col-lg-6">
             <form
               style="border-radius: 8px"
-              class="p-5 shadow border"
+              class="p-4 shadow border"
               method="POST"
               action="{% url 'spectra_talks_signup' %}"
             >
@@ -55,6 +55,7 @@
                   class="h2 underline text-dark fw-bold"
                   >spectra Talks with Luku Store.nl & WhoWhatWhereKE</a
                 >
+                <p class="text-muted">Remaining Slots: {{ remaining_slots }}</p>
               </div>
 
               <div class="row">
@@ -112,7 +113,7 @@
                 </button>
               </div>
 
-              <div class="form-check mb-4">
+              <div class="form-check mb-3">
                 <input
                   class="form-check-input"
                   type="checkbox"
@@ -120,7 +121,6 @@
                   id="flexCheckChecked"
                   name="consent"
                   checked
-                  required
                 />
                 <label class="form-check-label" for="flexCheckChecked">
                   I want to stay informed about future events, exclusive offers,

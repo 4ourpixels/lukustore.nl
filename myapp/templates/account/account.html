@@ -1,0 +1,56 @@
+{% extends 'base.html' %} {% load static %} {% block body %}
+<main class="container">
+  <nav style="--bs-breadcrumb-divider: '>'" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a class="text-dark underline" href="{% url 'index' %}">Home</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">
+        Account > 👋 Welcome back, {{ request.user.first_name|capfirst }}!
+      </li>
+    </ol>
+  </nav>
+  <section class="row my-5">
+    <div class="col-md-12 col-lg-12 col-sm-12">
+      <h1 class="mb-5 ms-5">My Luku</h1>
+      {% if items %}
+      <article class="p-5 border rounded">
+        <h6 class="mb-3">
+          Luku ordered: {{ cartItems }}
+          <span class="float-end">Total: €{{ order.get_cart_total }}</span>
+        </h6>
+        <table class="table table-responsive table-striped table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Image</th>
+              <th scope="col">Item</th>
+              <th scope="col">Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in items %}
+            <tr>
+              <th scope="row">
+                <img
+                  height="50"
+                  width="auto"
+                  style="object-fit: cover"
+                  src="{{ item.product.image.url }}"
+                  alt="{{ item.product.name }}"
+                />
+              </th>
+              <td>{{ item.product.name }} <br />X {{ item.quantity }}</td>
+              <td>€{{ item.product.price }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </article>
+      {% else %}
+      <h4>Cart is empty</h4>
+      {% endif %}
+    </div>
+  </section>
+</main>
+
+{% endblock %}
