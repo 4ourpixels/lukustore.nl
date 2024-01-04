@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     "django.contrib.humanize",
     "blog",
     "django_summernote",
+    "django_resized",
 ]
 
 MIDDLEWARE = [
@@ -138,3 +139,13 @@ EMAIL_USE_TLS = False
 # Update with your project name
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lukustore.settings")
 django.setup()
+
+
+DJANGORESIZED_DEFAULT_SIZE = [1920, 1080]
+DJANGORESIZED_DEFAULT_SCALE = 0.5
+DJANGORESIZED_DEFAULT_QUALITY = 75
+DJANGORESIZED_DEFAULT_KEEP_META = True
+DJANGORESIZED_DEFAULT_FORCE_FORMAT = 'JPEG'
+DJANGORESIZED_DEFAULT_FORMAT_EXTENSIONS = {'JPEG': ".jpg"}
+DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION = True
+
