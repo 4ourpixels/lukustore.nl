@@ -7,6 +7,8 @@ from django.urls import reverse
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.db.models import Count
+from django_resized import ResizedImageField
+
 # ABOUT US
 
 
@@ -14,15 +16,15 @@ class AboutUs(models.Model):
     summary = models.CharField(max_length=700, blank=True, null=True)
     name = models.CharField(max_length=100, blank=True, null=True)
     role = models.CharField(max_length=100, blank=True, null=True)
-    instagram = models.CharField(max_length=50, blank=True, null=True)
-    twitter = models.CharField(max_length=50, blank=True, null=True)
+    instagram = models.TextField(blank=True, null=True)
+    twitter = models.TextField(blank=True, null=True)
+    facebook = models.TextField(blank=True, null=True)
     bio = models.TextField(blank=True, null=True)
 
     image = models.ImageField(
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         upload_to="about-us/",
-        default='image.jpg'
     )
 
     def __str__(self):
@@ -120,12 +122,8 @@ class Customer(models.Model):
     username = models.CharField(max_length=50, null=True, blank=True)
     email = models.EmailField(default='', null=True, blank=True)
 
-    profile_pic = models.ImageField(
-        null=True,
-        blank=True,
-        upload_to="customer-images/",
-        default='image.jpg',
-    )
+    profile_pic = ResizedImageField(
+        size=[500, 500], quality=100, upload_to="customers/", default=None, null=True, blank=True)
 
     def __str__(self):
         return f"@{self.username} - {self.first_name}"
@@ -173,6 +171,12 @@ class Brand(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def get_url(self):
+        return reverse("brand_detail", kwargs={
+            "slug": self.slug
+        })
 
 
 class Product(models.Model):

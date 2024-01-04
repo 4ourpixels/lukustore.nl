@@ -24,8 +24,8 @@ from django.contrib.admin.models import LogEntry
 blogs = BlogPost.objects.order_by('-pk')
 
 
-def lukufam(request):
-    title_tag = "About Us"
+def about(request):
+    title_tag = "Luku Fam | About Us"
     data = cartData(request)
     cartItems = data['cartItems']
 
@@ -47,7 +47,7 @@ def lukufam(request):
             message=message,
         )
         contact.save()
-        return redirect('lukufam')
+        return redirect('about')
 
     context = {
         'kendy': kendy,
@@ -60,7 +60,7 @@ def lukufam(request):
         'brands': brands
     }
 
-    return render(request, 'lukufam.html', context)
+    return render(request, 'about.html', context)
 # END OF ABOUT US
 
 # HELP SECTION - DONE
@@ -391,20 +391,28 @@ def brand_detail(request, slug):
     blogs = BlogPost.objects.order_by('-pk')
     brands = Brand.objects.order_by('-pk')
     title_tag = brand.name
-    # Filter stocks based on the specified brand
     stocks = Stock.objects.filter(brand=brand).order_by('-priority')
+
+    filtered_blogs = BlogPost.objects.filter(
+        Q(tag__name__icontains=brand.name) |
+        Q(category__name__icontains=brand.name) |
+        Q(author__username__icontains=brand.name) |
+        Q(content__icontains=brand.name) |
+        Q(title__icontains=brand.name)
+    ).distinct()
 
     data = cartData(request)
     cartItems = data['cartItems']
 
     context = {
         'cartItems': cartItems,
-        'blogs': blogs,
+        'filtered_blogs': filtered_blogs,
         'title_tag': title_tag,
         'brands': brands,
         'brand': brand,
         'products': products,
         'stocks': stocks,
+        'blogs': blogs,
     }
     return render(request, 'brand_detail.html', context)
 

@@ -6,7 +6,7 @@ from .account import account, account_settings, loginPage, logoutUser, registerP
 urlpatterns = [
     path('', views.index, name='index'),
     path('shop/', views.shop, name='shop'),
-    path('lukufam/', views.lukufam, name='lukufam'),
+    path('lukufam/', views.about, name='about'),
     path('account/', account, name='account'),
     path('settings/', account_settings, name='account_settings'),
     path('login/', loginPage, name='login'),
