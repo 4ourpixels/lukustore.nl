@@ -522,3 +522,77 @@ h3 {
 .brand-btn {
   border-radius: 30px;
 }
+
+/* Notifications animation */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -100%, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.fadeInDown {
+  animation-name: fadeInDown;
+}
+
+@keyframes fadeInDownBig {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -2000px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Notifications animation */
+
+/* Event cover */
+.event-cover {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: center;
+  object-fit: cover;
+  animation: zoom 1s ease-in-out;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  background-image: linear-gradient(to top, #000000f7, #0000006b),
+    url("../images/events/spectra_talks_flyer.jpg");
+}
+/* Event cover */
+
+/* Extra small devices(phones, 600px and down) */
+@media (max-width: 600px) {
+}
+/* Small devices(Portrait tablets and large phones, 600px and up) */
+@media (min-width: 600px) {
+}
+/* Medium devices (Landscape tablets, 768px and up) */
+@media (min-width: 768px) {
+}
+/* Large devices (Laptops/desktops, 992px and up) */
+@media (min-width: 992px) {
+}
+
+/* Extra large devices (Large laptops and desktops, 1200px and up) */
+@media (min-width: 1200px) {
+}
+@media (min-width: 1400px) {
+}
+/* Media Queries */
+
+.profile-pic {
+  border-radius: 50px;
+  height: 1.6rem;
+  width: 1.6rem;
+  object-fit: cover;
+}
