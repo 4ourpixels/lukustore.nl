@@ -271,6 +271,18 @@ def view_stock(request, slug):
             product_images.append(image)
 
     title_tag = product.item
+    
+    all_photos = StockPhoto.objects.all()
+    photos = []
+
+    for photo in all_photos:
+        if photo.product_code == product_code:
+            photos.append(photo.image)
+
+    product_img = photos[0]
+
+    sizes_object = product.size.split(',')
+    sizes = [size.strip() for size in sizes_object]
 
     context = {
         'product': product,
@@ -281,6 +293,9 @@ def view_stock(request, slug):
         'other_images': other_images,
         'brands': brands,
         'product_images': product_images,
+        'photos': photos,
+        'product_img': product_img,
+        'sizes': sizes,
         'similar_products': similar_products,
     }
 
