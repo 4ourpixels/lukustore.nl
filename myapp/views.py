@@ -664,6 +664,33 @@ def dashboard(request):
     num_spectra_talks_signups = SpectraTalksSignUp.objects.all().count()
     blog_posts = BlogPost.objects.all()
 
+    stock_object = Stock.objects.all()
+    online_products = Stock.objects.filter(online=True).all()
+
+    product_codes = []
+    below_twenty = []
+
+    online_product_codes = []
+    all_online_products = []
+    
+    for product in stock_object:
+        if product.buying_price == 0:
+            pass
+        elif product.buying_price <= 25:
+            below_twenty.append(product)
+
+    for code in stock_object:
+        new_code = str(f"ls0{code.pk}")
+        product_codes.append(new_code)
+
+    for product in online_products:
+        if product.online:
+            online_product_codes.append(str(f"ls0{product.pk}"))
+
+    for product in online_products:
+        if product.online:
+            all_online_products.append(product)
+
     title_tag = "Dashboard"
     admin_actions = LogEntry.objects.order_by('-action_time')[:10]
     context = {
@@ -680,6 +707,10 @@ def dashboard(request):
         'spectra_talks_signups': spectra_talks_signups,
         'num_spectra_talks_signups': num_spectra_talks_signups,
         'blog_posts': blog_posts,
+        'product_codes': product_codes,
+        'online_product_codes': online_product_codes,
+        'all_online_products': all_online_products,
+        'below_twenty': below_twenty,
     }
 
     return render(request, 'dashboard.html', context)
