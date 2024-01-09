@@ -85,9 +85,9 @@ class CustomerForm(ModelForm):
 # Stocks Form Start
 
 
-class StockForm(forms.ModelForm):
+class ProductForm(forms.ModelForm):
     class Meta:
-        model = Stock
+        model = Product
         fields = '__all__'
         exclude = ['product_code', 'slug']
         widgets = {
@@ -115,9 +115,9 @@ class StockForm(forms.ModelForm):
 # Stocks Form End
 
 
-class StockPhotoForm(forms.ModelForm):
+class ProductPhotoForm(forms.ModelForm):
     class Meta:
-        model = StockPhoto
+        model = ProductPhoto
         fields = '__all__'
 
 

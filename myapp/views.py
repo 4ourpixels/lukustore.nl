@@ -1,27 +1,18 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import JsonResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.urls import reverse
-import json
-import datetime
 from .models import *
 from .forms import *
 from .email import send_email_with_inline_logo
-from .utils import cartData, guestOrder
+from .utils import cartData
 from django.contrib import messages
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from blog.models import BlogPost
-
-# Amapiano Slots Logic
 import uuid
-
-
-# History Logic Start
 from django.contrib.admin.models import LogEntry
-# History Logic End
-# ABOUT US
-
 blogs = BlogPost.objects.order_by('-pk')
+# ABOUT US
 
 
 def about(request):
@@ -191,8 +182,8 @@ def shop(request):
     meta_keywords = "Kenyan Fashion, Accessible Clothing, Stylish Outfits, Online Fashion Store, Handmade Clothes, Curated Designs, Socially-conscious Shopping, Men's Fashion, Women's Fashion, Unisex, Luku Store.nl, Netherlands Fashion, Shipping."
     blogs = BlogPost.objects.order_by('-pk')
     brands = Brand.objects.order_by('pk')
-    stocks = Stock.objects.all()
-    # stocks = Stock.objects.filter(online=True).order_by('-priority')
+    products = Product.objects.all()
+    # products = product.objects.filter(online=True).order_by('-priority')
 
     unique_product_codes = Photo.objects.filter(
         product_code__isnull=False).values_list('product_code', flat=True).distinct()
@@ -208,15 +199,13 @@ def shop(request):
     data = cartData(request)
     cartItems = data['cartItems']
 
-    sorted_brands = Brand.get_brands_sorted_by_online_stock()
-
     if brand is not None:
-        stocks = Stock.objects.filter(brand__name=brand, online=True)
+        products = Product.objects.filter(brand__name=brand, online=True)
     else:
-        stocks = Stock.objects.filter(online=True)
+        products = Product.objects.filter(online=True)
 
-    sorted_brands = Brand.get_brands_sorted_by_online_stock()
-
+    # sorted_brands = Brand.get_brands_sorted_by_online_product()
+    sorted_brands = Brand.objects.all()
     active_brand = request.GET.get('brand', None)
 
     context = {
@@ -229,7 +218,7 @@ def shop(request):
         'brands': brands,
         "meta_description": meta_description,
         'meta_keywords': meta_keywords,
-        'stocks': stocks,
+        'products': products,
         'sorted_brands': sorted_brands,
         'active_brand': active_brand,
     }
@@ -237,20 +226,22 @@ def shop(request):
     return render(request, 'shop.html', context)
 
 
-def view_stock(request, slug):
-    product = get_object_or_404(Stock, slug=slug)
-    photos = Stock.objects.all()
+def view_product(request, slug):
+    product = get_object_or_404(Product, slug=slug)
+    photos = Product.objects.all()
+    product_code = str(f'ls0{product.pk}')
 
     other_images = [
-        product.image_original_size,
-        product.image_large_size,
-        product.image_medium_size,
-        product.image_thumbnail_size,
+        product.img_xl,
+        product.img_lg,
+        product.img_md,
+        product.img_sm,
+        product.thumbnail,
     ]
 
     try:
         similar_products_codes = product.similar_products_codes.split(',')
-        similar_products = Stock.objects.filter(
+        similar_products = Product.objects.filter(
             Q(product_code__in=similar_products_codes) | Q(
                 item__in=similar_products_codes)
         )
@@ -271,18 +262,24 @@ def view_stock(request, slug):
             product_images.append(image)
 
     title_tag = product.item
-    
-    all_photos = StockPhoto.objects.all()
+
+    all_product_photos = ProductPhoto.objects.all()
     photos = []
 
-    for photo in all_photos:
+    for photo in all_product_photos:
         if photo.product_code == product_code:
             photos.append(photo.image)
 
-    product_img = photos[0]
+    try:
+        product_img = photos[0]
+    except:
+        product_img = product.thumbnail
 
-    sizes_object = product.size.split(',')
-    sizes = [size.strip() for size in sizes_object]
+    try:
+        sizes_object = product.size.split(',')
+        sizes = [size.strip() for size in sizes_object]
+    except:
+        sizes = product.size
 
     context = {
         'product': product,
@@ -299,13 +296,12 @@ def view_stock(request, slug):
         'similar_products': similar_products,
     }
 
-    return render(request, 'view_stock.html', context)
+    return render(request, 'product/view_product.html', context)
 # CART
 
 
 def error404(request):
-    page = "- Error"
-
+    page = "Error"
     context = {
         'page': page,
     }
@@ -342,7 +338,7 @@ def cart(request):
         'brands': brands,
     }
 
-    return render(request, 'cart.html', context)
+    return render(request, 'checkout/cart.html', context)
 
 # END OF CART
 
@@ -377,7 +373,7 @@ def checkout(request):
         'brands': brands,
     }
 
-    return render(request, 'checkout.html', context)
+    return render(request, 'checkout/checkout.html', context)
 
 # END OF CHECKOUT
 # Brands Start
@@ -397,7 +393,7 @@ def brand_list(request):
         'title_tag': title_tag,
         'brands': brands,
     }
-    return render(request, 'brand_list.html', context)
+    return render(request, 'brands/brand_list.html', context)
 
 
 def brand_detail(request, slug):
@@ -406,7 +402,7 @@ def brand_detail(request, slug):
     blogs = BlogPost.objects.order_by('-pk')
     brands = Brand.objects.order_by('-pk')
     title_tag = brand.name
-    stocks = Stock.objects.filter(brand=brand).order_by('-priority')
+    products = Product.objects.filter(brand=brand).order_by('-priority')
 
     filtered_blogs = BlogPost.objects.filter(
         Q(tag__name__icontains=brand.name) |
@@ -426,10 +422,10 @@ def brand_detail(request, slug):
         'brands': brands,
         'brand': brand,
         'products': products,
-        'stocks': stocks,
+        'products': products,
         'blogs': blogs,
     }
-    return render(request, 'brand_detail.html', context)
+    return render(request, 'brands/brand_detail.html', context)
 
 
 def newsletter(request):
@@ -467,169 +463,6 @@ def newsletter(request):
 
     return render(request, 'newsletter.html', context)
 
-# cart update item view
-
-
-def updateItem(request):
-    data = json.loads(request.body)
-    productId = data['productId']
-    action = data['action']
-
-    customer = request.user.customer
-    product = Product.objects.get(pk=productId)
-    order, created = Order.objects.get_or_create(
-        customer=customer, complete=False)
-
-    orderItem, created = OrderItem.objects.get_or_create(
-        order=order, product=product)
-
-    if action == 'add':
-        orderItem.quantity = (orderItem.quantity + 1)
-    elif action == 'remove':
-        orderItem.quantity = (orderItem.quantity - 1)
-
-    orderItem.save()
-
-    if orderItem.quantity <= 0:
-        orderItem.delete()
-
-    return JsonResponse('Item was added', safe=False)
-# end of cart update item view
-
-
-def processOrder(request):
-    transaction_id = datetime.datetime.now().timestamp()
-    data = json.loads(request.body)
-
-    if request.user.is_authenticated:
-        customer = request.user.customer
-        order, created = Order.objects.get_or_create(
-            customer=customer, complete=False)
-        if order.shipping == True:
-            ShippingAddress.objects.create(
-                customer=customer,
-                order=order,
-                address=data['shipping']['address'],
-                city=data['shipping']['city'],
-                state=data['shipping']['state'],
-                zipcode=data['shipping']['zipcode'],
-            )
-
-    else:
-        customer, order = guestOrder(request, data)
-
-    total = data['form']['total']
-    order.transaction_id = transaction_id
-
-    if total == order.get_cart_total:
-        order.complete = True
-    order.save()
-
-    if order.shipping == True:
-        ShippingAddress.objects.create(
-            customer=customer,
-            order=order,
-            address=data['shipping']['address'],
-            city=data['shipping']['city'],
-            state=data['shipping']['state'],
-            zipcode=data['shipping']['zipcode'],
-        )
-    messages.success(request, ("Payment Complete!"))
-    return JsonResponse('Payment Complete!', safe=False)
-
-# Trial cart update item view
-
-
-def updateItem(request):
-    data = json.loads(request.body)
-    productId = data['productId']
-    action = data['action']
-
-    print(f'{action}ed the product {productId}')
-
-    customer = request.user.customer
-    product = Product.objects.get(product_code=productId)
-    order, created = Order.objects.get_or_create(
-        customer=customer, complete=False)
-
-    orderItem, created = OrderItem.objects.get_or_create(
-        order=order, product=product)
-
-    if action == 'add':
-        orderItem.quantity = (orderItem.quantity + 1)
-    elif action == 'remove':
-        orderItem.quantity = (orderItem.quantity - 1)
-
-    orderItem.save()
-
-    if orderItem.quantity <= 0:
-        orderItem.delete()
-
-    return JsonResponse('Item was added', safe=False)
-# end of cart update item view
-
-
-def processOrder(request):
-    transaction_id = datetime.datetime.now().timestamp()
-    print("TRANSACTION ID: ==>> ", transaction_id)
-    data = json.loads(request.body)
-
-    if request.user.is_authenticated:
-        customer = request.user.customer
-        order, created = Order.objects.get_or_create(
-            customer=customer, complete=False)
-        if order.shipping == True:
-            ShippingAddress.objects.create(
-                customer=customer,
-                order=order,
-                address=data['shipping']['address'],
-                city=data['shipping']['city'],
-                state=data['shipping']['state'],
-                zipcode=data['shipping']['zipcode'],
-            )
-
-    else:
-        customer, order = guestOrder(request, data)
-
-    total = data['form']['total']
-    order.transaction_id = transaction_id
-
-    if total == order.get_cart_total:
-        order.complete = True
-    order.save()
-
-    if order.shipping == True:
-        ShippingAddress.objects.create(
-            customer=customer,
-            order=order,
-            address=data['shipping']['address'],
-            city=data['shipping']['city'],
-            state=data['shipping']['state'],
-            zipcode=data['shipping']['zipcode'],
-        )
-    messages.success(request, ("Payment Complete!"))
-    return JsonResponse('Payment Complete!', safe=False)
-
-# customer
-
-
-def confirmed(request):
-    title_tag = "Order Complete!"
-    data = cartData(request)
-    cartItems = data['cartItems']
-    blogs = BlogPost.objects.order_by('-pk')
-    brands = Brand.objects.order_by('-pk')
-
-    context = {
-        'title_tag': title_tag,
-        'cartItems': cartItems,
-        'success': True,
-        'blogs': blogs,
-        'brands': brands,
-    }
-
-    return render(request, 'confirmed.html', context)
-
 
 def music(request):
     title_tag = "DJ G400 Mixes"
@@ -665,11 +498,11 @@ def music_player(request, slug):
 
 @login_required(login_url='index')
 def dashboard(request):
-    stocks = Stock.objects.all()
-    total_pieces = Stock.objects.first().total_pieces()
-    total_consigment = Stock.objects.first().total_consigment()
-    grand_total_cost = Stock.objects.first().grand_total_cost()
-    total_amount_T = Stock.objects.first().total_amount_T()
+    products = Product.objects.all()
+    total_pieces = Product.objects.first().total_pieces()
+    total_consigment = Product.objects.first().total_consigment()
+    grand_total_cost = Product.objects.first().grand_total_cost()
+    total_amount_T = Product.objects.first().total_amount_T()
     brands = Brand.objects.all()
     euro_exchange_rate = int(155)
     euro_converted_total_consigment = round(
@@ -679,22 +512,22 @@ def dashboard(request):
     num_spectra_talks_signups = SpectraTalksSignUp.objects.all().count()
     blog_posts = BlogPost.objects.all()
 
-    stock_object = Stock.objects.all()
-    online_products = Stock.objects.filter(online=True).all()
+    product_object = Product.objects.all()
+    online_products = Product.objects.filter(online=True).all()
 
     product_codes = []
     below_twenty = []
 
     online_product_codes = []
     all_online_products = []
-    
-    for product in stock_object:
+
+    for product in product_object:
         if product.buying_price == 0:
             pass
         elif product.buying_price <= 25:
             below_twenty.append(product)
 
-    for code in stock_object:
+    for code in product_object:
         new_code = str(f"ls0{code.pk}")
         product_codes.append(new_code)
 
@@ -710,7 +543,7 @@ def dashboard(request):
     admin_actions = LogEntry.objects.order_by('-action_time')[:10]
     context = {
         'title_tag': title_tag,
-        'stocks': stocks,
+        'products': products,
         'total_pieces': total_pieces,
         'total_consigment': total_consigment,
         'grand_total_cost': grand_total_cost,
@@ -732,8 +565,6 @@ def dashboard(request):
 
 
 # Amapiano Workshop Signup Logic Start
-
-
 def amapiano_workshop_signup(request):
     title_tag = "Amapiano Workshop Signup"
     form = AmapianoSignUpForm()
@@ -793,29 +624,42 @@ def amapiano_workshop_signup(request):
 # ACCOUNT
 
 
-def view_stock_details(request, slug):
-    stock = Stock.objects.get(slug=slug)
+def view_product_details(request, slug):
+    product = Product.objects.get(slug=slug)
     return HttpResponseRedirect(reverse('dashboard'))
 
 
-def edit_stock(request, slug):
-    stock = get_object_or_404(Stock, slug=slug)
-    title_tag = f"Update: {stock.item}"
+def edit_product(request, slug):
+    context = {}
+    product = get_object_or_404(Product, slug=slug)
+    title_tag = f"Update: {product.item}"
+
+    all_product_photos = ProductPhoto.objects.all()
+    photos = []
+
+    for photo in all_product_photos:
+        if photo.product_code == product.product_code:
+            photos.append(photo.image)
+
+    try:
+        product_img = photos[0]
+    except:
+        product_img = product.thumbnail
 
     images = [
-        stock.image_original_size,
-        stock.image_large_size,
-        stock.image_medium_size,
-        stock.image_thumbnail_size,
-        stock.thumbnail,
+        product.img_xl,
+        product.img_lg,
+        product.img_md,
+        product.img_sm,
+        product.thumbnail,
     ]
 
     if request.method == 'POST':
-        form = StockForm(request.POST, request.FILES, instance=stock)
+        form = ProductForm(request.POST, request.FILES, instance=product)
 
         if form.is_valid():
             form.save()
-            return render(request, 'edit_stock.html', {
+            return render(request, 'product/edit_product.html', {
                 'form': form,
                 'success': True
             })
@@ -823,27 +667,30 @@ def edit_stock(request, slug):
             print("Errors occurred while uploading: ",
                   form.errors)
     else:
-        form = StockForm(instance=stock)
+        form = ProductForm(instance=product)
 
-    context = {
+    context.update({
         'form': form,
         'images': images,
         'title_tag': title_tag,
-        'stock': stock,
-    }
+        'product_img': product_img,
+        'photos': photos,
+        'product': product,
+    })
 
-    return render(request, 'edit_stock.html', context)
+    return render(request, 'product/edit_product.html', context)
 
 
-def delete_stock(request, slug):
+def delete_product(request, slug):
     if request.method == 'POST':
-        stock = Stock.objects.get(slug=slug)
-        stock.delete()
+        product = Product.objects.get(slug=slug)
+        product.delete()
     return HttpResponseRedirect(reverse('dashboard'))
 
 
-def add_stock_photo(request):
+def add_product_photo(request):
     brands = Brand.objects.all()
+    title_tag = "Add Product Photo"
 
     if request.method == 'POST':
         data = request.POST
@@ -858,7 +705,7 @@ def add_stock_photo(request):
             brand = None
 
         for image in images:
-            photo = StockPhoto.objects.create(
+            photo = ProductPhoto.objects.create(
                 name=data['name'],
                 brand=brand,
                 product_code=data['product_code'],
@@ -869,10 +716,11 @@ def add_stock_photo(request):
 
     context = {
         'brands': brands,
+        'title_tag': title_tag,
     }
-    return render(request, 'add_stock_photo.html', context)
+    return render(request, 'product/add_product_photo.html', context)
 
-# Stock Logic End
+# product Logic End
 
 
 # spectra Talks Signup Logic Start
@@ -945,3 +793,25 @@ def spectra_talks_signup(request):
 
     return render(request, 'events/spectra_talks.html', context)
 # spectra Talks Signup Logic End
+
+
+def allProductPhotos(request):
+    photos = ProductPhoto.objects.all()
+    title_tag = "All product Photos"
+
+    context = {
+        'photos': photos,
+        'title_tag': title_tag,
+    }
+    return render(request, 'dashboard/all-photos.html', context)
+
+
+def viewProductPhoto(request, pk):
+    photo = get_object_or_404(ProductPhoto, pk=pk)
+    title_tag = photo.name
+
+    context = {
+        'photo': photo,
+        'title_tag': title_tag,
+    }
+    return render(request, 'dashboard/view-photo.html', context)

@@ -1,5 +1,6 @@
 from django.urls import path
 from .import views
+from .checkout import updateItem, processOrder, confirmed
 from blog.views import add_blog
 from .account import account, account_settings, loginPage, logoutUser, registerPage
 
@@ -14,12 +15,12 @@ urlpatterns = [
     path('add-blog/', add_blog, name='add_blog'),
     path('register/', registerPage, name='register'),
     path('cart/', views.cart, name='cart'),
-    path('confirmed/', views.confirmed, name='confirmed'),
+    path('confirmed/', confirmed, name='confirmed'),
     path('checkout/', views.checkout, name='checkout'),
     path('newsletter/', views.newsletter, name='newsletter'),
     path('help/', views.help, name='help'),
-    path('updateItem/', views.updateItem, name='updateItem'),
-    path('processOrder/', views.processOrder, name='processOrder'),
+    path('updateItem/', updateItem, name='updateItem'),
+    path('processOrder/', processOrder, name='processOrder'),
     path('music/', views.music, name='music'),
     path('music/mix/DJ-G400/<slug:slug>/',
          views.music_player, name='music_player'),
@@ -29,10 +30,16 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
     path('amapiano/', views.amapiano_workshop_signup,
          name='amapiano_workshop_signup'),
-    path('shop/<slug:slug>/', views.view_stock, name='view_stock'),
-    path('edit_stock/<slug:slug>/', views.edit_stock, name='edit_stock'),
-    path('delete_stock/<slug:slug>/', views.delete_stock, name='delete_stock'),
-    path('add_stock_photo/', views.add_stock_photo, name='add_stock_photo'),
-    path('event/Spectra-Talks-with-Luku-Store-nl-and-WhoWhatWhereKE/', views.spectra_talks_signup,
-         name='spectra_talks_signup'),
+    path('shop/<slug:slug>/', views.view_product, name='view_product'),
+    path('edit_product/<slug:slug>/', views.edit_product, name='edit_product'),
+    path('delete_product/<slug:slug>/',
+         views.delete_product, name='delete_product'),
+    path('add_product_photo/', views.add_product_photo, name='add_product_photo'),
+    path('event/Spectra-Talks-with-Luku-Store-nl-and-WhoWhatWhereKE/',
+         views.spectra_talks_signup, name='spectra_talks_signup'),
+
+    path('all-product-photos/', views.allProductPhotos, name='allProductPhotos'),
+    path('view-product-photo/<int:pk>',
+         views.viewProductPhoto, name='viewProductPhoto'),
+
 ]

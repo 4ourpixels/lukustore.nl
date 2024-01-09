@@ -8,6 +8,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.db.models import Count
 from django_resized import ResizedImageField
+import uuid
 
 # ABOUT US
 
@@ -47,10 +48,14 @@ class Help(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=100, null=True, blank=True)
-    icon = models.CharField(max_length=50, null=True, blank=True)
+    slug = models.SlugField(unique=True, null=True, blank=True)
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
 
 class Type(models.Model):
@@ -150,13 +155,12 @@ class Brand(models.Model):
     image = models.ImageField(
         null=True,
         blank=True,
-        upload_to="brand/",
-        default='blog.jpg'
+        upload_to="brand/"
     )
     slug = models.SlugField(unique=True, null=True, blank=True)
 
     def total_stock_products(self):
-        return Stock.objects.filter(brand=self).count()
+        return Product.objects.filter(brand=self).count()
 
     @classmethod
     def get_brands_sorted_by_online_stock(cls):
@@ -180,47 +184,6 @@ class Brand(models.Model):
 
 
 class Product(models.Model):
-    name = models.CharField(max_length=200, null=True, blank=True)
-    product_code = models.CharField(max_length=10, null=True, blank=True)
-    similar_products_codes = models.CharField(max_length=300, blank=True)
-    type = models.CharField(max_length=100, blank=True, null=True)
-    category = models.ForeignKey(
-        Category,
-        on_delete=models.SET_NULL,
-        null=True, blank=True
-    )
-
-    image = models.ImageField(
-        null=False,
-        blank=False,
-        upload_to="products/",
-        default='image.jpg'
-    )
-    description = models.TextField()
-    price = models.DecimalField(max_digits=7, decimal_places=2, default=0)
-    stock = models.IntegerField(default=0)
-    color = models.CharField(max_length=100, blank=True, null=True)
-    size = models.CharField(max_length=20, blank=True, null=True)
-    rating = models.IntegerField(blank=True, default=0)
-    popular = models.BooleanField(default=False, null=True, blank=False)
-    brand = models.ForeignKey(
-        Brand,
-        on_delete=models.SET_NULL,
-        null=True, blank=True
-    )
-    digital = models.BooleanField(default=False, null=True, blank=False)
-    collection = models.CharField(max_length=100, blank=True, null=True)
-    slug = models.SlugField(unique=True, null=True, blank=True)
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return self.name
-
-
-class Stock(models.Model):
     brand = models.ForeignKey(
         Brand,
         on_delete=models.SET_NULL,
@@ -232,9 +195,9 @@ class Stock(models.Model):
         null=True, blank=True
     )
     TARGET_CHOICES = [
-        ("U", "U"),  # U for Unknown or Unspecified
-        ("M", "M"),   # M for Male
-        ("F", "F"),  # F for Female
+        ("U", "U"),
+        ("M", "M"),
+        ("F", "F"),
     ]
 
     target = models.CharField(
@@ -267,51 +230,46 @@ class Stock(models.Model):
     rating = models.IntegerField(blank=True, default=0)
     digital = models.BooleanField(default=False, null=True, blank=True)
 
-    image_original_size = models.ImageField(
+    img_xl = models.ImageField(
         null=True,
         blank=True,
-        upload_to="stock/",
-        default='placeholder.png',
+        upload_to="products/",
     )
-    image_large_size = models.ImageField(
+    img_lg = models.ImageField(
         null=True,
         blank=True,
-        upload_to="stock/",
-        default='placeholder.png',
+        upload_to="products/",
     )
-    image_medium_size = models.ImageField(
+    img_md = models.ImageField(
         null=True,
         blank=True,
-        upload_to="stock/",
-        default='placeholder.png',
+        upload_to="products/",
     )
-    image_thumbnail_size = models.ImageField(
+    img_sm = models.ImageField(
         null=True,
         blank=True,
-        upload_to="stock/",
-        default='placeholder.png',
+        upload_to="products/",
     )
 
     thumbnail = models.ImageField(
         null=True,
         blank=True,
-        upload_to="stock/",
-        default='placeholder.png',
+        upload_to="products/",
     )
 
     slug = models.SlugField(unique=True, null=True, blank=True)
 
     def total_pieces(self):
-        return Stock.objects.aggregate(total_pieces=models.Sum('amount_f'))['total_pieces'] or 0
+        return Product.objects.aggregate(total_pieces=models.Sum('amount_f'))['total_pieces'] or 0
 
     def total_amount_T(self):
-        return Stock.objects.aggregate(total_amount_T=models.Sum('amount_t'))['total_amount_T'] or 0
+        return Product.objects.aggregate(total_amount_T=models.Sum('amount_t'))['total_amount_T'] or 0
 
     def total_consigment(self):
-        return Stock.objects.aggregate(total_consigment=models.Sum('buying_price'))['total_consigment'] or 0
+        return Product.objects.aggregate(total_consigment=models.Sum('buying_price'))['total_consigment'] or 0
 
     def grand_total_cost(self):
-        return Stock.objects.aggregate(grand_total_cost=models.Sum('total_cost'))['grand_total_cost'] or 0
+        return Product.objects.aggregate(grand_total_cost=models.Sum('total_cost'))['grand_total_cost'] or 0
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.item)
@@ -319,7 +277,7 @@ class Stock(models.Model):
 
     @property
     def get_url(self):
-        return reverse("view_stock", kwargs={
+        return reverse("view_product", kwargs={
             "slug": self.slug
         })
 
@@ -327,7 +285,7 @@ class Stock(models.Model):
         return self.item
 
 
-class StockPhoto(models.Model):
+class ProductPhoto(models.Model):
     name = models.CharField(max_length=200, null=True, blank=True)
     product_code = models.TextField(null=True, blank=True)
     similar_products_codes = models.CharField(max_length=300, blank=True)
@@ -338,7 +296,6 @@ class StockPhoto(models.Model):
         null=False,
         blank=False,
         upload_to="products/",
-        default='image.jpg'
     )
     slug = models.SlugField(null=True, blank=True)
 
@@ -348,6 +305,12 @@ class StockPhoto(models.Model):
 
     def __str__(self):
         return f"{self.name} - #ls0{self.pk}"
+
+    @property
+    def get_url(self):
+        return reverse("viewProductPhoto", kwargs={
+            "pk": self.pk
+        })
 # ORDER
 
 
@@ -356,13 +319,14 @@ class Order(models.Model):
         Customer, on_delete=models.SET_NULL, blank=True, null=True)
     date_ordered = models.DateTimeField(auto_now_add=True)
     complete = models.BooleanField(default=False, null=True, blank=False)
-    transaction_id = models.CharField(max_length=200, null=True, blank=False)
+    paid = models.BooleanField(default=False, null=True, blank=False)
+    transaction_id = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
         date_format = DateFormat(self.date_ordered.astimezone(
             timezone.get_current_timezone()))
         formatted_date = date_format.format('h:iA, l jS F Y')
-        return f'Order #{self.pk} || {self.customer.first_name} || At: {formatted_date}'
+        return f'#{self.pk} | {self.customer.first_name} {self.customer.last_name} | At: {formatted_date}'
 
     @property
     def shipping(self):
@@ -394,6 +358,15 @@ class Order(models.Model):
             if i.product.digital == False:
                 shipping = True
         return shipping
+
+
+@receiver(post_save, sender=Order)
+def generate_transaction_id(sender, instance, created, **kwargs):
+    if created and not instance.transaction_id:
+        transaction_id = f"{instance.pk}-{int(timezone.now().timestamp())}-{uuid.uuid4().hex[:6]}"
+        instance.transaction_id = transaction_id
+        instance.save()
+
 # END OF ORDER
 
 # ORDER ITEM
@@ -408,7 +381,7 @@ class OrderItem(models.Model):
 
     @property
     def get_total(self):
-        total = self.product.price * self.quantity
+        total = self.product.buying_price * self.quantity
         return total
 
     def __str__(self):
@@ -462,8 +435,7 @@ class HomePage(models.Model):
     image = models.ImageField(
         null=True,
         blank=True,
-        upload_to="media/",
-        default='image.jpg',
+        upload_to="media/"
     )
     button = models.CharField(max_length=10, null=True, blank=True)
 
@@ -487,8 +459,7 @@ class Mix(models.Model):
     image = models.ImageField(
         null=True,
         blank=True,
-        upload_to="media/",
-        default='mix-cover.jpg',
+        upload_to="media/"
     )
     genre = models.CharField(max_length=100)
     release_date = models.DateField()
@@ -510,8 +481,8 @@ class Mix(models.Model):
 
 
 class Video(models.Model):
-    title = models.CharField(max_length=100)
-    video_file = models.FileField(upload_to='videos/')
+    title = models.CharField(max_length=100, blank=True, null=True)
+    video_file = models.FileField(upload_to='videos/', blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -522,7 +493,6 @@ class AmapianoSignUp(models.Model):
     last_name = models.CharField(max_length=100, blank=True, null=True)
     email = models.EmailField()
     consent = models.BooleanField(default=True, null=True, blank=False)
-    # New field for the ticket number
     ticket_number = models.CharField(
         max_length=36, unique=True, blank=True, null=True)
 
@@ -538,7 +508,6 @@ class SpectraTalksSignUp(models.Model):
     last_name = models.CharField(max_length=100, blank=True, null=True)
     email = models.EmailField()
     consent = models.BooleanField(default=True, null=True, blank=False)
-    # New field for the ticket number
     ticket_number = models.CharField(
         max_length=36, unique=True, blank=True, null=True)
 
