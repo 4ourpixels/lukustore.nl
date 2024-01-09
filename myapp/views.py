@@ -815,3 +815,11 @@ def viewProductPhoto(request, pk):
         'title_tag': title_tag,
     }
     return render(request, 'dashboard/view-photo.html', context)
+
+
+def search_result(request):
+    title_tag = f'"{request.GET.get("q")}" results'
+    context = {
+        "title_tag": title_tag,
+    }
+    return render(request, "search.html", context)

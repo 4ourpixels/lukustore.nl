@@ -42,4 +42,5 @@ urlpatterns = [
     path('view-product-photo/<int:pk>',
          views.viewProductPhoto, name='viewProductPhoto'),
 
+    path('search/', views.search_result, name='search_result'),
 ]
