@@ -324,14 +324,14 @@ h3 {
 }
 
 /* Dashboard Start */
-.view_stock_btn {
+.view_product_btn {
   background: none;
   border: none;
   text-align: left;
   font-weight: 600;
   color: #222222;
 }
-.view_stock_btn:hover {
+.view_product_btn:hover {
   background: none;
   border: none;
   text-align: left;
@@ -358,18 +358,18 @@ h3 {
 }
 
 .overflow-hidden {
-  overflow: hidden; /* Ensure the overflow is hidden for smooth animation */
+  overflow: hidden;
 }
 
 .zoomOut {
-  animation: zoomOut 1s ease-in-out; /* You can adjust the duration and timing function */
-  transform-origin: center center; /* Set the transform origin to the center for the zoom effect */
+  animation: zoomOut 1s ease-in-out;
+  transform-origin: center center;
 }
 
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(20px); /* Adjust the initial position */
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -377,9 +377,25 @@ h3 {
   }
 }
 .fadeInUp {
-  opacity: 1; /* Initially set opacity to 0 */
-  animation: fadeInUp 1.3s ease-out; /* You can adjust the duration and timing function */
-  transform-origin: center bottom; /* Set the transform origin for the fadeInUp effect */
+  opacity: 1;
+  animation: fadeInUp 1.3s ease-out;
+  transform-origin: center bottom;
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(-400px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.fadeInRight {
+  opacity: 1;
+  animation: fadeInRight 2.5s ease-out;
+  transform-origin: center bottom;
 }
 .unlink {
   text-decoration: none;
@@ -572,27 +588,58 @@ h3 {
 
 /* Extra small devices(phones, 600px and down) */
 @media (max-width: 600px) {
+  .nav-link {
+    font-size: 1.2rem;
+  }
+  .profile-pic {
+    height: 1.9rem;
+    width: 1.9rem;
+  }
 }
 /* Small devices(Portrait tablets and large phones, 600px and up) */
 @media (min-width: 600px) {
+  .nav-link {
+    font-size: 1.2rem;
+  }
+  .profile-pic {
+    height: 1.9rem;
+    width: 1.9rem;
+  }
 }
 /* Medium devices (Landscape tablets, 768px and up) */
 @media (min-width: 768px) {
+  .nav-link {
+    font-size: 1rem;
+  }
+  .profile-pic {
+    height: 1.6rem;
+    width: 1.6rem;
+  }
 }
 /* Large devices (Laptops/desktops, 992px and up) */
 @media (min-width: 992px) {
+  .nav-link {
+    font-size: 1rem;
+  }
 }
 
 /* Extra large devices (Large laptops and desktops, 1200px and up) */
 @media (min-width: 1200px) {
+  .nav-link {
+    font-size: 1rem;
+  }
 }
 @media (min-width: 1400px) {
+  .nav-link {
+    font-size: 1rem;
+  }
 }
 /* Media Queries */
 
+.nav-link {
+  color: #121212;
+}
 .profile-pic {
   border-radius: 50px;
-  height: 1.6rem;
-  width: 1.6rem;
   object-fit: cover;
 }
