@@ -123,6 +123,16 @@
               >
             </li>
             <li>
+              <a class="dropdown-item" href="{% url 'allProductPhotos' %}"
+                >Product Photos</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'add_product_photo' %}"
+                >Add Product Photos</a
+              >
+            </li>
+            <li>
               <a
                 class="dropdown-item"
                 href="https://analytics.google.com/analytics/web/?authuser=3#/p415088185/reports/intelligenthome"
@@ -137,29 +147,59 @@
         </li>
         {% endif %}
       </ul>
-      <ul class="navbar-nav fw-bold flex-row ms-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a href="{% url 'cart' %}" class="nav-link"
-            ><i class="fa-solid fa-xl fa-cart-shopping"></i
-          ></a>
-        </li>
-        <li class="nav-item">
+      <ul class="navbar-nav fw-bold flex-row mb-2 mb-lg-0">
+        <li class="nav-item" id="search-form-container" style="display: none">
           <a class="nav-link">
+            <form
+              action="{% url 'search_result' %}"
+              id="search-form"
+              role="form"
+              method="GET"
+            >
+              <input
+                name="q"
+                type="search"
+                class="form-control"
+                id="search-input"
+                placeholder="Search..."
+                aria-label="Search"
+                aria-describedby="search-addon"
+                required
+              />
+              <input
+                type="submit"
+                id="search-addon"
+                class="hidden"
+                name="search-box"
+              />
+            </form>
+          </a>
+        </li>
+      </ul>
+      <ul class="navbar-nav fw-bold flex-row ms-auto mb-2 mb-lg-0">
+        <li class="nav-item me-2">
+          <a class="nav-link hover" id="search-icon">
             <i class="fa-solid fa-xl fa-magnifying-glass"></i>
           </a>
         </li>
         {% if user.customer.profile_pic %}
-        <li class="nav-item">
+        <li class="nav-item me-2">
           <a class="nav-link"
             ><img
               class="profile-pic"
               src="{{ request.user.customer.profile_pic.url }}"
           /></a>
           {% else %}
-          <a class="nav-link">
+          <a href="{% url 'login' %}" class="nav-link me-2">
             <i class="fa-solid fa-xl fa-user"></i>
           </a>
           {% endif %}
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'cart' %}" class="nav-link"
+            ><i class="fa-solid fa-xl fa-cart-shopping"></i
+            ><span>{{ cartItems }}</span></a
+          >
         </li>
       </ul>
     </div>

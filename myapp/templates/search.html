@@ -1,0 +1,62 @@
+{% extends 'base.html' %}{% block body %}
+<main class="container-fluid">
+  <!-- Breadcrumb Begin -->
+  <nav class="container-fluid-scroll pb-3">
+    <div class="scrolling-wrapper">
+      <a class="small underline text-muted"
+        ><span class="fw-bold">{{ num_results }}</span> items in
+        <span class="fw-bold">"{{ query }}"</span></a
+      >
+    </div>
+  </nav>
+  <!-- Breadcrumb End -->
+
+  <!-- Product List Start -->
+  <section class="container">
+    <div
+      class="row row-cols-2 row-cols-md-4 row-cols-xl-4 justify-content-center"
+    >
+      {% for product in results %} {% if product.online %}
+      <article class="col-sm-6 mb-5 col-md-4 col-lg-3">
+        <figure class="figure-card">
+          <img src="{{ product.img_md.url }}" class="img-fluid rounded" />
+          <figcaption style="font-size: 1rem">{{ product.item }}</figcaption>
+        </figure>
+        <div class="footer">
+          <h5 class="fw-bold mt-1">{{ product.item }}</h5>
+          <h6 class="mt-2">€ {{ product.buying_price }}.00</h6>
+          <small>Brand: {{ product.brand }}</small><br />
+          <!-- Size Start -->
+          <div class="col">
+            {% if product.size == 's' %}
+            <small>Size: S</small>
+            {% elif product.size == 'm' %}
+            <small>Size: M</small>
+            {% elif product.size == 'l' %}
+            <small>Size: L</small>
+            {% elif product.size == 'xl' %}
+            <small>Size: XL</small>
+            {% else %}
+            <small>Size: XXL</small>
+            {% endif %}
+          </div>
+          <!-- Size End -->
+          <hr />
+          <!-- Cart and View Buttons Start -->
+          <button
+            data-product="ls0{{ product.pk }}"
+            data-action="add"
+            class="btn btn-dark my-2 update-cart"
+          >
+            Add to Cart
+          </button>
+          <a href="{{ product.get_url }}" class="btn btn-outline-dark">View</a>
+          <!-- Cart and View Buttons End -->
+        </div>
+      </article>
+      {% endif %} {% endfor %}
+    </div>
+  </section>
+  <!-- Product List End -->
+</main>
+{% endblock %}
