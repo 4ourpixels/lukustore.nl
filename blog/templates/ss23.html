@@ -10,6 +10,7 @@
 </div>
 <!-- Main Blog Starts here -->
 <div class="container-fluid mt-5">
+  <h1>Hello worlds</h1>
   <div class="container fadeInUp">
     <div class="row justify-content-center">
       <div class="col-sm-12 col-lg-8">
@@ -33,7 +34,6 @@
             {% endif %}
           </div>
           <article id="blog-article" style="max-width: fit-content" class="row">
-            {% if blog.slug == 'ss23-lukubook-after-movie' %}
             <iframe
               width="1280"
               height="720"
@@ -43,6 +43,61 @@
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;"
               allowfullscreen
             ></iframe>
+            <div
+              class="row gx-3 gx-lg-5 row-cols-2 row-cols-md-4 row-cols-xl-4 justify-content-center"
+            >
+              {% for photo in photos_in_ss23_category|slice:":4" %}
+              <div class="col mb-3">
+                <a
+                  style="text-decoration: none"
+                  href="{% url 'photo' photo.id %}"
+                  ><img
+                    src="{{ photo.image.url }}"
+                    style="height: 100%; object-fit: cover"
+                    alt="A {{ photo.type }} from the SS23 Luku Book"
+                    class="img-fluid"
+                /></a>
+              </div>
+              {% endfor %}
+            </div>
+
+            <p class="my-5 lead text-start">{{ blog.contentOne|safe }}</p>
+
+            <div
+              class="row gx-3 gx-lg-5 row-cols-3 row-cols-md-3 row-cols-xl-3 justify-content-center"
+            >
+              {% for photo in photos_in_ss23_category|slice:"4:10" %}
+              <div class="col mb-3">
+                <a
+                  style="text-decoration: none"
+                  href="{% url 'photo' photo.id %}"
+                  ><img
+                    style="height: 100%; object-fit: cover"
+                    src="{{ photo.image.url }}"
+                    alt="A {{ photo.type }} from the SS23 Luku Book"
+                    class="img-fluid"
+                /></a>
+              </div>
+              {% endfor %}
+            </div>
+            <p class="my-5 lead text-start">{{ blog.contentTwo|safe }}</p>
+            <div
+              class="row gx-3 gx-lg-5 row-cols-2 row-cols-md-2 row-cols-xl-2 justify-content-center"
+            >
+              {% for photo in photos_in_ss23_category|slice:"10:16" %}
+              <div class="col mb-3">
+                <a
+                  style="text-decoration: none"
+                  href="{% url 'photo' photo.id %}"
+                  ><img
+                    style="height: 100%; object-fit: cover"
+                    src="{{ photo.image.url }}"
+                    alt="A {{ photo.type }} from the SS23 Luku Book"
+                    class="img-fluid"
+                /></a>
+              </div>
+              {% endfor %}
+            </div>
             {% endif %}
             <em class="my-3 h5">{{ blog.summary|safe|linebreaks }}</em>
             <hr class="w-75 ms-3 mb-2" />
