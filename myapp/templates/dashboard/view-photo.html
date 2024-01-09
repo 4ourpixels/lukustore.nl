@@ -1,0 +1,30 @@
+{% extends 'base.html' %}{% block body %}
+<main class="container-fluid">
+  <!-- Breadcrumb Begin -->
+  <nav class="container-fluid-scroll pb-3">
+    <div class="scrolling-wrapper">
+      <a
+        class="btn brand-btn btn-outline-dark me-2"
+        style="text-decoration: none"
+        href="{% url 'shop' %}"
+      >
+        Shop
+      </a>
+      <a
+        class="btn brand-btn btn-outline-dark me-2"
+        style="text-decoration: none"
+        href="{% url 'dashboard' %}"
+      >
+        Dashboard
+      </a>
+    </div>
+  </nav>
+  <!-- Breadcrumb End -->
+
+  <!-- Product List Start -->
+  <section class="container">
+    <img src="{{ photo.image.url }}" class="img-fluid" />
+  </section>
+  <!-- Product List End -->
+</main>
+{% endblock %}

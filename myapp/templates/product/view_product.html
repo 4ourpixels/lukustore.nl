@@ -1,0 +1,275 @@
+{% extends 'base.html' %} {% block body %}
+<main class="container-xxl">
+  <section class="container">
+    <article class="row justify-content-center align-items-start">
+      <aside class="col-sm-12 col-md-6 col-lg-6">
+        <div class="container p-0 m-0">
+          <img
+            src="{{ product_img.url }}"
+            alt="{{ product.item }}'s name"
+            id="productImg"
+            class="rounded"
+            loading="eager"
+          />
+          {% if photos %}
+          <div class="d-flex justify-content-center  my-3">
+            <div id="prevBtn" width="60" height="60" class="mx-1 my-auto hover">
+              <button class="btn btn-outline-dark"><</h1>
+            </div>
+            <div class="max-width" style="max-width: 500px;">
+              {% for image in photos %}
+              <img
+                style="object-fit: cover"
+                width="60"
+                height="60"
+                class="small-img mb-1 mx-1"
+                loading="lazy"
+                src="{{ image.url }}"
+              />
+              {% endfor %}
+            </div>
+            <div id="nextBtn" width="60" height="60" class="mx-1 my-auto hover">
+              <button class="btn btn-outline-dark">></button>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </aside>
+
+      <section class="col-sm-12 col-md-6 col-lg-6">
+        <div class="ps-lg-3">
+          <h6>
+            <span
+              ><a href="{% url 'shop' %}" class="text-dark underline"
+                >Shop</a
+              ></span
+            >/
+            <span><a class="text-dark underline">{{ product.type }}</a></span>
+          </h6>
+          <h2 class="text-dark">{{ product.item }}</h2>
+          <div class="rating">
+            {% if product.rating == 1 %}
+            <i class="fa fa-star"></i>
+            {% elif product.rating == 2 %}
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            {% elif product.rating == 3 %}
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            {% elif product.rating == 4 %}
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            {% else %}
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            {% endif %}
+          </div>
+          <p class="my-3 text-dark">Brand: {{ product.brand }}</p>
+          <h2 class="text-dark">€{{ product.buying_price }}.00</h2>
+          <hr />
+          <div class="col mt-3">
+            <h6>Sizes Available:</h6>
+            {% for size in sizes %}
+            {% if size == 'S' %}
+              <p class="btn btn-dark">Small</p>
+              <p class="btn btn-outline-dark">Medium</p>
+              <p class="btn btn-outline-dark">Large</p>
+              <p class="btn btn-outline-dark">XL</p>
+              <p class="btn btn-outline-dark">XXL</p>
+              <p class="btn btn-outline-dark">All</p>
+            {% elif size == 'M' %}
+              <p class="btn btn-outline-dark">Small</p>
+              <p class="btn btn-dark">Medium</p>
+              <p class="btn btn-outline-dark">Large</p>
+              <p class="btn btn-outline-dark">XL</p>
+              <p class="btn btn-outline-dark">XXL</p>
+              <p class="btn btn-outline-dark">All</p>
+            {% elif size == 'L' %}
+              <p class="btn btn-outline-dark">Small</p>
+              <p class="btn btn-outline-dark">Medium</p>
+              <p class="btn btn-dark">Large</p>
+              <p class="btn btn-outline-dark">XL</p>
+              <p class="btn btn-outline-dark">XXL</p>
+              <p class="btn btn-outline-dark">All</p>
+            {% elif size == 'XL' %}
+              <p class="btn btn-outline-dark">Small</p>
+              <p class="btn btn-outline-dark">Medium</p>
+              <p class="btn btn-outline-dark">Large</p>
+              <p class="btn btn-dark">XL</p>
+              <p class="btn btn-outline-dark">XXL</p>
+              <p class="btn btn-outline-dark">All</p>
+            {% elif size == 'XXL' %}
+              <p class="btn btn-outline-dark">Small</p>
+              <p class="btn btn-outline-dark">Medium</p>
+              <p class="btn btn-outline-dark">Large</p>
+              <p class="btn btn-outline-dark">XL</p>
+              <p class="btn btn-dark">XXL</p>
+              <p class="btn btn-outline-dark">All</p>
+            {% else %}
+              <p class="btn btn-outline-dark">Small</p>
+              <p class="btn btn-outline-dark">Medium</p>
+              <p class="btn btn-outline-dark">Large</p>
+              <p class="btn btn-outline-dark">XL</p>
+              <p class="btn btn-outline-dark">XXL</p>
+              <p class="btn btn-dark">{{ size }}</p>
+            {% endif %}
+            {% endfor %}
+          </div>
+          <button
+            class="btn btn-dark btn-lg update-cart my-3 w-100"
+            data-product="ls0{{ product.pk }}"
+            data-action="add"
+          >
+            Add to cart <i class="ms-1 fa-solid fa-cart-shopping"></i>
+          </button>
+        </div>
+      </section>
+    </article>
+  </section>
+  <section class="container">
+    <article class="border-top py-4">
+      <div class="accordion" id="accordionExample">
+        <div class="accordion-item w-auto">
+          <h2 class="accordion-header" id="headingOne">
+            <button
+              class="accordion-button text-dark"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseOne"
+              aria-expanded="false"
+              aria-controls="collapseOne"
+            >
+              Read more about the product
+            </button>
+          </h2>
+          <div
+            id="collapseOne"
+            class="accordion-collapse collapse show"
+            aria-labelledby="headingOne"
+            data-bs-parent="#accordionExample"
+          >
+            <div class="accordion-body">{{ product.description }}</div>
+          </div>
+        </div>
+        {% if user.is_authenticated %}
+        <div class="hidden"></div>
+        {% else %}
+        <div class="accordion-item w-auto">
+          <h2 class="accordion-header" id="headingTwo">
+            <button
+              class="accordion-button text-dark"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseTwo"
+              aria-expanded="false"
+              aria-controls="collapseTwo"
+            >
+              Shipping Info
+            </button>
+          </h2>
+          <div
+            id="collapseTwo"
+            class="accordion-collapse collapse show"
+            aria-labelledby="headingTwo"
+            data-bs-parent="#accordionExample"
+          >
+            <div class="accordion-body">
+              Create an account with us by clicking
+              <a class="text-dark" href="{% url 'register' %}">here.</a>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </article>
+  </section>
+  {% if similar_products %}
+  <section class="container">
+    <h3 class="text-center my-5">Shop similar items</h3>
+    <div
+      class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-4 row-cols-xl-4 justify-content-start"
+    >
+      {% for product in similar_products %}
+      <article class="col-sm-6 mb-5 col-md-4 col-lg-3">
+        <figure class="figure-card">
+          <img src="{{ product.img_md.url }}" class="img-fluid rounded" />
+          <figcaption style="font-size: 1rem" class="text-center">
+            <a href="{{ product.get_url }}" class="btn btn-outline-light w-50"
+              >View</a
+            >
+          </figcaption>
+        </figure>
+        <div class="footer border-bottom pb-3">
+          <h6 class="mt-1">{{ product.item }}</h6>
+          <h5 class="fw-bold mt-2">€ {{ product.buying_price }}.00</h5>
+          <small>Brand: {{ product.brand }}</small><br />
+          <!-- Size Start -->
+          <div class="col">
+            {% if product.size == 's' %}
+            <small>Size: S</small>
+            {% elif product.size == 'm' %}
+            <small>Size: M</small>
+            {% elif product.size == 'l' %}
+            <small>Size: L</small>
+            {% elif product.size == 'xl' %}
+            <small>Size: XL</small>
+            {% else %}
+            <small>Size: XXL</small>
+            {% endif %}
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+</main>
+
+<script>
+  var productImg = document.getElementById("productImg");
+  var smallImg = document.getElementsByClassName("small-img");
+
+  for (var i = 0; i < smallImg.length; i++) {
+    smallImg[i].onclick = function (event) {
+      productImg.src = event.target.src;
+    };
+  }
+
+  var currentImageIndex = 0;
+
+  function showImage(index) {
+    if (index >= 0 && index < smallImg.length) {
+      productImg.src = smallImg[index].src;
+      currentImageIndex = index;
+    }
+  }
+
+  function showNextImage() {
+    currentImageIndex = (currentImageIndex + 1) % smallImg.length;
+    showImage(currentImageIndex);
+  }
+
+  function showPreviousImage() {
+    currentImageIndex =
+      (currentImageIndex - 1 + smallImg.length) % smallImg.length;
+    showImage(currentImageIndex);
+  }
+
+  for (var i = 0; i < smallImg.length; i++) {
+    smallImg[i].onclick = function (event) {
+      showImage(Array.from(smallImg).indexOf(event.target));
+    };
+  }
+
+  // Assuming you have next and previous buttons with the IDs 'nextBtn' and 'prevBtn'
+  document.getElementById("nextBtn").onclick = showNextImage;
+  document.getElementById("prevBtn").onclick = showPreviousImage;
+</script>
+
+{% endblock %}

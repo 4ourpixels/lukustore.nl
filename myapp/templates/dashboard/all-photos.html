@@ -1,0 +1,63 @@
+{% extends 'base.html' %}{% block body %}
+<main class="container-fluid">
+  <!-- Breadcrumb Begin -->
+  <nav class="container-fluid-scroll pb-3">
+    <div class="scrolling-wrapper">
+      <a
+        class="btn brand-btn btn-outline-dark me-2"
+        style="text-decoration: none"
+        href="{% url 'shop' %}"
+      >
+        Shop
+      </a>
+      <a
+        class="btn brand-btn btn-outline-dark me-2"
+        style="text-decoration: none"
+        href="{% url 'dashboard' %}"
+      >
+        Dashboard
+      </a>
+    </div>
+  </nav>
+  <!-- Breadcrumb End -->
+
+  <!-- Product List Start -->
+  <section class="container">
+    <div
+      class="row row-cols-2 row-cols-md-4 row-cols-xl-4 justify-content-center"
+    >
+      {% for photo in products %}
+      <article class="col-sm-6 mb-5 col-md-4 col-lg-3">
+        <figure class="figure-card">
+          <img src="{{ photo.image.url }}" class="img-fluid rounded" />
+          <figcaption style="font-size: 1rem">{{ photo.name }}</figcaption>
+        </figure>
+        <div class="footer">
+          <h5 class="fw-bold mt-1">{{ photo.name }}</h5>
+          <a class="btn btn-outline-dark">View</a>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+  <section class="container">
+    <div
+      class="row row-cols-2 row-cols-md-4 row-cols-xl-4 justify-content-center"
+    >
+      {% for photo in photos %}
+      <article class="col-sm-6 mb-5 col-md-4 col-lg-3">
+        <figure class="figure-card">
+          <img src="{{ photo.image.url }}" class="img-fluid rounded" />
+          <figcaption style="font-size: 1rem">{{ photo.item }}</figcaption>
+        </figure>
+        <div class="footer">
+          <h5 class="fw-bold mt-1">{{ photo.item }}</h5>
+          <a href="{{ photo.get_url }}" class="btn btn-outline-dark">View</a>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+  <!-- Product List End -->
+</main>
+{% endblock %}

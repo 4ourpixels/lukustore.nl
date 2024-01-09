@@ -1,0 +1,101 @@
+{% extends 'base.html' %} {% load static %} {% block body %}
+<main class="container-xxl">
+  <section class="breadcrumb-option">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="breadcrumb__links">
+            <a class="underline hover" href="{% url 'index' %}"
+              ><i class="fa fa-home"></i
+            ></a>
+            /
+            <a class="underline hover" href="{% url 'brand_list' %}">Brands</a>
+            /
+            <span class="text-dark">{{ brand.name }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% if brand.keywords == "Coming Soon..." %}
+  <section class="container">
+    <article style="height: 40vh" class="text-center row">
+      <h1 class="display-2 zoomOut my-auto fw-bold">Coming soon...</h1>
+    </article>
+  </section>
+  {% else %}
+  <section class="container my-5">
+    <div
+      class="row row-cols-2 row-cols-md-4 row-cols-xl-4 justify-content-start"
+    >
+      {% for product in products %} {% if product.online %}
+      <!--  -->
+      <div class="col-sm-6 mb-5 col-md-4 col-lg-3">
+        <img
+          src="{{ product.thumbnail.url }}"
+          alt="{{ product.name }}"
+          class="img-fluid mb-2 rounded bg-black"
+        />
+        <h5 class="fw-bold mt-1">{{ product.item }}</h5>
+        <h6 class="mt-2">€ {{ product.buying_price }}.00</h6>
+        <small>Brand: {{ product.brand }}</small><br />
+        <!-- Size Start -->
+        <div class="col">
+          {% if product.size == 's' %}
+          <small>Size: S</small>
+          {% elif product.size == 'm' %}
+          <small>Size: M</small>
+          {% elif product.size == 'l' %}
+          <small>Size: L</small>
+          {% elif product.size == 'xl' %}
+          <small>Size: XL</small>
+          {% else %}
+          <small>Size: XXL</small>
+          {% endif %}
+        </div>
+        <!-- Size End -->
+        <hr />
+        <!-- Cart and View Buttons Start -->
+        <button class="btn btn-dark my-2">Add to Cart</button>
+        <button class="btn btn-outline-dark">View</button>
+        <!-- Cart and View Buttons End -->
+      </div>
+      {% endif %} {% endfor %}
+    </div>
+  </section>
+  {% endif %} {% if filtered_blogs %}
+  <section class="container">
+    <h3 class="my-5 border-bottom pb-3">{{ brand.name }} Blogs & News</h3>
+    <div
+      class="row row-col-2 justify-content-start align-items-center fadeInUp animate my-5"
+    >
+      {% for blog in filtered_blogs %}
+      <div class="col-md-6 col-sm-12 mb-3">
+        <div class="card">
+          <a href="{{ blog.get_tag_url }}" class="unlink">
+            <figure class="figure-card">
+              <img
+                src="{{ blog.cover_image.url }}"
+                style="height: 300px; width: 100%; object-fit: cover"
+              />
+              <figcaption>{{ blog.title }}</figcaption>
+            </figure>
+          </a>
+          <div class="card-body mb-3">
+            <p class="card-text">{{ blog.summary }}</p>
+            <a href="{{ blog.get_tag_url }}" class="btn btn-outline-dark"
+              >Continue reading...</a
+            >
+            <small class="text-muted float-end"
+              >{{ blog.created_at|date }}</small
+            >
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+</main>
+{% endblock %}

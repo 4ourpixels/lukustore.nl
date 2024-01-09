@@ -1,22 +1,65 @@
 {% extends 'base.html' %}{% load static %}{% block body %}{% load humanize %}
 <main class="container-fluid mb-5">
+  <div class="container">
+    <div class="row justify-content-center align-items-center">
+      <article class="col-sm-12 col-lg-8">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <div class="bg-secondary rounded fw-bold text-white px-3 h3 py-2">
+                Products in shop
+              </div>
+            </thead>
+            <tbody>
+              {% for product in all_online_products %}
+              <tr>
+                <td>
+                  <img
+                    style="height: 50px; width: 50px; object-fit: cover"
+                    src="{{ product.thumbnail.url }}"
+                    class="img-fluid"
+                  />
+                </td>
+                <td>
+                  <a class="unlink" href="{{ product.get_url }}"
+                    ><span>{{ product.item }} | </span>
+                    <span>€{{ product.buying_price }}.00</span>
+                    <br />
+                  </a>
+                  <span class="badge bg-secondary">ls0{{ product.pk }}</span>
+                  <a
+                    class="badge bg-secondary unlink hover text-white"
+                    href="{% url 'edit_product' slug=product.slug %}"
+                    >Edit</a
+                  >
+                </td>
+                <td>
+                  <img
+                    style="height: 50px; width: 50px; object-fit: cover"
+                    src="{{ product.brand.image.url }}"
+                    class="img-fluid"
+                  />
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </article>
+    </div>
+  </div>
   <div class="row">
     <h1 class="text-center display-6 my-5 border-bottom pb-5 fw-bold">
       <i class="fas fa-table me-1"></i>
-      LukuStore Estimate Stock September 2023
+      LukuStore Estimate Product September 2023
       <i class="fas fa-table me-1"></i>
     </h1>
-    <div class="text-center my-3">
-      <a href="{% url 'add_stock_photo' %}" class="btn btn-outline-success"
-        >Add Stock Photos</a
-      >
-    </div>
   </div>
 
   <section class="container">
     <div class="row">
       <div class="col-8">
-        {% for photo in stock_photos.all %}
+        {% for photo in product_photos.all %}
         <h1>{{ photo.name }}</h1>
         <img
           src="{{ photo.image.url }}"
@@ -48,7 +91,7 @@
             <tr>
               <th>Product Code</th>
               <th>Image</th>
-              <th>Stock Item</th>
+              <th>Product Item</th>
               <th>Target</th>
               <th>Amount (F)</th>
               <th>Amount (T)</th>
@@ -70,7 +113,7 @@
             <tr>
               <th>Product Code</th>
               <th>Image</th>
-              <th>Stock Item</th>
+              <th>product Item</th>
               <th class="text-white">Target</th>
               <th class="text-white">{{ total_pieces }}</th>
               <th>{{ total_amount_T }}</th>
@@ -82,16 +125,16 @@
             </tr>
           </tfoot>
           <tbody>
-            {% for stock in stocks %}
+            {% for product in products %}
             <tr>
-              <th class="col">#ls0{{ stock.pk }}</th>
+              <th class="col">#ls0{{ product.pk }}</th>
               <th>
-                {% if stock.thumbnail %}
-                <img src="{{ stock.thumbnail.url }}" height="150px" />
+                {% if product.thumbnail %}
+                <img src="{{ product.thumbnail.url }}" height="150px" />
                 {% else %}
                 <img
-                  src="{{ stock.brand.image.url }}"
-                  alt="{{ stock.item }}'s Image"
+                  src="{{ product.brand.image.url }}"
+                  alt="{{ product.item }}'s Image"
                   class="img-fluid rounded bg-black"
                 />
                 {% endif %}
@@ -99,24 +142,24 @@
               <th>
                 <button
                   type="button"
-                  class="view_stock_btn"
-                  href="{% url 'view_stock' slug=stock.slug %}"
+                  class="view_product_btn"
+                  href="{% url 'view_product' slug=product.slug %}"
                   data-bs-toggle="modal"
-                  data-bs-target="#myModal{{ stock.id }}"
+                  data-bs-target="#myModal{{ product.id }}"
                 >
-                  {{ stock.item }}</button
+                  {{ product.item }}</button
                 ><br />
                 <br />
                 <span style="font-weight: 400; font-size: 0.9rem"
-                  >Brand: {{ stock.brand }}</span
+                  >Brand: {{ product.brand }}</span
                 ><br />
                 <span style="font-weight: 400; font-size: 0.9rem"
-                  >Type: {{ stock.type }}</span
+                  >Type: {{ product.type }}</span
                 ><br />
                 <span style="font-weight: 400; font-size: 0.9rem"
-                  >Sizes: {{ stock.size }}</span
+                  >Sizes: {{ product.size }}</span
                 ><br />
-                {% if stock.priority %}
+                {% if product.priority %}
                 <span
                   style="font-weight: 400; font-size: 0.9rem"
                   class="badge bg-success"
@@ -129,12 +172,12 @@
                   >Not a priority</span
                 >
                 {% endif %}
-                <!-- View Stock Modal 2 Start -->
+                <!-- View product Modal 2 Start -->
                 <div
                   class="modal fade"
-                  id="myModal{{ stock.id }}"
+                  id="myModal{{ product.id }}"
                   tabindex="-1"
-                  aria-labelledby="myModal{{ stock.id }}Label1"
+                  aria-labelledby="myModal{{ product.id }}Label1"
                   aria-hidden="true"
                 >
                   <div class="modal-dialog modal-dialog-center modal-xl">
@@ -142,9 +185,9 @@
                       <div class="modal-header">
                         <h1
                           class="modal-title fs-5"
-                          id="myModal{{ stock.id }}Label1"
+                          id="myModal{{ product.id }}Label1"
                         >
-                          {{ stock.item }}
+                          {{ product.item }}
                         </h1>
                         <button
                           type="button"
@@ -159,9 +202,9 @@
                             class="row justify-content-center align-items-start"
                           >
                             <div class="col-sm-16 col-md-6">
-                              {% if stock.thumbnail %}
+                              {% if product.thumbnail %}
                               <img
-                                src="{{ stock.thumbnail.url }}"
+                                src="{{ product.thumbnail.url }}"
                                 class="img-fluid"
                                 style="
                                   height: 75vh;
@@ -171,29 +214,35 @@
                               />
                               {% else %}
                               <img
-                                src="{{ stock.brand.image.url }}"
-                                alt="{{ stock.item }}'s Image"
+                                src="{{ product.brand.image.url }}"
+                                alt="{{ product.item }}'s Image"
                                 class="img-fluid rounded bg-z"
                               />
                               {% endif %}
                             </div>
                             <div class="col-sm-16 col-md-6">
-                              <h5 class="mb-3">{{ stock.item }}</h5>
-                              <h6>Brand: {{ stock.brand }}</h6>
-                              <h6>Type: {{ stock.type }}</h6>
-                              <h6>Target: {{ stock.target }}</h6>
-                              <h6>Target: {{ stock.target }}</h6>
-                              <h6>Amount_F: {{ stock.amount_f }}</h6>
-                              <h6>Amount_T: {{ stock.amount_t }}</h6>
-                              <h6>Buying Price: € {{ stock.buying_price }}</h6>
-                              <h6>Selling Price: {{ stock.selling_price }}</h6>
-                              <h6>Total Cost: Ksh {{ stock.total_cost }}/=</h6>
+                              <h5 class="mb-3">{{ product.item }}</h5>
+                              <h6>Brand: {{ product.brand }}</h6>
+                              <h6>Type: {{ product.type }}</h6>
+                              <h6>Target: {{ product.target }}</h6>
+                              <h6>Target: {{ product.target }}</h6>
+                              <h6>Amount_F: {{ product.amount_f }}</h6>
+                              <h6>Amount_T: {{ product.amount_t }}</h6>
                               <h6>
-                                Best Seller: {{ stock.possible_best_seller }}
+                                Buying Price: € {{ product.buying_price }}
                               </h6>
-                              <h6>Size: {{ stock.size }}</h6>
-                              <h6>Color: {{ stock.color }}</h6>
-                              {% if stock.online %}
+                              <h6>
+                                Selling Price: {{ product.selling_price }}
+                              </h6>
+                              <h6>
+                                Total Cost: Ksh {{ product.total_cost }}/=
+                              </h6>
+                              <h6>
+                                Best Seller: {{ product.possible_best_seller }}
+                              </h6>
+                              <h6>Size: {{ product.size }}</h6>
+                              <h6>Color: {{ product.color }}</h6>
+                              {% if product.online %}
                               <h6
                                 style="font-weight: 400; font-size: 0.9rem"
                                 class="badge bg-success mt-3"
@@ -207,7 +256,7 @@
                               >
                                 Offline
                               </h6>
-                              {% endif %} {% if stock.priority %}
+                              {% endif %} {% if product.priority %}
                               <h6
                                 style="font-weight: 400; font-size: 0.9rem"
                                 class="badge bg-success"
@@ -228,7 +277,7 @@
                       </div>
                       <div class="modal-footer">
                         <a
-                          href="{% url 'edit_stock' slug=stock.slug %}"
+                          href="{% url 'edit_product' slug=product.slug %}"
                           class="btn btn-outline-dark me-2"
                           >Update</a
                         >
@@ -243,44 +292,44 @@
                     </div>
                   </div>
                 </div>
-                <!-- View Stock Modal 2 End -->
+                <!-- View product Modal 2 End -->
               </th>
-              {% if stock.target_display == 'M' %}
+              {% if product.target_display == 'M' %}
               <th>M</th>
-              {% elif stock.target_display == "F" %}
+              {% elif product.target_display == "F" %}
               <th>F</th>
               {% else %}
               <th>U</th>
               {% endif %}
-              <th>{{ stock.amount_f }}</th>
-              <th>{{ stock.amount_t }}</th>
-              <th>€{{ stock.buying_price }}</th>
-              <th>{{ stock.selling_price }}</th>
-              <th>Ksh {{ stock.total_cost|intcomma }}</th>
-              {% if stock.online %}
+              <th>{{ product.amount_f }}</th>
+              <th>{{ product.amount_t }}</th>
+              <th>€{{ product.buying_price }}</th>
+              <th>{{ product.selling_price }}</th>
+              <th>Ksh {{ product.total_cost|intcomma }}</th>
+              {% if product.online %}
               <th class="badge bg-success rounded-pill">Online</th>
               {% else %}
               <th class="badge bg-danger rounded-pill">Offline</th>
               {% endif %}
 
-              <!-- Delete Stock Start -->
+              <!-- Delete product Start -->
               <th>
                 <button
                   type="button"
                   class="btn btn-danger"
                   data-bs-toggle="modal"
-                  data-bs-target="#delete{{ stock.id}}"
+                  data-bs-target="#delete{{ product.id}}"
                 >
                   <i class="fa-solid fa-trash-can"></i>
                 </button>
                 <!-- Delete button ends -->
 
-                <!-- Modal - Delete Stock Modal Start -->
+                <!-- Modal - Delete product Modal Start -->
                 <div
                   class="modal fade"
-                  id="delete{{ stock.id }}"
+                  id="delete{{ product.id }}"
                   tabindex="-1"
-                  aria-labelledby="myModal{{ stock.id }}Label2"
+                  aria-labelledby="myModal{{ product.id }}Label2"
                   aria-hidden="true"
                 >
                   <div class="modal-dialog modal-xl">
@@ -288,10 +337,10 @@
                       <div class="modal-header">
                         <h1
                           class="modal-title fs-5"
-                          id="myModal{{ stock.id }}Label2"
+                          id="myModal{{ product.id }}Label2"
                         >
-                          {{ stock.item }} <br />
-                          {{ stock.type }}
+                          {{ product.item }} <br />
+                          {{ product.type }}
                         </h1>
                         <button
                           type="button"
@@ -301,11 +350,13 @@
                         ></button>
                       </div>
                       <div class="modal-body">
-                        <p>Are you sure you want to delete {{ stock.item }}?</p>
+                        <p>
+                          Are you sure you want to delete {{ product.item }}?
+                        </p>
                       </div>
                       <div class="modal-footer">
                         <form
-                          action="{% url 'delete_stock' slug=stock.slug %}"
+                          action="{% url 'delete_product' slug=product.slug %}"
                           method="POST"
                         >
                           {% csrf_token %}
@@ -326,9 +377,9 @@
                     </div>
                   </div>
                 </div>
-                <!-- Modal - Delete Stock Modal End -->
+                <!-- Modal - Delete product Modal End -->
               </th>
-              <!-- Delete Stock End -->
+              <!-- Delete product End -->
             </tr>
             {% endfor %}
           </tbody>

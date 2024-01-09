@@ -1,0 +1,238 @@
+{% extends 'base.html' %} {% load static %} {% block body %}
+<div class="container-fluid pb-5 bg-light">
+  <div class="row">
+    <h1 class="text-center my-4">Add Product</h1>
+    {% if success %}
+    <div class="alert alert-success pb-5 text-center" role="alert">
+      The Product was added successfully <i class="fa-solid fa-square-check"></i
+      ><br /><br />
+      <a href="{% url 'dashboard' %}" class="alert-link"
+        ><i class="fa-solid fa-reply"></i> Back To Dashboard.</a
+      >
+    </div>
+    {% endif %}
+
+    <div class="row justify-content-center align-items-start">
+      <div class="col-lg-8 col-sm-10">
+        <div class="card shadow border-0 p-3 mb-3">
+          <div class="card-body">
+            <form
+              id="ProductForm"
+              method="POST"
+              enctype="multipart/form-data"
+              action=""
+            >
+              {% csrf_token %}
+              <div class="row mb-3">
+                <div class="col-6 form-group">
+                  <label class="mb-2">Select brand:</label>
+                  <select name="brand" class="form-control">
+                    <option value="none">Select a brand...</option>
+
+                    {% for brand in brands %}
+                    <option value="{{ brand.id }}">{{ brand.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="col-6 form-group">
+                  <label class="mb-2">Type:</label>
+                  <select name="type" class="form-control">
+                    <option value="none">Select a type...</option>
+
+                    {% for type in types %}
+                    <option value="{{ type.id }}">{{ type.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <div class="col-6 form-group">
+                  <label class="mb-2">Name of item:</label>
+                  <input
+                    required
+                    name="item"
+                    type="text"
+                    placeholder="Name of product"
+                    class="form-control"
+                  />
+                </div>
+                <div class="col-6 form-group">
+                  <label class="mb-2">Target:</label>
+                  <select name="target" class="form-control">
+                    <option value="none">Select a target...</option>
+                    <option value="M">M</option>
+                    <option value="F">F</option>
+                    <option value="U">U</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <div class="col-3 form-group">
+                  <label class="mb-2">Amount F:</label>
+                  <input
+                    name="amount_f"
+                    type="number"
+                    placeholder="0"
+                    class="form-control"
+                  />
+                </div>
+                <div class="col-3 form-group">
+                  <label class="mb-2">Amount T:</label>
+                  <input
+                    name="amount_t"
+                    type="number"
+                    placeholder="0"
+                    class="form-control"
+                  />
+                </div>
+                <div class="col-3 form-group">
+                  <label class="mb-2">Buying Price:</label>
+                  <input
+                    name="buying_price"
+                    type="number"
+                    placeholder="0"
+                    class="form-control"
+                  />
+                </div>
+                <div class="col-3 form-group">
+                  <label class="mb-2">Selling Price:</label>
+                  <input
+                    name="selling_price"
+                    type="number"
+                    placeholder="0"
+                    class="form-control"
+                  />
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <div class="col-3 form-group">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="online"
+                    value="True"
+                  />
+                  <label class="mb-2">Online</label>
+                </div>
+                <div class="col-3 form-group">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="priority"
+                  />
+                  <label class="mb-2">Priority</label>
+                </div>
+                <div class="col-3 form-group">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="possible_best_seller"
+                  />
+                  <label class="mb-2">Possible Best Seller</label>
+                </div>
+                <div class="col-3 form-group">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="digital"
+                  />
+                  <label class="mb-2">Digital</label>
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <div class="col-3 form-group">
+                  <label class="mb-2">Total Cost:</label>
+                  <input
+                    value="0"
+                    name="total_cost"
+                    type="number"
+                    placeholder="0"
+                    class="form-control"
+                  />
+                </div>
+                <div class="col-3 form-group">
+                  <label class="mb-2">Size:</label>
+                  <input
+                    name="size"
+                    type="text"
+                    placeholder="s, m, l, xl, xxl, xxxl"
+                    class="form-control"
+                  />
+                </div>
+                <div class="col-3 form-group">
+                  <label class="mb-2">Color:</label>
+                  <input
+                    name="color"
+                    type="text"
+                    placeholder="black, yellow, pink"
+                    class="form-control"
+                  />
+                </div>
+                <div class="col-3 form-group">
+                  <label class="mb-2">Product:</label>
+                  <input
+                    name="Product"
+                    type="number"
+                    placeholder="Product"
+                    class="form-control"
+                  />
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <div class="col-6">
+                  <label class="mb-2">Similar Product Codes:</label>
+                  <input
+                    name="similar_products_codes"
+                    type="text"
+                    placeholder="ls02, ls04..."
+                    class="form-control"
+                  />
+                </div>
+                <div class="col-6">
+                  <label class="mb-2">Rating:</label>
+                  <input
+                    name="rating"
+                    type="number"
+                    placeholder="1"
+                    class="form-control"
+                  />
+                </div>
+              </div>
+
+              <div class="row mb-3 border-bottom pb-3">
+                <label class="mb-2">Upload images:</label>
+                <input
+                  name="images"
+                  type="file"
+                  multiple
+                  class="form-control-file"
+                />
+              </div>
+              <div class="row mb-3">
+                <label class="mb-2">Select thumbnail:</label>
+                <input name="thumbnail" type="file" class="form-control-file" />
+              </div>
+
+              <div class="text-center">
+                <a
+                  href="{% url 'dashboard' %}"
+                  class="btn btn-lg btn-outline-dark"
+                  ><i class="fa-solid fa-reply"></i> Back</a
+                >
+                <button type="submit" class="btn btn-lg me-2 btn-dark">
+                  <i class="fa-solid fa-floppy-disk"></i> Save
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

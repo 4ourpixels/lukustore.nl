@@ -1,0 +1,17 @@
+{% extends 'base.html' %} {% load static %} {% block body %}
+<main class="container mt-5">
+    <section class="row">
+        <article class="mx-auto col text-center">
+            <h1 class="display-3"><i class="fa-sharp fa-solid fa-check-double fa-2xl"></i></h1>
+            <h1 class="display-1 fw-bold">ORDER CONFIRMED</h1>
+            <h3>THANK YOU FOR YOUR ORDER!</h3><br>
+            <div class="col-sm-12 col-md-8 col-lg-10 mb-4 fadeInRight">
+                <img class="img-fluid delivery-truck " src="{% static 'images/mail-truck.svg' %}" alt="Delivery truck" /><br>
+            </div>
+            <h4>We've sent you an email with the receipt and details of your order.</h4><br>
+            <h3>Order ID: {{ transactin_id }}</h3>
+            <a class="btn btn-dark" href="{% url 'shop' %}">Continue Shopping &#8594</a>
+        </article>
+    </section>
+</main>
+{% endblock %}
