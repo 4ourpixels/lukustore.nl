@@ -86,6 +86,10 @@ class BlogPost(models.Model):
         })
 
     @property
+    def get_blog_url(self):
+        return f"www.lukustore.nl/{self.tag.slug}/{self.slug}/"
+
+    @property
     def get_og_image_url(self):
         if self.cover_image:
             return self.cover_image.url

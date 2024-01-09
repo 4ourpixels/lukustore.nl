@@ -1,9 +1,7 @@
 from django import forms
 from .models import BlogPost
 from django.forms import ModelForm
-from django_summernote.widgets import SummernoteWidget, SummernoteInplaceWidget
-
-# Create your tests here.
+from django_summernote.widgets import SummernoteWidget
 
 
 class BlogForm(forms.ModelForm):
@@ -11,7 +9,7 @@ class BlogForm(forms.ModelForm):
         model = BlogPost
         fields = ("__all__")
         exclude = ['created_at', 'slug', 'author',
-                   'is_published', 'published_at', 'tags']
+                   'published_at', 'tags']
 
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
@@ -22,4 +20,6 @@ class BlogForm(forms.ModelForm):
             'meta_keywords': forms.Textarea(attrs={'class': 'form-control'}),
             'meta_description': forms.Textarea(attrs={'class': 'form-control'}),
             'cover_image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'is_published': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'category': forms.Select(attrs={'class': 'form-control'}),
         }
